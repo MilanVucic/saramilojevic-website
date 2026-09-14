@@ -1,0 +1,11 @@
+---
+import ArtworkImage from './ArtworkImage.astro';
+import type { Artwork } from '../lib/content';
+interface Props { artwork: Artwork }
+const { artwork: a } = Astro.props;
+---
+<a class="work-card" href={`/artwork/${a.slug}/`}>
+  <div class="work-image"><ArtworkImage image={a.images[0]} /><span class="view-work">View artwork ↗</span></div>
+  <div class="card-line"><h3>{a.title}</h3>{a.year && <span>{a.year}</span>}</div>
+  <p>{a.medium}{a.dimensions && ` · ${a.dimensions.widthCm} × ${a.dimensions.heightCm} cm`}</p>
+</a>

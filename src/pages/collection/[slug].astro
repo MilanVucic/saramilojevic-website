@@ -1,0 +1,14 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ArtworkCard from '../../components/ArtworkCard.astro';
+import { getPortfolio } from '../../lib/content';
+export async function getStaticPaths() {
+  const { collections, works } = await getPortfolio();
+  return collections.map(collection=>({params:{slug:collection.slug},props:{collection,works:works.filter(a=>a.collection===collection.slug)}}));
+}
+const { collection:c, works } = Astro.props;
+---
+<Layout title={c.title} description={c.description}>
+  <section class="section page-intro"><a class="text-link" href="/collections/">← All collections</a>{c.year && <p class="eyebrow">Collection / {c.year}</p>}<h1>{c.title}</h1><p>{c.description}</p></section>
+  <section class="section"><div class="works-grid">{works.map(a=><ArtworkCard artwork={a}/>)}{!works.length&&<p>New works coming soon.</p>}</div></section>
+</Layout>

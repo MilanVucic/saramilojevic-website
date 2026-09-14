@@ -1,0 +1,22 @@
+{
+  "slug": "neither-do-i-want-to-travel-without-you",
+  "title": "Neither do I want to travel without you",
+  "collection": "cinematic-stills",
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 120,
+    "heightCm": 100
+  },
+  "description": "Drawing conceptual inspiration from Robert Musil’s novella The Perfecting of Love, the painting explores physical presence, spiritual intimacy, and emotional surrender. Rendered in a muted monochrome palette evoking the grain of an archival photograph or a classic film still, the composition depicts two figures locked in an embrace. Stripped of geographic markers, the couple creates an isolated sanctuary. The artwork addresses the gravity of shared journeys, vulnerability, and the bittersweet desire to halt time. Through a cinematic lens, it captures a fleeting moment of human connection, transforming personal nostalgia into a universal visual discourse on love.",
+  "order": 4,
+  "featured": true,
+  "published": true,
+  "images": [
+    {
+      "src": "cinematic-stills/neither-do-i-want-to-travel-without-you.JPG",
+      "width": 3667,
+      "height": 3034,
+      "alt": "Neither do I want to travel without you, acrylic on canvas"
+    }
+  ]
+}

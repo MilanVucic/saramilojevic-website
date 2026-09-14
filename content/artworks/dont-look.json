@@ -1,0 +1,34 @@
+{
+  "slug": "dont-look",
+  "title": "Don't Look",
+  "collection": "cinematic-stills",
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 60,
+    "heightCm": 50
+  },
+  "description": "Structured in an intense close-up crop, Don't Look focuses on the upper face, forehead, and averted gaze of a blonde woman. By shifting the figure's eyes away from the viewer, the painting creates an atmospheric tension between exposure and concealment, presence and self-protection. Rooted in visual explorations of intimacy, vulnerability, and internal dialogue, the artwork uses expressive brushwork and nuanced color tones to evoke a quiet, reflective emotional state.",
+  "order": 3,
+  "featured": true,
+  "published": true,
+  "images": [
+    {
+      "src": "cinematic-stills/dont-look-1.JPG",
+      "width": 3808,
+      "height": 3118,
+      "alt": "Don't look, view 1"
+    },
+    {
+      "src": "cinematic-stills/dont-look-2.png",
+      "width": 1312,
+      "height": 1199,
+      "alt": "Don't look, view 2"
+    },
+    {
+      "src": "cinematic-stills/dont-look-3.png",
+      "width": 1312,
+      "height": 1199,
+      "alt": "Don't look, view 3"
+    }
+  ]
+}

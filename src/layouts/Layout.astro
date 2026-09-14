@@ -1,0 +1,32 @@
+---
+import { site } from '../lib/content';
+import '../styles/global.css';
+import 'photoswipe/style.css';
+interface Props { title: string; description?: string }
+const { title, description = site.intro } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title} — {site.name}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f6f4ef" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="header">
+      <a href="/" class="wordmark">{site.name}</a>
+      <nav aria-label="Main navigation"><a href="/collections/">Collections</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav>
+    </header>
+    <main id="main"><slot /></main>
+    <footer id="contact">
+      <div><p class="eyebrow">For enquiries & conversations</p>
+        {site.email ? <a class="contact-link" href={`mailto:${site.email}`}>{site.email} ↗</a> : <><p class="contact-link">Let’s start a conversation.</p><p>Contact details coming soon.</p></>}
+      </div>
+      <div class="footer-bottom"><a class="wordmark" href="/">{site.name}</a><span>© {new Date().getFullYear()} · {site.subtitle}</span><a href="#main">Back to top ↑</a></div>
+    </footer>
+    <script>import '../scripts/app.js';</script>
+  </body>
+</html>
