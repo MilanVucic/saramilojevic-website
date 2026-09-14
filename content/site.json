@@ -5,5 +5,12 @@
   "biography": "Welcome to my studio. Explore a selection of paintings, their details, and the collections they belong to. This introductory text is a placeholder—replace it with Sara’s own words before publishing.",
   "email": "",
   "imageBaseUrl": "https://pub-0cd4ec3155d8403885715be1046a4e68.r2.dev",
-  "heroArtwork": "the-blue-clips"
+  "heroArtwork": "the-blue-clips",
+  "heroArtworks": [
+    "the-blue-clips",
+    "dont-worry",
+    "dont-look",
+    "neither-do-i-want-to-travel-without-you",
+    "i-feel-like-im-in-a-movie"
+  ]
 }

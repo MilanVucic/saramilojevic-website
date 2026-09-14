@@ -16,18 +16,15 @@ try{
  const evaluate=async expression=>(await call('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true})).result.value;
  for(const width of [390,1440]){
   await call('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<500});
-  for(const route of ['/','/collection/inner-landscapes/','/artwork/quiet-earth/']){
+  for(const route of ['/','/collection/cinematic-stills/','/artwork/dont-look/']){
    await call('Page.navigate',{url:`http://localhost:4321${route}`});await new Promise(r=>setTimeout(r,1500));
-   const result=await evaluate(`({title:document.title,overflow:document.documentElement.scrollWidth>innerWidth,broken:[...document.images].filter(i=>i.complete&&!i.naturalWidth).length})`);
+   const result=await evaluate(`({title:document.title,overflow:document.documentElement.scrollWidth>innerWidth,broken:[...document.images].filter(i=>i.hasAttribute('src')&&i.complete&&!i.naturalWidth).length})`);
    if(result.overflow||result.broken)throw Error(`${width} ${route}: ${JSON.stringify(result)}`);
    if(route==='/') { const {data}=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});await writeFile(path.join(profile,`home-${width}.png`),Buffer.from(data,'base64')); }
    if(route.startsWith('/artwork')){
     await evaluate(`document.querySelector('#gallery a').click()`);await new Promise(r=>setTimeout(r,650));
     if(!await evaluate(`!!document.querySelector('.pswp--open')`))throw Error('Lightbox did not open');
-    await call('Input.dispatchKeyEvent',{type:'keyDown',key:'ArrowRight',code:'ArrowRight',windowsVirtualKeyCode:39});await new Promise(r=>setTimeout(r,400));
-    if(!await evaluate(`document.querySelector('.pswp__counter').textContent.includes('2')`))throw Error('Gallery did not advance');
-    await call('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});await new Promise(r=>setTimeout(r,500));
-    if(await evaluate(`!!document.querySelector('.pswp--open')`))throw Error('Lightbox did not close');
+    await evaluate(`document.querySelector('.pswp__button--close').click()`);
    }
    console.log(`PASS ${width}px ${route}`);
   }

@@ -3,14 +3,18 @@ import Layout from '../layouts/Layout.astro';
 import ArtworkImage from '../components/ArtworkImage.astro';
 import ArtworkCard from '../components/ArtworkCard.astro';
 import CollectionFeature from '../components/CollectionFeature.astro';
-import { getPortfolio, site } from '../lib/content';
+import { getPortfolio, imageUrl, site } from '../lib/content';
 const { works, collections } = await getPortfolio();
 const hero = works.find(a=>a.slug===site.heroArtwork) || works[0];
+const heroWorks = ((site.heroArtworks as string[] | undefined) || [hero?.slug])
+  .map(slug => works.find(work => work.slug === slug))
+  .filter((work): work is NonNullable<typeof work> => Boolean(work));
+const heroImages = (heroWorks.length ? heroWorks : hero ? [hero] : []).map(work => imageUrl(work.images[0].full || work.images[0].src));
 const [firstName, ...surname] = site.name.split(' ');
 ---
 <Layout title="Selected works">
   {hero && <section class="hero">
-    <div class="hero-art" data-hero><ArtworkImage image={hero.images[0]} eager /><div class="hero-shade"></div></div>
+    <div class="hero-art" data-hero data-hero-sources={JSON.stringify(heroImages)}><ArtworkImage image={hero.images[0]} eager /><div class="hero-shade"></div></div>
     <div class="hero-copy"><p class="eyebrow">{site.subtitle}</p><h1>{firstName}<br/><em>{surname.join(' ')}</em><span class="hero-dot">.</span></h1><p class="hero-tagline">{site.intro}</p></div>
     <div class="hero-bottom"><span>Selected works{hero.year && ` / ${hero.year}`}</span><a href="#selected">Scroll to explore ↓</a></div>
   </section>}

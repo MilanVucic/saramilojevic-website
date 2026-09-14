@@ -14,6 +14,6 @@ if (!reduced && matchMedia('(pointer:fine)').matches) {
   section.addEventListener('pointermove',event=>{const rect=section.getBoundingClientRect();const x=(event.clientX-rect.left)/rect.width-.5;setters.forEach(({set,direction})=>set(x*180*direction));});
   section.addEventListener('pointerleave',()=>setters.forEach(({set})=>set(0)));
  });
- const hero=document.querySelector('[data-hero]');
- if(hero) import('./hero.js').then(m=>m.startHero(hero)).catch(()=>{/* Static artwork remains visible if WebGL is unavailable. */});
 }
+const hero=document.querySelector('[data-hero]');
+if(hero) import('./hero.js').then(m=>m.startHero(hero)).catch(()=>{/* Static artwork remains visible if enhancement is unavailable. */});
