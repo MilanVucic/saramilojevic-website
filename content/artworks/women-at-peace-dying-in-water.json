@@ -1,0 +1,23 @@
+{
+  "slug": "women-at-peace-dying-in-water",
+  "title": "Women. At Peace. Dying in Water.",
+  "collection": "soft-as-dreams",
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 150,
+    "heightCm": 230
+  },
+  "description": "Exhibited as a core piece of the Dreamy Softness exhibition, this painting serves as a visual chapter of my poem about the elusive nature of dreams. It explores the vast potential of love and the tragic human inability to fully love or be loved - a frustration that drives us toward ancient, mystical rituals. Here, two female figures are captured in a deep, ecstatic trance, invoking the Dodole, a traditional Serbian rain-summoning ritual. Their skin, painted in wild, animalistic streaks of vibrant pink, cuts through the translucent green glazes to embody pure emotional ache. Through their raw, gestural movement, the canvas becomes a stage for a primal cry - using the ritual of rain to wash over the profound pain of a longing heart.",
+  "readyToHang": true,
+  "order": 3,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "soft-as-dreams/women-at-peace-dying-in-water.JPG",
+      "width": 1500,
+      "height": 2300,
+      "alt": "Women. At Peace. Dying in Water., acrylic on canvas"
+    }
+  ]
+}

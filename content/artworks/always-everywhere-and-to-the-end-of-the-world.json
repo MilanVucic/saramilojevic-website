@@ -1,0 +1,23 @@
+{
+  "slug": "always-everywhere-and-to-the-end-of-the-world",
+  "title": "Always, Everywhere, and to the End of the World",
+  "collection": "soft-as-dreams",
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 150,
+    "heightCm": 230
+  },
+  "description": "Part of my Dreamy Softness series, Always, Everywhere, and to the End of the World subverts the ideal image of a wedding. In this canvas, I present a groom holding the hand of his bride, who holds the hand of a young girl, all shrouded in a ghostly white. The title comes from a poetic note I took from a balloon shop sign: 'Always, everywhere, and to the End of the World - the shop of trapped air is closed until 8.' This metaphor of 'trapped air' infuses the piece with a chilling tension, as I captured the figures frozen with the rigid posture of mannequins. Rendered in acrylic on raw cotton canvas with subtle pink and green undertones, my aim was to expose the suffocating weight hidden beneath perfect facades.",
+  "readyToHang": true,
+  "order": 5,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "soft-as-dreams/always-everywhere-and-to-the-end-of-the-world.JPG",
+      "width": 1500,
+      "height": 2300,
+      "alt": "Always, Everywhere, and to the End of the World, acrylic on canvas"
+    }
+  ]
+}

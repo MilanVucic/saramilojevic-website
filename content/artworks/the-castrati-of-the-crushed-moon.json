@@ -1,0 +1,23 @@
+{
+  "slug": "the-castrati-of-the-crushed-moon",
+  "title": "The Castrati of the Crushed Moon",
+  "collection": "soft-as-dreams",
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 150,
+    "heightCm": 220
+  },
+  "description": "Continuing the raw narrative of the Dreamy Softness series, The Castrati of the Crushed Moon focuses on a solitary female figure in a kneeling posture, her arms stretched desperately toward the sky. Painted with acrylics on raw cotton canvas, the texture of the fabric drinks in the paint, mirroring the vulnerability of the subject. Executed in the series' signature palette of vibrant pink and green, the rapid, gestural brushwork captures an ecstatic, painful plea. The title invokes the haunting, soaring voices of the castrati choir, crying out under a crushed moon. It is a visual crescendo of romantic agony, where the kneeling body becomes an instrument of pure, unfiltered emotion.",
+  "readyToHang": true,
+  "order": 4,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "soft-as-dreams/the-castrati-of-the-crushed-moon.JPG",
+      "width": 1500,
+      "height": 2200,
+      "alt": "The Castrati of the Crushed Moon, acrylic on canvas"
+    }
+  ]
+}

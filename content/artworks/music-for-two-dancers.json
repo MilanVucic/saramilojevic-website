@@ -1,0 +1,23 @@
+{
+  "slug": "music-for-two-dancers",
+  "title": "Music for Two Dancers",
+  "collection": "soft-as-dreams",
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 210,
+    "heightCm": 150
+  },
+  "description": "A monumental, horizontal piece from the Dreamy Softness series, this painting is deeply rooted in nostalgia and the passing of time. Inspired by an old photograph of a couple frozen in happiness in front of their newly built home, the artwork translates this vintage warmth into a contemporary, poetic space. Rendered in acrylic on raw cotton canvas, the composition is dominated by the expansive back of a man’s white shirt as he holds hands with his partner in a dance posture. Developed alongside my poem Music for Two Dancers, the visual rhythm builds toward the text's final, haunting line: 'the careful solitude of two heads.' Within the signature palette of translucent pinks and greens, the figures embody a profound intimacy - a sacred, quiet sanctuary shared between two minds amidst the fading echoes of yesterday.",
+  "readyToHang": true,
+  "order": 6,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "soft-as-dreams/music-for-two-dancers.JPG",
+      "width": 2100,
+      "height": 1500,
+      "alt": "Music for Two Dancers, acrylic on canvas"
+    }
+  ]
+}

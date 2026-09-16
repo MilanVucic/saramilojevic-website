@@ -1,0 +1,22 @@
+{
+  "slug": "dance-through-the-ache",
+  "title": "Dance through the ache",
+  "collection": "soft-as-dreams",
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 150,
+    "heightCm": 210
+  },
+  "description": "A companion piece to the jumping female dancer, this artwork shifts the focus to a male figure in a white shirt, caught in the exact same vibrant friction of pinks and greens. Created in tandem, it is a visual continuation of my poem from the collection Dreamy Softness. This painting captures the raw, nocturnal gravity of 2:40 AM - the hour where reality blurs and the command arises: 'Control your dreams, last until exhaustion, dance through the ache.' Shrouded in translucent glazes and dynamic brushwork, the figure embodies the haunting words of a traveler who once told me that everything else is fleeting. It is a monument to persistence and the beautiful chaos of holding onto a dream when the world is fading.",
+  "order": 2,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "soft-as-dreams/dance-through-the-ache.JPG",
+      "width": 1500,
+      "height": 2100,
+      "alt": "Dance through the ache, acrylic on canvas"
+    }
+  ]
+}

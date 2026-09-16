@@ -1,0 +1,23 @@
+{
+  "slug": "the-act-of-falling",
+  "title": "The Act of Falling",
+  "collection": "soft-as-dreams",
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 150,
+    "heightCm": 170
+  },
+  "description": "Visually tied to my Dreamy Softness universe, Falling subverts the energetic movement of a breakdancer to explore the vulnerability of the romantic discourse. In this canvas, I captured a figure inverted on his head, pressed against the ground as if listening intensely to the floor. This urban pose becomes a raw metaphor for a continuous emotional descent, the endless act of falling, of being turned upside down by love and heartache. Painted in my signature palette of expressive pink and green on raw cotton canvas, the artwork meditates on suspended gravity: that heavy, vulnerable moment of losing balance where the body surrenders to the impact and listens to the ground.",
+  "readyToHang": true,
+  "order": 7,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "soft-as-dreams/the-act-of-falling.JPG",
+      "width": 1500,
+      "height": 1700,
+      "alt": "The Act of Falling, acrylic on canvas"
+    }
+  ]
+}
