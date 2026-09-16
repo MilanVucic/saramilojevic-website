@@ -1,0 +1,23 @@
+{
+  "slug": "tenderly-or-violently",
+  "title": "Tenderly or Violently",
+  "collection": "soft-as-dreams",
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 145,
+    "heightCm": 170
+  },
+  "description": "Presented as part of my solo exhibition 'This Has Already Happened: Fragments of Love', Tenderly or Violently captures a close-up embrace of two heads locked in a kiss. The artwork is deeply inspired by a scene from Jean Eustache’s iconic 1973 film La maman et la putain, channeling its raw, unfiltered, and melancholic take on human connection. Painted in my signature translucent pink and green palette on raw cotton canvas, this piece acts as a visual artifact of memory, a fragment of a romance that feels eerily familiar, as if it has already occurred. By leaving the unprimed fabric exposed, I sought to reflect the vulnerability of a kiss suspended between ultimate tenderness and psychological violence.",
+  "readyToHang": true,
+  "order": 8,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "soft-as-dreams/tenderly-or-violently.JPG",
+      "width": 2940,
+      "height": 3502,
+      "alt": "Tenderly or Violently, acrylic on canvas"
+    }
+  ]
+}

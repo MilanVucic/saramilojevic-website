@@ -22,9 +22,21 @@ try{
    if(result.overflow||result.broken)throw Error(`${width} ${route}: ${JSON.stringify(result)}`);
    if(route==='/') { const {data}=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});await writeFile(path.join(profile,`home-${width}.png`),Buffer.from(data,'base64')); }
    if(route.startsWith('/artwork')){
-    await evaluate(`document.querySelector('#gallery a').click()`);await new Promise(r=>setTimeout(r,650));
-    if(!await evaluate(`!!document.querySelector('.pswp--open')`))throw Error('Lightbox did not open');
-    await evaluate(`document.querySelector('.pswp__button--close').click()`);
+    await evaluate(`document.querySelector('.gallery-trigger').scrollIntoView({block:'center'})`);await new Promise(r=>setTimeout(r,150));
+    const point=await evaluate(`(()=>{const r=document.querySelector('.gallery-trigger').getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}})()`);
+    if(width<500){
+     await call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:point.x,y:point.y}]});
+     await call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    }else{
+     await call('Input.dispatchMouseEvent',{type:'mousePressed',x:point.x,y:point.y,button:'left',clickCount:1});
+     await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x,y:point.y,button:'left',clickCount:1});
+    }
+    await new Promise(r=>setTimeout(r,650));
+    if(!await evaluate(`!!document.querySelector('.artwork-viewer.is-open')`)){
+     const state=await evaluate(`({url:location.href,viewer:[...document.querySelectorAll('.artwork-viewer')].map(el=>el.className),gallery:!!document.querySelector('#gallery')})`);
+     throw Error(`Lightbox did not open: ${JSON.stringify(state)}${errors.length ? `\n${errors.join('\n')}` : ''}`);
+    }
+    await evaluate(`document.querySelector('.viewer-close').click()`);
    }
    console.log(`PASS ${width}px ${route}`);
   }

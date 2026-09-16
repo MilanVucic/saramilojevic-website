@@ -1,7 +1,6 @@
 ---
 import { site } from '../lib/content';
 import '../styles/global.css';
-import 'photoswipe/style.css';
 interface Props { title: string; description?: string }
 const { title, description = site.intro } = Astro.props;
 const path = Astro.url.pathname;
