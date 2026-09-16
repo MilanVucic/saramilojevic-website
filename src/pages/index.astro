@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import ArtworkImage from '../components/ArtworkImage.astro';
 import ArtworkCard from '../components/ArtworkCard.astro';
 import CollectionFeature from '../components/CollectionFeature.astro';
+import CTA from '../components/CTA.astro';
 import { getPortfolio, imageUrl, site } from '../lib/content';
 const { works, collections } = await getPortfolio();
 const hero = works.find(a=>a.slug===site.heroArtwork) || works[0];
@@ -23,6 +24,8 @@ const [firstName, ...surname] = site.name.split(' ');
     <div class="works-grid">{works.filter(a=>a.featured).map(a=><ArtworkCard artwork={a}/>)}</div>
   </section>
   <section id="about" class="section about"><div><p class="eyebrow">The artist</p><h2>A practice of<br/><em>looking closer.</em></h2></div><div><p class="intro">{site.intro}</p><p>{site.biography}</p><a class="text-link about-link" href="/about/">Read about Sara ↗</a><span class="signature">{site.name}</span></div></section>
-  {collections.map(c=><CollectionFeature collection={c} works={works.filter(a=>a.collection===c.slug)}/>)}
-  <section class="archive section"><p class="eyebrow">Discover the complete collection</p><h2>Every painting,<br/><em>its own world.</em></h2><a class="button" href="/collections/">View all collections ↗</a></section>
+  <div class="collection-features">
+    {collections.map(c=><CollectionFeature collection={c} works={works.filter(a=>a.collection===c.slug)}/>)}
+  </div>
+  <section class="archive section"><p class="eyebrow">Discover the complete collection</p><h2>Every painting,<br/><em>its own world.</em></h2><CTA href="/collections/">View all collections</CTA></section>
 </Layout>

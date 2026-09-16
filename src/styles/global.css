@@ -322,19 +322,24 @@ p + p {
     place-items: center
 }
 
+.collection-features {
+    display: grid;
+    gap: 32px
+}
+
 .mosaic {
     position: absolute;
     inset: -25% -15%;
     transform: rotate(-12deg);
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 0;
     opacity: .65
 }
 
 .mosaic-row {
     display: flex;
-    gap: 18px;
+    gap: 0;
     height: 33%;
     will-change: transform
 }
@@ -662,11 +667,11 @@ dd {
 
     .mosaic {
         inset: -10% -60%;
-        gap: 12px
+        gap: 0
     }
 
     .mosaic-row {
-        gap: 12px
+        gap: 0
     }
 
     .feature-content h2 {

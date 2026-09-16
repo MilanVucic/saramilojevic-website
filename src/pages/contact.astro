@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import CTA from '../components/CTA.astro';
 import { site } from '../lib/content';
 ---
 <Layout title="Contact" description="Contact Sara Milojević for enquiries, collaborations, and conversations.">
@@ -10,7 +11,7 @@ import { site } from '../lib/content';
     </div>
     <div class="contact-panel">
       <p>For artwork enquiries, exhibition opportunities, mural projects, collaborations, and other questions, write to Sara directly.</p>
-      <a class="button contact-button" href={`mailto:${site.email}`}>Contact Sara <span aria-hidden="true">↗</span></a>
+      <CTA href={`mailto:${site.email}`} className="contact-button">Contact Sara</CTA>
       <a class="contact-email" href={`mailto:${site.email}`}>{site.email}</a>
     </div>
   </section>

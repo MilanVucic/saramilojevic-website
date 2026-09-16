@@ -7,13 +7,32 @@ if (document.querySelector('#gallery')) {
   box.pswp.on('change',()=>{element.textContent=box.pswp.currSlide.data.element?.closest('figure')?.querySelector('figcaption')?.textContent||'';});
  }}));box.init();
 }
-if (!reduced && matchMedia('(pointer:fine)').matches) {
- const { gsap } = await import('gsap');
- document.querySelectorAll('.collection-feature').forEach(section=>{
-  const setters=[...section.querySelectorAll('.mosaic-row')].map((row,i)=>({set:gsap.quickTo(row,'x',{duration:1.1+i*.2,ease:'power3.out'}),direction:i%2?-1:1}));
-  section.addEventListener('pointermove',event=>{const rect=section.getBoundingClientRect();const x=(event.clientX-rect.left)/rect.width-.5;setters.forEach(({set,direction})=>set(x*180*direction));});
-  section.addEventListener('pointerleave',()=>setters.forEach(({set})=>set(0)));
- });
+if (!reduced) {
+ const sections=[...document.querySelectorAll('.collection-feature')].map(section=>({
+  section,
+  rows:[...section.querySelectorAll('.mosaic-row')]
+ }));
+ if(sections.length){
+  let ticking=false;
+  const update=()=>{
+   const viewportHeight=innerHeight;
+   const travel=matchMedia('(max-width: 760px)').matches?72:120;
+   sections.forEach(({section,rows})=>{
+    const rect=section.getBoundingClientRect();
+    const progress=Math.max(0,Math.min(1,(viewportHeight-rect.top)/(viewportHeight+rect.height)))-.5;
+    rows.forEach((row,index)=>{
+     const direction=index%2?-1:1;
+     const depth=1-index*.12;
+     row.style.transform=`translate3d(${progress*travel*direction*depth}px,0,0)`;
+    });
+   });
+   ticking=false;
+  };
+  const requestUpdate=()=>{if(!ticking){requestAnimationFrame(update);ticking=true;}};
+  addEventListener('scroll',requestUpdate,{passive:true});
+  addEventListener('resize',requestUpdate,{passive:true});
+  update();
+ }
 }
 const hero=document.querySelector('[data-hero]');
 if(hero) import('./hero.js').then(m=>m.startHero(hero)).catch(()=>{/* Static artwork remains visible if enhancement is unavailable. */});

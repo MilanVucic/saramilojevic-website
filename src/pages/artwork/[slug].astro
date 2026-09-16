@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import ArtworkCard from '../../components/ArtworkCard.astro';
 import ArtworkImage from '../../components/ArtworkImage.astro';
+import CTA from '../../components/CTA.astro';
 import { getPortfolio, imageUrl, site } from '../../lib/content';
 export async function getStaticPaths() {
   const { collections, works } = await getPortfolio();
@@ -16,7 +17,7 @@ const { artwork:a, collection:c, related } = Astro.props;
     </div><aside class="artwork-info"><p class="eyebrow">{c.title}{a.year && ` / ${a.year}`}</p><h1>{a.title}</h1>{a.description && <p>{a.description}</p>}
       <dl><div><dt>Medium</dt><dd>{a.medium}</dd></div>{a.dimensions && <div><dt>Dimensions</dt><dd>{a.dimensions.widthCm} × {a.dimensions.heightCm} cm (W × H)</dd></div>}{a.year && <div><dt>Year</dt><dd>{a.year}</dd></div>}{a.readyToHang && <div><dt>Ready to hang</dt><dd>Yes</dd></div>}</dl>
       <p class="gallery-hint">Tap an image to explore.<br/>Swipe or use arrow keys in the viewer.</p>
-      {site.email&&<a class="button" href={`mailto:${site.email}?subject=${encodeURIComponent(a.title)}`}>Enquire about this work ↗</a>}
+      {site.email&&<CTA href={`mailto:${site.email}?subject=${encodeURIComponent(a.title)}`}>Enquire about this work</CTA>}
     </aside></div>
   </section>
   <section class="section"><div class="section-heading"><h2>From the same <em>collection</em></h2></div><div class="works-grid">{related.map(a=><ArtworkCard artwork={a}/>)}</div></section>
