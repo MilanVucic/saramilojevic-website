@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../lib/content';
+---
+<Layout title="Contact" description="Contact Sara Milojević for enquiries, collaborations, and conversations.">
+  <section class="section contact-page">
+    <div>
+      <p class="eyebrow">Get in touch</p>
+      <h1>Let’s start a<br/><em>conversation.</em></h1>
+    </div>
+    <div class="contact-panel">
+      <p>For artwork enquiries, exhibition opportunities, mural projects, collaborations, and other questions, write to Sara directly.</p>
+      <a class="button contact-button" href={`mailto:${site.email}`}>Contact Sara <span aria-hidden="true">↗</span></a>
+      <a class="contact-email" href={`mailto:${site.email}`}>{site.email}</a>
+    </div>
+  </section>
+</Layout>

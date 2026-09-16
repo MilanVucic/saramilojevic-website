@@ -14,7 +14,7 @@ const { artwork:a, collection:c, related } = Astro.props;
     <div class="artwork-layout"><div class="gallery" id="gallery">
       {a.images.map((image,n)=><figure><a href={imageUrl(image.full||image.src)} data-pswp-width={image.width} data-pswp-height={image.height} aria-label={`Enlarge ${a.title} image ${n+1}`}><ArtworkImage image={image} eager={n===0}/><span class="expand">⤢ <span>View full screen</span></span></a><figcaption>{String(n+1).padStart(2,'0')} / {image.caption||image.alt}</figcaption></figure>)}
     </div><aside class="artwork-info"><p class="eyebrow">{c.title}{a.year && ` / ${a.year}`}</p><h1>{a.title}</h1>{a.description && <p>{a.description}</p>}
-      <dl><div><dt>Medium</dt><dd>{a.medium}</dd></div>{a.dimensions && <div><dt>Dimensions</dt><dd>{a.dimensions.widthCm} × {a.dimensions.heightCm} cm (W × H)</dd></div>}{a.year && <div><dt>Year</dt><dd>{a.year}</dd></div>}</dl>
+      <dl><div><dt>Medium</dt><dd>{a.medium}</dd></div>{a.dimensions && <div><dt>Dimensions</dt><dd>{a.dimensions.widthCm} × {a.dimensions.heightCm} cm (W × H)</dd></div>}{a.year && <div><dt>Year</dt><dd>{a.year}</dd></div>}{a.readyToHang && <div><dt>Ready to hang</dt><dd>Yes</dd></div>}</dl>
       <p class="gallery-hint">Tap an image to explore.<br/>Swipe or use arrow keys in the viewer.</p>
       {site.email&&<a class="button" href={`mailto:${site.email}?subject=${encodeURIComponent(a.title)}`}>Enquire about this work ↗</a>}
     </aside></div>

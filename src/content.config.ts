@@ -16,6 +16,7 @@ const artwork = defineCollection({
     year: z.number().int().optional(), medium: z.string().min(1),
     dimensions: z.object({ widthCm: z.number().positive(), heightCm: z.number().positive() }),
     description: z.string(), order: z.number().default(0),
+    readyToHang: z.boolean().optional(),
     featured: z.boolean().default(false), published: z.boolean().default(true),
     images: z.array(z.object({
       src: imagePath, full: imagePath.optional(), width: z.number().int().positive(),
