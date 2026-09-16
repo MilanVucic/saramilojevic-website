@@ -1,5 +1,6 @@
 ---
 import { site } from '../lib/content';
+import { footerLinks } from '../config/links';
 import '../styles/global.css';
 interface Props { title: string; description?: string }
 const { title, description = site.intro } = Astro.props;
@@ -25,11 +26,17 @@ const path = Astro.url.pathname;
       </nav>
     </header>
     <main id="main"><slot /></main>
-    <footer id="contact">
-      <div><p class="eyebrow">For enquiries & conversations</p>
-        {site.email ? <a class="contact-link" href={`mailto:${site.email}`}>{site.email} ↗</a> : <><p class="contact-link">Let’s start a conversation.</p><p>Contact details coming soon.</p></>}
+    <footer>
+      <div class="footer-bottom">
+        <a class="wordmark" href="/">{site.name}</a>
+        <nav class="footer-social" aria-label="Social links">
+          <a class="social-icon" href={footerLinks.email} aria-label="Email Sara"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.5"></rect><path d="m4 7 8 6 8-6"></path></svg></a>
+          {footerLinks.instagram ? <a class="social-icon" href={footerLinks.instagram} target="_blank" rel="noreferrer" aria-label="Sara Milojević on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></a> : <span class="social-icon is-disabled" aria-label="Instagram link coming soon" role="img"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></span>}
+          {footerLinks.saatchi ? <a class="social-icon" href={footerLinks.saatchi} target="_blank" rel="noreferrer" aria-label="Sara Milojević on Saatchi Art"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5c-.8-.7-2-1.1-3.3-1.1-1.8 0-3.2.8-3.2 2.2 0 3.4 6.5 1.5 6.5 5 0 1.4-1.4 2.4-3.5 2.4-1.5 0-2.8-.5-3.7-1.4"></path></svg></a> : <span class="social-icon is-disabled" aria-label="Saatchi Art link coming soon" role="img"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5c-.8-.7-2-1.1-3.3-1.1-1.8 0-3.2.8-3.2 2.2 0 3.4 6.5 1.5 6.5 5 0 1.4-1.4 2.4-3.5 2.4-1.5 0-2.8-.5-3.7-1.4"></path></svg></span>}
+        </nav>
+        <span>© {new Date().getFullYear()} · {site.subtitle}</span>
+        <a href="#main">Back to top ↑</a>
       </div>
-      <div class="footer-bottom"><a class="wordmark" href="/">{site.name}</a><span>© {new Date().getFullYear()} · {site.subtitle}</span><a href="#main">Back to top ↑</a></div>
     </footer>
     <script>import '../scripts/app.js';</script>
   </body>

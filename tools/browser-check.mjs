@@ -20,7 +20,11 @@ try{
    await call('Page.navigate',{url:`http://localhost:4321${route}`});await new Promise(r=>setTimeout(r,1500));
    const result=await evaluate(`({title:document.title,overflow:document.documentElement.scrollWidth>innerWidth,broken:[...document.images].filter(i=>i.hasAttribute('src')&&i.complete&&!i.naturalWidth).length})`);
    if(result.overflow||result.broken)throw Error(`${width} ${route}: ${JSON.stringify(result)}`);
-   if(route==='/') { const {data}=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});await writeFile(path.join(profile,`home-${width}.png`),Buffer.from(data,'base64')); }
+   if(route==='/') {
+    if(!await evaluate(`!!document.querySelector('[data-hero] canvas, [data-hero] .hero-slide')`))throw Error(`${width} homepage: enhanced hero did not initialize`);
+    if(!await evaluate(`document.documentElement.classList.contains('reveal-enabled')`))throw Error(`${width} homepage: section reveals did not initialize`);
+    const {data}=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});await writeFile(path.join(profile,`home-${width}.png`),Buffer.from(data,'base64'));
+   }
    if(route.startsWith('/artwork')){
     await evaluate(`document.querySelector('.gallery-trigger').scrollIntoView({block:'center'})`);await new Promise(r=>setTimeout(r,150));
     const point=await evaluate(`(()=>{const r=document.querySelector('.gallery-trigger').getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}})()`);

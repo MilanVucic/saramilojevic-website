@@ -5,7 +5,7 @@ import type { Artwork, PortfolioCollection } from '../lib/content';
 interface Props { collection: PortfolioCollection; works: Artwork[] }
 const { collection: c, works } = Astro.props;
 ---
-{works.length > 0 && <section class="collection-feature">
+{works.length > 0 && <section class="collection-feature" data-reveal>
   <div class="mosaic" aria-hidden="true">{Array.from({length:3},(_,row) => <div class="mosaic-row">{Array.from({length:6},(_,j) => <ArtworkImage image={works[(row+j)%works.length].images[0]} decorative />)}</div>)}</div>
   <div class="feature-content"><p class="eyebrow">The collection · {c.year}</p><h2>{c.title}</h2><CTA href={`/collection/${c.slug}/`} variant="light">Explore {works.length} works</CTA></div>
 </section>}

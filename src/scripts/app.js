@@ -1,6 +1,11 @@
-import { startHero } from './hero.js';
-
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!reduced) {
+ document.documentElement.classList.add('reveal-enabled');
+ const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+  if(entry.isIntersecting){entry.target.classList.add('is-visible');revealObserver.unobserve(entry.target);}
+ }),{threshold:.12,rootMargin:'0px 0px -8%'});
+ document.querySelectorAll('[data-reveal]').forEach(element=>revealObserver.observe(element));
+}
 // Every content link and image works before these progressive enhancements load.
 const galleryItems=[...document.querySelectorAll('.gallery-trigger')];
 if (galleryItems.length) {
@@ -84,4 +89,4 @@ if (!reduced) {
  }
 }
 const hero=document.querySelector('[data-hero]');
-if(hero) startHero(hero);
+if(hero) import('./hero.js').then(({startHero})=>startHero(hero)).catch(()=>{/* Static artwork remains visible if enhancement is unavailable. */});
