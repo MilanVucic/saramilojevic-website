@@ -3,10 +3,18 @@ import Layout from '../../layouts/Layout.astro';
 import ArtworkCard from '../../components/ArtworkCard.astro';
 import ArtworkImage from '../../components/ArtworkImage.astro';
 import CTA from '../../components/CTA.astro';
-import { getPortfolio, imageUrl, site } from '../../lib/content';
+import { getPortfolio, imageUrl } from '../../lib/content';
 export async function getStaticPaths() {
   const { collections, works } = await getPortfolio();
-  return works.map(artwork=>({params:{slug:artwork.slug},props:{artwork,collection:collections.find(c=>c.slug===artwork.collection)!,related:works.filter(a=>a.collection===artwork.collection&&a.slug!==artwork.slug)}}));
+  return works.map(artwork => {
+    const collectionWorks = works.filter(item => item.collection === artwork.collection);
+    const artworkIndex = collectionWorks.findIndex(item => item.slug === artwork.slug);
+    const related = Array.from(
+      { length: Math.min(3, Math.max(0, collectionWorks.length - 1)) },
+      (_, offset) => collectionWorks[(artworkIndex + offset + 1) % collectionWorks.length],
+    );
+    return { params: { slug: artwork.slug }, props: { artwork, collection: collections.find(c => c.slug === artwork.collection)!, related } };
+  });
 }
 const { artwork:a, collection:c, related } = Astro.props;
 ---
@@ -16,9 +24,8 @@ const { artwork:a, collection:c, related } = Astro.props;
       {a.images.map((image,n)=><figure><button type="button" class="gallery-trigger" data-full-src={imageUrl(image.full||image.src)} aria-label={`Enlarge ${a.title} image ${n+1}`}><ArtworkImage image={image} eager={n===0}/><span class="zoom-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path><path d="M10.5 7.5v6M7.5 10.5h6"></path></svg></span></button><figcaption>{String(n+1).padStart(2,'0')} / {image.caption||image.alt}</figcaption></figure>)}
     </div><aside class="artwork-info"><p class="eyebrow">{c.title}{a.year && ` / ${a.year}`}</p><h1>{a.title}</h1>{a.description && <p>{a.description}</p>}
       <dl><div><dt>Medium</dt><dd>{a.medium}</dd></div>{a.dimensions && <div><dt>Dimensions</dt><dd>{a.dimensions.widthCm} × {a.dimensions.heightCm} cm (W × H)</dd></div>}{a.year && <div><dt>Year</dt><dd>{a.year}</dd></div>}{a.readyToHang && <div><dt>Ready to hang</dt><dd>Yes</dd></div>}</dl>
-      <p class="gallery-hint">Click or tap any image to explore.<br/>Swipe or use arrow keys in the viewer.</p>
-      {site.email&&<CTA href={`mailto:${site.email}?subject=${encodeURIComponent(a.title)}`}>Enquire about this work</CTA>}
+      <CTA href={`/contact/?artwork=${encodeURIComponent(a.slug)}`}>Enquire about this work</CTA>
     </aside></div>
   </section>
-  <section class="section"><div class="section-heading"><h2>From the same <em>collection</em></h2></div><div class="works-grid">{related.map(a=><ArtworkCard artwork={a}/>)}</div></section>
+  <section class="section"><div class="section-heading"><h2>From the same <em>collection</em></h2><CTA href="/all-works/">View all artworks</CTA></div><div class="works-grid">{related.map(a=><ArtworkCard artwork={a}/>)}</div></section>
 </Layout>

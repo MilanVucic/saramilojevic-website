@@ -1,10 +1,16 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import ArtworkCard from '../../components/ArtworkCard.astro';
+import CollectionArchiveRow from '../../components/CollectionArchiveRow.astro';
+import CTA from '../../components/CTA.astro';
 import { getPortfolio } from '../../lib/content';
 const { works, collections } = await getPortfolio();
 ---
 <Layout title="Collections">
-  <section class="section page-intro"><p class="eyebrow">The archive</p><h1>Collections</h1><p>Explore bodies of work, one painting at a time.</p></section>
-  {collections.map(c => <section class="section collection-list"><div class="section-heading"><div>{c.year && <p class="eyebrow">{c.year}</p>}<h2><a href={`/collection/${c.slug}/`}>{c.title} ↗</a></h2><p>{c.description}</p></div></div><div class="works-grid">{works.filter(a=>a.collection===c.slug).map(a=><ArtworkCard artwork={a}/>)}{!works.some(a=>a.collection===c.slug)&&<p>New works coming soon.</p>}</div></section>)}
+  <section class="section collection-archive-top" data-reveal>
+    <p class="eyebrow">Browse by collection</p>
+    <CTA href="/all-works/">View all artworks</CTA>
+  </section>
+  <div class="collection-archive">
+    {collections.map((collection, index) => <CollectionArchiveRow collection={collection} works={works.filter(artwork => artwork.collection === collection.slug)} index={index} />)}
+  </div>
 </Layout>

@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ArtworkImage from '../components/ArtworkImage.astro';
+import { getPortfolio } from '../lib/content';
+
+const { works, collections } = await getPortfolio();
+const collectionTitle = (slug: string) => collections.find(collection => collection.slug === slug)?.title || slug;
+---
+<Layout title="All works" description="Browse every published artwork by Sara Milojević.">
+  <section class="section all-works-page">
+    <header class="all-works-heading">
+      <div><p class="eyebrow">Complete archive</p><h1>All <em>works</em></h1></div>
+      <p><span data-work-count>{works.length}</span> artworks</p>
+    </header>
+
+    <div class="all-works-controls" data-all-works-controls>
+      <label class="all-works-search">
+        <span>Search</span>
+        <input type="search" data-work-search placeholder="Search by title, collection, medium, or year" autocomplete="off" />
+      </label>
+      <div class="all-works-toolbar">
+        <div class="all-works-filters" aria-label="Filter artworks by collection">
+          <button type="button" class="is-active" data-work-filter="all" aria-pressed="true">All</button>
+          {collections.map(collection => <button type="button" data-work-filter={collection.slug} aria-pressed="false">{collection.title}</button>)}
+        </div>
+        <div class="all-works-views" aria-label="Choose artwork view">
+          <button type="button" class="is-active" data-work-view="grid" aria-label="Grid view" title="Grid view" aria-pressed="true"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="6" height="6"></rect><rect x="12" y="2" width="6" height="6"></rect><rect x="2" y="12" width="6" height="6"></rect><rect x="12" y="12" width="6" height="6"></rect></svg></button>
+          <button type="button" data-work-view="list" aria-label="List view" title="List view" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 4h16M2 10h16M2 16h16"></path></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="all-works-grid" data-all-works>
+      {works.map((artwork, index) => <a
+        class="all-work-item"
+        href={`/artwork/${artwork.slug}/`}
+        data-work-item
+        data-collection={artwork.collection}
+        data-search={`${artwork.title} ${collectionTitle(artwork.collection)} ${artwork.medium} ${artwork.year || ''}`.toLowerCase()}
+      >
+        <span class="all-work-number">{String(index + 1).padStart(2, '0')}</span>
+        <div class="all-work-media"><ArtworkImage image={artwork.images[0]} /></div>
+        <div class="all-work-copy">
+          <h2>{artwork.title}</h2>
+          <p>{collectionTitle(artwork.collection)}{artwork.year && <span class="all-work-inline-year">{` · ${artwork.year}`}</span>}</p>
+        </div>
+        {artwork.year && <span class="all-work-year">{artwork.year}</span>}
+        <p class="all-work-details">{artwork.medium}{artwork.dimensions && ` · ${artwork.dimensions.widthCm} × ${artwork.dimensions.heightCm} cm`}</p>
+      </a>)}
+    </div>
+    <p class="all-works-empty" data-works-empty hidden>No artworks match this search.</p>
+  </section>
+</Layout>

@@ -1,6 +1,7 @@
 ---
 import { imageUrl, type ArtworkImage } from '../lib/content';
+import LoadingImage from './LoadingImage.astro';
 interface Props { image: ArtworkImage; eager?: boolean; decorative?: boolean }
 const { image, eager = false, decorative = false } = Astro.props;
 ---
-<img src={imageUrl(image.src)} width={image.width} height={image.height} alt={decorative ? '' : image.alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} />
+<LoadingImage src={imageUrl(image.src)} width={image.width} height={image.height} alt={decorative ? '' : image.alt} eager={eager} />

@@ -1,0 +1,15 @@
+---
+interface Props {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  eager?: boolean;
+  className?: string;
+}
+
+const { src, width, height, alt, eager = false, className } = Astro.props;
+---
+<span class:list={['loading-image', className]} data-image-loader style={`aspect-ratio:${width}/${height}`}>
+  <img src={src} width={width} height={height} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} />
+</span>

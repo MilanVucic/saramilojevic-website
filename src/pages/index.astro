@@ -6,11 +6,14 @@ import CollectionFeature from '../components/CollectionFeature.astro';
 import CTA from '../components/CTA.astro';
 import { getPortfolio, imageUrl, site } from '../lib/content';
 const { works, collections } = await getPortfolio();
-const hero = works.find(a=>a.slug===site.heroArtwork) || works[0];
+const hero = works.find(a => a.slug === site.heroArtwork) || works[0];
 const heroWorks = ((site.heroArtworks as string[] | undefined) || [hero?.slug])
   .map(slug => works.find(work => work.slug === slug))
   .filter((work): work is NonNullable<typeof work> => Boolean(work));
 const heroImages = (heroWorks.length ? heroWorks : hero ? [hero] : []).map(work => imageUrl(work.images[0].full || work.images[0].src));
+const selectedGroups = collections
+  .map(collection => ({ collection, works: works.filter(work => work.collection === collection.slug).slice(0, 3) }))
+  .filter(group => group.works.length);
 const [firstName, ...surname] = site.name.split(' ');
 ---
 <Layout title="Selected works">
@@ -20,12 +23,23 @@ const [firstName, ...surname] = site.name.split(' ');
     <div class="hero-bottom"><span>Selected works{hero.year && ` / ${hero.year}`}</span><a href="#selected">Scroll to explore ↓</a></div>
   </section>}
   <section id="selected" class="section" data-reveal>
-    <div class="section-heading"><div><p class="eyebrow">A selection from the studio</p><h2>Selected <em>works</em></h2></div><a class="text-link" href="/collections/">All collections ↗</a></div>
-    <div class="works-grid">{works.filter(a=>a.featured).map(a=><ArtworkCard artwork={a}/>)}</div>
+    <div class="section-heading"><div><p class="eyebrow">A selection from the studio</p><h2>Selected <em>works</em></h2></div><CTA href="/all-works/">All works</CTA></div>
+    <div class="selected-works-stage" data-selected-works>
+      {selectedGroups.map((group, groupIndex) =>
+        <div
+          class:list={['works-grid', 'selected-works-group', { 'is-active': groupIndex === 0 }]}
+          data-selected-group
+          data-collection={group.collection.slug}
+          aria-hidden={groupIndex === 0 ? 'false' : 'true'}
+        >
+          {group.works.map(artwork => <ArtworkCard artwork={artwork}/>)}
+        </div>
+      )}
+    </div>
   </section>
   <section id="about" class="section about" data-reveal><div><p class="eyebrow">The artist</p><h2>A practice of<br/><em>looking closer.</em></h2></div><div><p class="intro">{site.intro}</p><p>{site.biography}</p><a class="text-link about-link" href="/about/">Read about Sara ↗</a><span class="signature">{site.name}</span></div></section>
   <div class="collection-features">
-    {collections.map(c=><CollectionFeature collection={c} works={works.filter(a=>a.collection===c.slug)}/>)}
+    {collections.map(collection => <CollectionFeature collection={collection} works={works.filter(artwork => artwork.collection === collection.slug)}/>)}
   </div>
   <section class="archive section" data-reveal><p class="eyebrow">Discover the complete collection</p><h2>Every painting,<br/><em>its own world.</em></h2><CTA href="/collections/">View all collections</CTA></section>
 </Layout>

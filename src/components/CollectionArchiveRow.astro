@@ -1,0 +1,49 @@
+---
+import ArtworkImage from './ArtworkImage.astro';
+import CTA from './CTA.astro';
+import type { Artwork, PortfolioCollection } from '../lib/content';
+
+interface Props {
+  collection: PortfolioCollection;
+  works: Artwork[];
+  index: number;
+}
+
+const { collection, works, index } = Astro.props;
+---
+<section class:list={['section', 'collection-archive-row', { 'is-reversed': index % 2 === 1 }]} data-reveal>
+  <div class="collection-archive-copy">
+    <p class="eyebrow">Collection</p>
+    <h2>{collection.title}</h2>
+    {collection.year && <p class="collection-archive-year">{collection.year}</p>}
+    <p class="collection-archive-description">{collection.description}</p>
+    <CTA href={`/collection/${collection.slug}/`}>View collection</CTA>
+  </div>
+  <div class="collection-archive-carousel" data-collection-carousel aria-roledescription="carousel" aria-label={`${collection.title} artworks`}>
+    <div class="collection-archive-viewport">
+      {works.map((artwork, artworkIndex) =>
+        <a
+          class:list={['collection-archive-slide', { 'is-active': artworkIndex === 0 }]}
+          data-carousel-slide
+          aria-hidden={artworkIndex === 0 ? 'false' : 'true'}
+          href={`/artwork/${artwork.slug}/`}
+        >
+          <ArtworkImage image={artwork.images[0]} />
+        </a>
+      )}
+      {!works.length && <p class="collection-empty">New works coming soon.</p>}
+    </div>
+    {works.length > 0 && <div class="collection-carousel-navigation">
+      <button type="button" data-carousel-previous aria-label={`Previous ${collection.title} artwork`} disabled={works.length < 2}>←</button>
+      <div class="collection-carousel-caption" aria-live="polite">
+        <div class="collection-carousel-titles">
+          {works.map((artwork, artworkIndex) =>
+            <span data-carousel-title hidden={artworkIndex !== 0}>{artwork.title}</span>
+          )}
+        </div>
+        <span class="collection-carousel-count"><span data-carousel-current>01</span> / {String(works.length).padStart(2, '0')}</span>
+      </div>
+      <button type="button" data-carousel-next aria-label={`Next ${collection.title} artwork`} disabled={works.length < 2}>→</button>
+    </div>}
+  </div>
+</section>
