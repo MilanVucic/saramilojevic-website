@@ -1162,43 +1162,6 @@ dd {
     object-position: 76% 50%
 }
 
-.about-carousel-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    margin-top: 10px;
-    color: var(--muted);
-    font-size: 10px;
-    letter-spacing: .08em;
-    text-transform: uppercase
-}
-
-.about-carousel-controls > div {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0
-}
-
-.about-carousel-controls button {
-    border: 0;
-    padding: 2px 4px;
-    background: transparent;
-    color: var(--ink);
-    font: inherit;
-    cursor: pointer
-}
-
-.about-carousel-controls button:hover {
-    color: var(--accent)
-}
-
-.about-carousel-count {
-    min-width: 42px;
-    text-align: center
-}
-
 .about-biography {
     padding-top: 30px
 }
@@ -1216,33 +1179,6 @@ dd {
     color: var(--ink)
 }
 
-.exhibition-gallery .loading-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover
-}
-
-.exhibition-gallery figcaption {
-    margin-top: 10px;
-    color: var(--muted);
-    font-size: 10px;
-    letter-spacing: .12em;
-    text-transform: uppercase
-}
-
-.cv-content {
-    min-width: 0
-}
-
-.exhibition-gallery {
-    margin-bottom: 58px
-}
-
-.exhibition-gallery-secondary {
-    width: 74%;
-    margin: 24px 0 0 auto
-}
-
 .cv-section {
     display: grid;
     grid-template-columns:minmax(260px, .7fr) minmax(0, 1.3fr);
@@ -1256,6 +1192,32 @@ dd {
     position: sticky;
     top: 40px;
     align-self: start
+}
+
+.exhibition-cv-section .cv-heading {
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 42px 34px;
+    background-position: center;
+    background-size: cover;
+    overflow: hidden
+}
+
+.solo-exhibitions .cv-heading {
+    background-image: linear-gradient(90deg, rgb(0 0 0 / 40%) 0%, rgb(0 0 0 / 22%) 46%, transparent 100%), url('/assets/gallery-2.JPG')
+}
+
+.group-exhibitions .cv-heading {
+    background-image: linear-gradient(90deg, rgb(0 0 0 / 40%) 0%, rgb(0 0 0 / 22%) 46%, transparent 100%), url('/assets/gallery-1.jpg')
+}
+
+.exhibition-cv-section .cv-heading .eyebrow,
+.exhibition-cv-section .cv-heading h2 {
+    position: relative;
+    z-index: 1;
+    color: #fff
 }
 
 .cv-heading h2 {
@@ -1956,15 +1918,6 @@ dd {
         font-size: 20px
     }
 
-    .exhibition-gallery {
-        margin-bottom: 42px
-    }
-
-    .exhibition-gallery-secondary {
-        width: 86%;
-        margin-top: 14px
-    }
-
     .cv-section {
         grid-template-columns:1fr;
         gap: 40px;
@@ -1974,6 +1927,11 @@ dd {
 
     .cv-heading {
         position: static
+    }
+
+    .exhibition-cv-section .cv-heading {
+        min-height: 390px;
+        padding: 32px 24px
     }
 
     .cv-list li {

@@ -48,13 +48,13 @@ const groupExhibitions = [
             <LoadingImage src="/assets/artist-3.JPG" alt="Sara Milojević standing beside a large green and pink painting in her atelier" width={4320} height={3456} />
           </div>
         </div>
-        <div class="about-carousel-controls">
-          <span>Artist portrait - Sara Milojević</span>
-          <div>
-            <button type="button" data-carousel-previous aria-label="Previous portrait">←</button>
-            <span class="about-carousel-count" aria-live="polite"><span data-carousel-current>01</span> / 03</span>
-            <button type="button" data-carousel-next aria-label="Next portrait">→</button>
+        <div class="collection-carousel-navigation about-carousel-controls">
+          <button type="button" data-carousel-previous aria-label="Previous portrait">←</button>
+          <div class="collection-carousel-caption" aria-live="polite">
+            <div class="collection-carousel-titles"><span>Artist portrait — Sara Milojević</span></div>
+            <span class="collection-carousel-count"><span data-carousel-current>01</span> / 03</span>
           </div>
+          <button type="button" data-carousel-next aria-label="Next portrait">→</button>
         </div>
       </div>
     </div>
@@ -73,27 +73,15 @@ const groupExhibitions = [
     </ol>
   </section>
 
-  <section class="section cv-section" aria-labelledby="solo-heading">
-    <div class="cv-heading"><p class="eyebrow">Selected history</p><h2 id="solo-heading">Solo<br/><em>exhibitions</em></h2></div>
-    <div class="cv-content">
-      <div class="exhibition-gallery" aria-label="Exhibition installation photographs">
-        <figure class="exhibition-gallery-primary">
-          <LoadingImage src="/assets/gallery-2.JPG" alt="Installation view of a gallery wall filled with pink artworks" width={5184} height={3456} />
-          <figcaption>Exhibition view</figcaption>
-        </figure>
-        <figure class="exhibition-gallery-secondary">
-          <LoadingImage src="/assets/gallery-1.jpg" alt="A visitor viewing Sara Milojević's work in a gallery" width={4129} height={3456} />
-          <figcaption>Gallery installation</figcaption>
-        </figure>
-      </div>
-      <ol class="cv-list">
-        {soloExhibitions.map(([year, detail]) => <li><time>{year}</time><p>{detail}</p></li>)}
-      </ol>
-    </div>
+  <section class="section cv-section exhibition-cv-section solo-exhibitions" aria-labelledby="solo-heading">
+    <div class="cv-heading"><h2 id="solo-heading"><em>Solo<br/>exhibitions</em></h2></div>
+    <ol class="cv-list">
+      {soloExhibitions.map(([year, detail]) => <li><time>{year}</time><p>{detail}</p></li>)}
+    </ol>
   </section>
 
-  <section class="section cv-section" aria-labelledby="group-heading">
-    <div class="cv-heading"><p class="eyebrow">Selected history</p><h2 id="group-heading">Group exhibitions<br/><em>& projects</em></h2></div>
+  <section class="section cv-section exhibition-cv-section group-exhibitions" aria-labelledby="group-heading">
+    <div class="cv-heading"><h2 id="group-heading">Group<br/><em>exhibitions</em></h2></div>
     <ol class="cv-list">
       {groupExhibitions.map(([year, detail]) => <li><time>{year}</time><p>{detail}</p></li>)}
     </ol>

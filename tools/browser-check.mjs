@@ -38,8 +38,10 @@ try{
     const {data}=await call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});await writeFile(path.join(profile,`home-${width}.png`),Buffer.from(data,'base64'));
    }
    if(route==='/about/'){
+    if(!await evaluate(`document.querySelector('.about-carousel-controls.collection-carousel-navigation')&&document.querySelector('.about-carousel-controls .collection-carousel-caption')?.textContent.includes('Artist portrait — Sara Milojević')&&document.querySelector('.about-carousel-controls [data-carousel-previous]')?.nextElementSibling?.classList.contains('collection-carousel-caption')&&document.querySelector('.about-carousel-controls .collection-carousel-caption')?.nextElementSibling?.hasAttribute('data-carousel-next')`))throw Error(`${width} about: portrait carousel controls do not match Collections`);
     await evaluate(`document.querySelector('[data-carousel-next]').click()`);
     if(!await evaluate(`document.querySelector('[data-carousel-current]').textContent==='02'&&document.querySelectorAll('[data-carousel-slide].is-active').length===1`))throw Error(`${width} about: portrait carousel did not advance`);
+    if(!await evaluate(`!document.querySelector('.exhibition-gallery-section')&&getComputedStyle(document.querySelector('.solo-exhibitions .cv-heading')).backgroundImage.includes('gallery-2.JPG')&&getComputedStyle(document.querySelector('.group-exhibitions .cv-heading')).backgroundImage.includes('gallery-1.jpg')`))throw Error(`${width} about: exhibition heading backgrounds are incorrect`);
    }
    if(route==='/collections/'){
     if(!await evaluate(`!document.querySelector('main>section.page-intro')&&document.querySelectorAll('.collection-archive-row').length>1&&document.querySelectorAll('.collection-archive-copy .button').length===document.querySelectorAll('.collection-archive-row').length&&document.querySelectorAll('.collection-archive-row')[1].classList.contains('is-reversed')`))throw Error(`${width} collections: alternating archive layout is incomplete`);
