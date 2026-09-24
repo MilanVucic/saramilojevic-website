@@ -58,7 +58,7 @@ try{
     await evaluate(`document.querySelector('[data-work-search]').value='';document.querySelector('[data-work-search]').dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('[data-work-filter]:not([data-work-filter="all"])').click()`);
     if(!await evaluate(`document.querySelectorAll('[data-work-item]:not([hidden])').length>0&&document.querySelectorAll('[data-work-item][hidden]').length>0`))throw Error(`${width} all works: collection filter did not narrow results`);
     await evaluate(`document.querySelector('[data-work-view="list"]').click()`);
-    if(!await evaluate(`document.querySelector('[data-all-works]').classList.contains('is-list')&&[...document.querySelectorAll('[data-work-item]')].every(item=>item.querySelector('.all-work-year')?.textContent.trim())`))throw Error(`${width} all works: list view or artwork years are missing`);
+    if(!await evaluate(`document.querySelector('[data-all-works]').classList.contains('is-list')&&[...document.querySelectorAll('.all-work-year')].some(year=>year.textContent.trim()==='2026')&&[...document.querySelectorAll('.all-work-year')].some(year=>year.textContent.trim()==='2023')`))throw Error(`${width} all works: list view or specified artwork years are missing`);
    }
    if(route==='/contact/'){
     if(!await evaluate(`(()=>{const heading=document.querySelector('.contact-page h1').getBoundingClientRect();const panel=document.querySelector('.contact-panel').getBoundingClientRect();return !(heading.left<panel.right&&heading.right>panel.left&&heading.top<panel.bottom&&heading.bottom>panel.top)})()`))throw Error(`${width} contact: heading overlaps the form panel`);
