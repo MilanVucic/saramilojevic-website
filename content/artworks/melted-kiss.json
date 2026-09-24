@@ -1,0 +1,23 @@
+{
+  "slug": "melted-kiss",
+  "title": "Melted Kiss",
+  "collection": "crimson-and-scarlet",
+  "medium": "Oil on canvas",
+  "dimensions": {
+    "widthCm": 40,
+    "heightCm": 40
+  },
+  "description": "Part of the Crimson and Scarlet series, this small-format painting captures an intense, visceral moment between a man and a woman in the act of kissing. As their faces meet, the point of contact dissolves entirely - their heads melting together into a single, unified, and fluid mass. The piece is created using a strict, deliberate color restriction: strictly oil paint limited to pure titanium white, deep crimson for dark values, and vibrant scarlet for lighter tones. This high-contrast red palette heightens the physical and psychological energy of the composition, turning a passionate gesture into an almost monstrous, surreal fusion. The artwork explores the threshold where ultimate intimacy collapses individual identity, creating a soft yet terrifying state of total absorption.",
+  "readyToHang": true,
+  "order": 2,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "crimson-and-scarlet/melted-kiss.JPG",
+      "width": 1802,
+      "height": 1806,
+      "alt": "Melted Kiss, oil on canvas"
+    }
+  ]
+}

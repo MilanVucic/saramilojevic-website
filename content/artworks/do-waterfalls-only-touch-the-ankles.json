@@ -1,0 +1,29 @@
+{
+  "slug": "do-waterfalls-only-touch-the-ankles",
+  "title": "Do Waterfalls Only Touch the Ankles?",
+  "collection": "crimson-and-scarlet",
+  "medium": "Oil on canvas",
+  "dimensions": {
+    "widthCm": 100,
+    "heightCm": 80
+  },
+  "description": "Inspired by a poem I wrote, Do Waterfalls Only Touch the Ankles? is a large-format painting that captures a quiet, tactile moment where written poetry meets figurative form. In this piece, only the lower half of the female nude is visible - specifically the curve of the hips and legs. From the waist up, the body is completely veiled under a flat, semi-transparent white sheet. I wanted this translucent surface to act as an ethereal boundary, softening the figure beneath while creating a sense of weightlessness and quiet mystery. Working with a vibrant palette of deep crimsons, bright scarlets, soft pinks, and white, I explored the rhythm of exposure and concealment. The red and pink tones bring emotional warmth and physical presence, while the sheer white veil transforms the body into a poetic, fluid landscape.",
+  "readyToHang": true,
+  "order": 1,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "crimson-and-scarlet/do-waterfalls-only-touch-the-ankles-1.JPG",
+      "width": 3274,
+      "height": 2585,
+      "alt": "Do Waterfalls Only Touch the Ankles?, oil on canvas"
+    },
+    {
+      "src": "crimson-and-scarlet/do-waterfalls-only-touch-the-ankles-2.jpg",
+      "width": 5166,
+      "height": 2502,
+      "alt": "Do Waterfalls Only Touch the Ankles?, oil on canvas"
+    }
+  ]
+}

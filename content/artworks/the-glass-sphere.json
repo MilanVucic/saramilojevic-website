@@ -1,0 +1,23 @@
+{
+  "slug": "the-glass-sphere",
+  "title": "The Glass Sphere",
+  "collection": "crimson-and-scarlet",
+  "medium": "Oil on canvas",
+  "dimensions": {
+    "widthCm": 70,
+    "heightCm": 50
+  },
+  "description": "Part of my Crimson & Scarlet series, this painting captures a complex emotional state where intense passion meets physical coldness. Rendered in a restricted palette of vibrant scarlet, deep crimson, and stark white, the composition shows an arrangement of glass objects on a table, centered around a hand reaching in to touch a clear glass sphere. For me, this piece is an investigation of a specific romantic feeling - one where fiery desire coexists with distance, vulnerability, and boundary. The hand’s soft, reaching gesture contrasts directly with the smooth, unyielding coldness of the glass. As the translucent objects refract the rich red light, the scene turns a classic still-life setup into a visceral metaphor for romantic tension, where touch seeks warmth in a space that remains cool and elusive.",
+  "readyToHang": true,
+  "order": 3,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "crimson-and-scarlet/the-glass-sphere.JPG",
+      "width": 4167,
+      "height": 2948,
+      "alt": "The Glass Sphere, oil on canvas"
+    }
+  ]
+}
