@@ -1,0 +1,24 @@
+{
+  "slug": "coincidence",
+  "title": "Coincidence",
+  "collection": "favorite-objects",
+  "year": 2024,
+  "medium": "Oil on canvas",
+  "dimensions": {
+    "widthCm": 50,
+    "heightCm": 70
+  },
+  "description": "Executed in rich, intense oils, this painting presents a powerful dialogue between nature and hyper-stylized culture. Viewed from behind, an androgynous figure features a towering, high-volume yellow hairstyle that cuts a striking, architectural silhouette. The figure gazes into a lush green landscape that shifts and morphs to mimic this exact, vertical shape. The artwork examines the friction between human artifice and organic existence. The rigid, artificial geometry of the vibrant yellow hair stands in stark contrast to the natural world, yet they find a strange, symbiotic alignment as the greenery takes its form. Floating between these two worlds, a single soap bubble serves as a fragile, poetic element of transience. It is a striking commentary on identity, gender subversion, and our tendency to reshape nature in our own image.",
+  "readyToHang": true,
+  "order": 8,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "favorite-objects/coincidence.JPG",
+      "width": 3022,
+      "height": 4114,
+      "alt": "Coincidence, oil on canvas"
+    }
+  ]
+}

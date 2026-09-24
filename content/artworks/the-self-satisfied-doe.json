@@ -1,0 +1,24 @@
+{
+  "slug": "the-self-satisfied-doe",
+  "title": "The Self-Satisfied Doe",
+  "collection": "favorite-objects",
+  "year": 2024,
+  "medium": "Oil on canvas",
+  "dimensions": {
+    "widthCm": 100,
+    "heightCm": 70
+  },
+  "description": "The Self-Satisfied Doe offers a sharp, sarcastic commentary on modern intimacy and emotional self-reliance. In a stark departure from my usual backgrounds, this canvas is filled with a hyper-colorful, chaotic pattern. In the center, a vulnerable pink doe, rendered with a fragile, glass-like quality, lies curled up like a wounded animal. While the surrounding background initially resembles a harmless, vibrant tapestry, a closer look reveals a dense scattering of adult toys and intimacy apparatuses. Through this visual subversion, I explore the bittersweet reality of self-satisfaction - meditating on the thin line between protective isolation and the heavy, independent armor we build while searching for love.",
+  "readyToHang": true,
+  "order": 11,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "favorite-objects/the-self-satisfied-doe.JPG",
+      "width": 3469,
+      "height": 2424,
+      "alt": "The Self-Satisfied Doe, oil on canvas"
+    }
+  ]
+}

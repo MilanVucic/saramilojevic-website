@@ -1,0 +1,24 @@
+{
+  "slug": "tell-me-whom-you-love",
+  "title": "Tell Me Whom You Love",
+  "collection": "favorite-objects",
+  "year": 2024,
+  "medium": "Oil on canvas",
+  "dimensions": {
+    "widthCm": 60,
+    "heightCm": 60
+  },
+  "description": "This 60 × 60 cm oil on canvas painting delivers a striking, visceral commentary on desire, power, and vulnerability. Inspired by a provocative Dior advertising campaign, the composition captures a tense, high-contrast moment where a Doberman clamps its jaws around a model’s leg. Rendered in rich, textured oils, the work subverts the polished imagery of high fashion, exposing the raw, animalistic tension beneath the surface of luxury. The sleek elegance of the human form collides with the sharp, primal aggression of the predator, blurring the line between submission and control, affection and violence. By juxtaposing the world of haute couture with untamed instinct, the painting questions the price of devotion and the inherent power dynamics within relationships, obsession, and consumer culture.",
+  "readyToHang": true,
+  "order": 9,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "favorite-objects/tell-me-whom-you-love.JPG",
+      "width": 1200,
+      "height": 1200,
+      "alt": "Tell Me Whom You Love, oil on canvas"
+    }
+  ]
+}

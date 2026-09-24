@@ -1,0 +1,30 @@
+{
+  "slug": "my-love-is-like-a-varnished-miniature",
+  "title": "My Love is Like a Varnished Miniature",
+  "collection": "favorite-objects",
+  "year": 2024,
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 140,
+    "heightCm": 160
+  },
+  "description": "Inspired by a cherished personal object - a lacquered miniature inherited from my grandmother - this artwork explores intimacy, memory, and emotional longing. Originally exhibited as part of my solo exhibition Favorite Objects, the piece draws visual and conceptual reference from Roland Barthes’ A Lover's Discourse: Fragments and his evocative phrase: “My love is like a varnished miniature.” The composition depicts an energetic narrative scene of an archer on horseback targeting a deer, juxtaposed against a soft, contemporary pink background. By placing a historical, decorative hunt scene onto a flat, modern color field, the painting bridges personal nostalgia with universal themes of emotional pursuit, vulnerability, and romantic discourse.",
+  "readyToHang": true,
+  "order": 1,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "favorite-objects/my-love-is-like-a-varnished-miniature-1.jpg",
+      "width": 4344,
+      "height": 5792,
+      "alt": "My Love is Like a Varnished Miniature, acrylic on canvas"
+    },
+    {
+      "src": "favorite-objects/my-love-is-like-a-varnished-miniature-2.jpg",
+      "width": 3909,
+      "height": 4402,
+      "alt": "My Love is Like a Varnished Miniature, acrylic on canvas"
+    }
+  ]
+}

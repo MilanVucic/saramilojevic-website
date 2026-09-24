@@ -1,0 +1,24 @@
+{
+  "slug": "all-the-love-is-mine",
+  "title": "All The Love Is Mine",
+  "collection": "favorite-objects",
+  "year": 2024,
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 160,
+    "heightCm": 140
+  },
+  "description": "Executed in an expressive, raw style, this artwork features a glass snow globe resting on a vibrant yellow background. Rather than a defined winter scene, the sphere encloses fluid, abstract color stains alongside a red sketch of a solitary deer - evoking a sense of captured nostalgia and quiet inner states. Direct text is integrated into the composition: the phrase 'Sva ljubav je moja' (All the love is mine) is hand-written in charcoal above the globe, then heavily erased and crossed out with a bold black line. This gestural tension explores emotional irony, vulnerability, and the act of asserting then revoking personal affection, creating a powerful dialogic interaction between text, drawing, and color.",
+  "readyToHang": true,
+  "order": 4,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "favorite-objects/all-the-love-is-mine.jpg",
+      "width": 4584,
+      "height": 3757,
+      "alt": "All The Love Is Mine, acrylic on canvas"
+    }
+  ]
+}

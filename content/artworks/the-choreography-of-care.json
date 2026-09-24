@@ -1,0 +1,24 @@
+{
+  "slug": "the-choreography-of-care",
+  "title": "The Choreography of Care",
+  "collection": "favorite-objects",
+  "year": 2024,
+  "medium": "Oil on canvas",
+  "dimensions": {
+    "widthCm": 100,
+    "heightCm": 160
+  },
+  "description": "In this large-scale oil painting, two doll-like female figures engage in a tense, dynamic movement that blurs the line between a delicate dance and a silent struggle. Wrapped in and fighting against a sheer, transparent fabric, their bodies are illuminated with subtle, shimmering highlights, emphasizing both their synthetic form and their vulnerability. The concept is deeply rooted in a feminist perspective, originally inspired by the seemingly mundane domestic comment: “No need to hand wash.” This phrase transcends household chores to become a metaphor for the societal expectations of emotional labor, maintenance, and the “gentle handling” expected of women. In the background, a nod to Henri Matisse's iconic aesthetic introduces a vibrant, colorful landscape and a small, distinct blue chair. This art-historical reference serves as a scenic, almost theatrical backdrop, contrasting the intense psychological struggle in the foreground with a sense of playful, vivid escapism.",
+  "readyToHang": true,
+  "order": 7,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "favorite-objects/the-choreography-of-care.JPG",
+      "width": 2915,
+      "height": 4644,
+      "alt": "The Choreography of Care, oil on canvas"
+    }
+  ]
+}

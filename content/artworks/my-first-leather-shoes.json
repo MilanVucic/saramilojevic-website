@@ -1,0 +1,24 @@
+{
+  "slug": "my-first-leather-shoes",
+  "title": "My First Leather Shoes",
+  "collection": "favorite-objects",
+  "year": 2024,
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 140,
+    "heightCm": 110
+  },
+  "description": "This painting is a key piece from my Favorite Objects exhibition. It features an extreme close-up, overhead perspective of my very first pair of child’s shoes. Set against a vibrant, energetic orange background, the focus is entirely on the worn, textured detail of the black leather and the contrasting, colorful rainbow-colored bows. The story behind these shoes is profound: they were my father’s first gift to me. He purchased them in Bulgaria, yet they were original Italian leather shoes, making them rare and precious. I have preserved them for decades. This artwork captures the tactile memory of that black leather and those joyful rainbow bows, my father’s affection, and the symbolic start of my life’s journey. The intense orange background elevates the humble subject, transforming a simple memory into a preserved, dynamic artifact.",
+  "readyToHang": true,
+  "order": 2,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "favorite-objects/my-first-leather-shoes.JPG",
+      "width": 4503,
+      "height": 3456,
+      "alt": "My First Leather Shoes, acrylic on canvas"
+    }
+  ]
+}

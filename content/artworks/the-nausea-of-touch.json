@@ -1,0 +1,24 @@
+{
+  "slug": "the-nausea-of-touch",
+  "title": "The Nausea of Touch",
+  "collection": "favorite-objects",
+  "year": 2024,
+  "medium": "Oil on canvas",
+  "dimensions": {
+    "widthCm": 45,
+    "heightCm": 50
+  },
+  "description": "Rendered in oil on canvas, The Nausea of Touch is a deeply conceptual piece born from an intersection of existential philosophy, high-fashion subversion, and the visceral anxiety of romantic experience. The artwork draws its core inspiration from Jean-Paul Sartre’s seminal diary novel Nausea, translating philosophical dread into a tangible, bodily sensation. Visually, the composition references a striking runway detail by Bottega Veneta, where models carried water inside condoms over their hands. While the original fashion statement carried ecological undertones, I subvert and reshape this imagery into a double-edged metaphor for modern love. The liquid-filled, restrictive membranes trapping the hands become a visual manifestation of emotional suffocation. It explores the profound, existential nausea that can accompany intimacy - where the very tools of human connection and touch become heavy, paralyzed, and weighted down by the anxiety of loving another.",
+  "readyToHang": true,
+  "order": 6,
+  "featured": false,
+  "published": true,
+  "images": [
+    {
+      "src": "favorite-objects/the-nausea-of-touch.JPG",
+      "width": 2006,
+      "height": 2235,
+      "alt": "The Nausea of Touch, oil on canvas"
+    }
+  ]
+}
