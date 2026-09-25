@@ -1,0 +1,19 @@
+.not-found-layout main {
+    display: flex
+}
+
+.not-found-page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding-top: clamp(80px, 12vw, 170px);
+    padding-bottom: clamp(90px, 13vw, 190px)
+}
+
+.not-found-page > p:last-of-type {
+    max-width: 480px;
+    margin-bottom: 32px;
+    color: var(--muted)
+}
