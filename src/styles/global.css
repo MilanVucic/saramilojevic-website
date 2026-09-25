@@ -434,6 +434,24 @@ p + p {
     padding-bottom: 110px
 }
 
+.about-home-portrait {
+    width: min(100%, 440px);
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    background: #e9e6de
+}
+
+.about-home-portrait .loading-image {
+    height: 100%;
+    aspect-ratio: auto !important
+}
+
+.about-home-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover
+}
+
 .about .intro {
     font-family: var(--serif);
     font-size: 28px;
