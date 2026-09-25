@@ -66,7 +66,9 @@ try {
                 throw Error(`${width} ${route}: section reveal was not registered: ${JSON.stringify(state)}${errors.length ? `\n${errors.join('\n')}` : ''}`);
             }
             if (route === '/') {
-                if (!await evaluate(`!!document.querySelector('[data-hero] .hero-slide-loader')&&!document.querySelector('[data-hero] canvas')`)) throw Error(`${width} homepage: timed hero did not initialize`);
+                if (width < 761) {
+                    if (await evaluate(`!!document.querySelector('[data-hero] .hero-slide-loader')||performance.getEntriesByType('resource').some(resource=>resource.name.includes('/_astro/hero.'))`)) throw Error(`${width} homepage: unnecessary timed-hero module loaded on mobile`);
+                } else if (!await evaluate(`!!document.querySelector('[data-hero] .hero-slide-loader')&&!document.querySelector('[data-hero] canvas')`)) throw Error(`${width} homepage: timed hero did not initialize`);
                 if (!await evaluate(`document.documentElement.classList.contains('reveal-enabled')`)) throw Error(`${width} homepage: section reveals did not initialize`);
                 if (!await evaluate(`document.querySelector('#selected .section-heading .button')?.getAttribute('href')==='/artworks/'&&[...document.querySelectorAll('[data-selected-group]')].every(group=>group.querySelectorAll('.work-card').length<=3)&&document.querySelector('[data-selected-group].is-active')?.querySelectorAll('.work-card').length===3`)) throw Error(`${width} homepage: Selected Works groups or CTA are incorrect`);
                 if (width === 1440) {

@@ -396,4 +396,5 @@ if (!reduced) {
  }
 }
 const hero=document.querySelector('[data-hero]');
-if(hero) import('./hero.js').then(({startHero})=>startHero(hero)).catch(()=>{/* Static artwork remains visible if enhancement is unavailable. */});
+const mobileHeroAutoplayDisabled=hero?.dataset.heroMobileAutoplay==='false'&&matchMedia('(max-width: 760px)').matches;
+if(hero&&!mobileHeroAutoplayDisabled)import('./hero.js').then(({startHero})=>startHero(hero)).catch(()=>{/* Static artwork remains visible if enhancement is unavailable. */});
