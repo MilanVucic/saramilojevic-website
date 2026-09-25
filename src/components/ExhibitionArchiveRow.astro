@@ -24,7 +24,10 @@ const cover = {
     <p class="eyebrow">{exhibition.kind} / {exhibition.year}</p>
     <h2>{exhibition.title}</h2>
     {exhibition.originalTitle && <p class="exhibition-original-title">{exhibition.originalTitle}</p>}
-    <p class="exhibition-venue">{exhibition.venue}, {exhibition.location}</p>
+    <a class="exhibition-venue" href={exhibition.venueUrl} target="_blank" rel="noopener noreferrer">
+      <span>{exhibition.venue}, {exhibition.location}</span>
+      <span aria-hidden="true">&#8599;</span>
+    </a>
     <p class="exhibition-summary">{exhibition.summary}</p>
     <CTA href={`/exhibition/${exhibition.slug}/`}>View exhibition</CTA>
   </div>

@@ -2,8 +2,8 @@
 import { site } from '../lib/content';
 import { footerLinks } from '../config/links';
 import '../styles/global.css';
-interface Props { title: string; description?: string }
-const { title, description = site.intro } = Astro.props;
+interface Props { title: string; description?: string; bodyClass?: string }
+const { title, description = site.intro, bodyClass } = Astro.props;
 const path = Astro.url.pathname;
 ---
 <!doctype html>
@@ -16,7 +16,7 @@ const path = Astro.url.pathname;
     <meta name="theme-color" content="#f6f4ef" />
     <link rel="icon" type="image/png" href="/favicon.png" />
   </head>
-  <body>
+  <body class={bodyClass}>
     <a class="skip" href="#main">Skip to content</a>
     <header class="header">
       <a href="/" class="wordmark">{site.name}</a>
@@ -25,6 +25,7 @@ const path = Astro.url.pathname;
       </button>
       <nav id="main-navigation" data-mobile-nav aria-label="Main navigation">
         <a href="/collections/" aria-current={path.startsWith('/collections') || path.startsWith('/collection/') ? 'page' : undefined}>Collections</a>
+        <a href="/artworks/" aria-current={path.startsWith('/artworks') || path.startsWith('/artwork/') ? 'page' : undefined}>Artworks</a>
         <a href="/exhibitions/" aria-current={path.startsWith('/exhibitions') || path.startsWith('/exhibition/') ? 'page' : undefined}>Exhibitions</a>
         <a href="/about/" aria-current={path === '/about/' ? 'page' : undefined}>About</a>
         <a href="/contact/" aria-current={path === '/contact/' ? 'page' : undefined}>Contact</a>

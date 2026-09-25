@@ -34,7 +34,7 @@ if (!reduced) {
  revealElements.forEach(element=>element.setAttribute('data-reveal',''));
  const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
   if(entry.isIntersecting){entry.target.classList.add('is-visible');revealObserver.unobserve(entry.target);}
- }),{threshold:.12,rootMargin:'0px 0px -8%'});
+ }),{threshold:0,rootMargin:'0px 0px -8%'});
  revealElements.forEach(element=>revealObserver.observe(element));
 }
 // Every content link and image works before these progressive enhancements load.
@@ -310,39 +310,6 @@ if(contactForm){
    submitButton.textContent=originalLabel;
   }
  });
-}
-const allWorks=document.querySelector('[data-all-works]');
-if(allWorks){
- const items=[...allWorks.querySelectorAll('[data-work-item]')];
- const search=document.querySelector('[data-work-search]');
- const filters=[...document.querySelectorAll('[data-work-filter]')];
- const views=[...document.querySelectorAll('[data-work-view]')];
- const count=document.querySelector('[data-work-count]');
- const empty=document.querySelector('[data-works-empty]');
- let activeFilter='all';
- const update=()=>{
-  const query=search.value.trim().toLowerCase();
-  let visible=0;
-  items.forEach(item=>{
-   const matchesCollection=activeFilter==='all'||item.dataset.collection===activeFilter;
-   const matchesSearch=!query||item.dataset.search.includes(query);
-   item.hidden=!(matchesCollection&&matchesSearch);
-   if(!item.hidden)visible++;
-  });
-  count.textContent=String(visible);
-  empty.hidden=visible!==0;
- };
- search.addEventListener('input',update);
- filters.forEach(button=>button.addEventListener('click',()=>{
-  activeFilter=button.dataset.workFilter;
-  filters.forEach(filter=>{const active=filter===button;filter.classList.toggle('is-active',active);filter.setAttribute('aria-pressed',String(active));});
-  update();
- }));
- views.forEach(button=>button.addEventListener('click',()=>{
-  const list=button.dataset.workView==='list';
-  allWorks.classList.toggle('is-list',list);
-  views.forEach(view=>{const active=view===button;view.classList.toggle('is-active',active);view.setAttribute('aria-pressed',String(active));});
- }));
 }
 const selectedWorks=document.querySelector('[data-selected-works]');
 if(selectedWorks){

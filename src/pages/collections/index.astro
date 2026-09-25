@@ -1,15 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import CollectionArchiveRow from '../../components/CollectionArchiveRow.astro';
-import CTA from '../../components/CTA.astro';
 import { getPortfolio } from '../../lib/content';
 const { works, collections } = await getPortfolio();
 ---
 <Layout title="Collections">
-  <section class="section collection-archive-top" data-reveal>
-    <p class="eyebrow">Browse by collection</p>
-    <CTA href="/all-works/">View all artworks</CTA>
-  </section>
   <div class="collection-archive">
     {collections.map((collection, index) => <CollectionArchiveRow collection={collection} works={works.filter(artwork => artwork.collection === collection.slug)} index={index} />)}
   </div>

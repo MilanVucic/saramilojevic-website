@@ -10,11 +10,11 @@ const education = [
 ];
 
 const soloExhibitions = [
-  ['2025', 'Exercises in Tenderness, Gallery of the Faculty of Fine Arts, Belgrade, Serbia'],
+  ['2025', 'Exercises in Tenderness, Gallery of the Faculty of Fine Arts, Belgrade, Serbia', 'exercises-in-tenderness'],
   ['2024', 'The Story That Already Happened: Fragments of Love, Gallery Krug, Petrovac, Serbia'],
   ['2024', 'Favorite Objects, Café-Gallery Meduza, Belgrade, Serbia'],
-  ['2023', 'Soft From Dreams, Gallery ŠTAB, Belgrade, Serbia'],
-  ['2022', 'The Root of Bark, Gallery ’73, Belgrade, Serbia'],
+  ['2023', 'Dreamy Softness, Gallery ŠTAB, Belgrade, Serbia', 'dreamy-softness'],
+  ['2022', 'The Root of Bark, Gallery ’73, Belgrade, Serbia', 'root-of-bark'],
   ['2019', 'Landscapes, Not Places, SKC Obrenovac Gallery, Obrenovac, Serbia'],
 ];
 
@@ -80,7 +80,16 @@ const portraitItems = [
   <section class="section cv-section exhibition-cv-section solo-exhibitions" aria-labelledby="solo-heading">
     <div class="cv-heading"><h2 id="solo-heading"><em>Solo<br/>exhibitions</em></h2></div>
     <ol class="cv-list">
-      {soloExhibitions.map(([year, detail]) => <li><time>{year}</time><p>{detail}</p></li>)}
+      {soloExhibitions.map(([year, detail, slug]) => (
+        <li>
+          <time>{year}</time>
+          <p>
+            {slug
+              ? <a class="cv-exhibition-link" href={`/exhibition/${slug}/`}><span>{detail}</span><span aria-hidden="true">&#8594;</span></a>
+              : detail}
+          </p>
+        </li>
+      ))}
     </ol>
   </section>
 

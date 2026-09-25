@@ -2,4 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import CTA from '../components/CTA.astro';
 ---
-<Layout title="Page not found"><section class="section page-intro"><p class="eyebrow">404</p><h1>A little off canvas.</h1><CTA href="/">Return home</CTA></section></Layout>
+<Layout title="Page not found" bodyClass="not-found-layout">
+  <section class="section page-intro not-found-page">
+    <p class="eyebrow">404</p>
+    <h1>A little off canvas.</h1>
+    <p>The page you were looking for is no longer here, or may never have existed.</p>
+    <CTA href="/">Return home</CTA>
+  </section>
+</Layout>

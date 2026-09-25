@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ArtworkCard from '../../components/ArtworkCard.astro';
+import BackBreadcrumb from '../../components/BackBreadcrumb.astro';
 import ImageCarousel from '../../components/ImageCarousel.astro';
 import CTA from '../../components/CTA.astro';
 import { getPortfolio, imageUrl } from '../../lib/content';
@@ -36,7 +37,10 @@ const carouselFrameRatio = Math.min(...a.images.map(image => image.width / image
 ---
 <Layout title={a.title} description={a.description}>
   <section class="section artwork-page">
-    <a class="text-link" href={`/collection/${c.slug}/`}>&#8592; {c.title}</a>
+    <div class="detail-meta-row">
+      <BackBreadcrumb href={`/collection/${c.slug}/`} label={c.title} />
+      <p class="eyebrow">{c.title}{a.year && ` / ${a.year}`}</p>
+    </div>
     <div class="artwork-layout">
       <div class="gallery" id="gallery">
         <ImageCarousel
@@ -50,13 +54,13 @@ const carouselFrameRatio = Math.min(...a.images.map(image => image.width / image
         />
       </div>
       <aside class="artwork-info">
-        <p class="eyebrow">{c.title}{a.year && ` / ${a.year}`}</p>
         <h1>{a.title}</h1>
         {a.description && <p>{a.description}</p>}
         <dl>
           <div><dt>Medium</dt><dd>{a.medium}</dd></div>
           {a.dimensions && <div><dt>Dimensions</dt><dd>{a.dimensions.widthCm} × {a.dimensions.heightCm} cm (W × H)</dd></div>}
           {a.year && <div><dt>Year</dt><dd>{a.year}</dd></div>}
+          <div><dt>Availability</dt><dd>{a.available ? 'Available for sale' : 'In a collection'}</dd></div>
           {a.readyToHang && <div><dt>Ready to hang</dt><dd>Yes</dd></div>}
         </dl>
         <CTA href={`/contact/?artwork=${encodeURIComponent(a.slug)}`}>Enquire about this work</CTA>
@@ -64,7 +68,7 @@ const carouselFrameRatio = Math.min(...a.images.map(image => image.width / image
     </div>
   </section>
   <section class="section">
-    <div class="section-heading"><h2>From the same <em>collection</em></h2><CTA href="/all-works/">View all artworks</CTA></div>
+    <div class="section-heading"><h2>From the same <em>collection</em></h2><CTA href="/artworks/">View all artworks</CTA></div>
     <div class="works-grid">{related.map(artwork => <ArtworkCard artwork={artwork}/>)}</div>
   </section>
 </Layout>

@@ -1,0 +1,107 @@
+---
+interface FilterOption {
+  value: string;
+  label: string;
+  description?: string;
+}
+
+interface Props {
+  collections: FilterOption[];
+  years: FilterOption[];
+  includeUndated?: boolean;
+  artworkCount: number;
+}
+
+const { collections, years, includeUndated = false, artworkCount } = Astro.props;
+const sizeOptions: FilterOption[] = [
+  { value: 'small', label: 'Small', description: 'Longest side up to 60 cm' },
+  { value: 'medium', label: 'Medium', description: 'Longest side 61–120 cm' },
+  { value: 'large', label: 'Large', description: 'Longest side over 120 cm' },
+];
+
+const groups = [
+  { name: 'collection', label: 'Collection', options: collections },
+  { name: 'year', label: 'Year', options: includeUndated ? [...years, { value: 'undated', label: 'Undated' }] : years },
+  { name: 'size', label: 'Dimensions', options: sizeOptions },
+];
+---
+<div class="all-works-controls" data-artwork-filter-root>
+  <div class="all-works-toolbar">
+    <button
+      type="button"
+      class="all-works-mobile-filter-toggle"
+      data-mobile-filter-toggle
+      aria-label="Show artwork filters"
+      aria-expanded="false"
+      aria-controls="artwork-filter-options"
+    >
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 4h15l-6 6.7v4.4l-3 1.5v-5.9L2.5 4Z"></path></svg>
+    </button>
+
+    <div class="all-works-filter-modal" data-filter-modal role="dialog" aria-modal="false" aria-hidden="true" aria-label="Artwork filters">
+      <div class="all-works-filter-surface">
+        <header class="all-works-filter-modal-header">
+          <p>Filters</p>
+          <button type="button" data-mobile-filter-close aria-label="Close artwork filters">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 6 8 8M14 6l-8 8"></path></svg>
+          </button>
+        </header>
+
+        <div class="all-works-search">
+          <label for="artwork-search">Search</label>
+          <input id="artwork-search" type="search" data-work-search placeholder="Search by title, collection, medium, or year" autocomplete="off" />
+          <button type="button" class="all-works-search-clear" data-clear-work-search aria-label="Clear artwork search" hidden>
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 6 8 8M14 6l-8 8"></path></svg>
+          </button>
+        </div>
+
+        <div class="all-works-filter-menus" id="artwork-filter-options" aria-label="Filter artworks">
+          {groups.map(group => (
+            <div class="all-works-filter-menu" data-filter-menu={group.name}>
+              <p class="all-works-mobile-filter-title">{group.label}</p>
+              <button type="button" class="all-works-filter-toggle" data-filter-menu-toggle aria-expanded="false">
+                <span>{group.label}: <strong data-filter-summary>All</strong></span>
+              </button>
+              <div class="all-works-filter-popup" data-filter-popup hidden>
+                {group.options.map(option => (
+                  <label class="all-works-filter-option">
+                    <input
+                      class="all-works-filter-input"
+                      type="checkbox"
+                      value={option.value}
+                      data-work-filter-group={group.name}
+                      data-filter-label={option.label}
+                    />
+                    <span class="filter-option-copy">
+                      <span>{option.label}</span>
+                      {option.description && <small>{option.description}</small>}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          <button type="button" class="all-works-clear" data-clear-work-filters hidden>Clear filters</button>
+        </div>
+
+        <footer class="all-works-filter-actions">
+          <button type="button" class="all-works-filter-clear-all" data-mobile-filter-clear>Clear all</button>
+          <button type="button" class="all-works-filter-apply" data-mobile-filter-apply>Apply</button>
+        </footer>
+      </div>
+    </div>
+
+    <p class="all-works-count" aria-live="polite"><span data-work-count>{artworkCount}</span> artworks</p>
+
+    <div class="all-works-views" aria-label="Choose artwork view">
+      <button type="button" class="is-active" data-work-view="grid" aria-label="Grid view" title="Grid view" aria-pressed="true"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="6" height="6"></rect><rect x="12" y="2" width="6" height="6"></rect><rect x="2" y="12" width="6" height="6"></rect><rect x="12" y="12" width="6" height="6"></rect></svg></button>
+      <button type="button" data-work-view="list" aria-label="List view" title="List view" aria-pressed="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2 4h16M2 10h16M2 16h16"></path></svg></button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initializeArtworkFilters } from '../scripts/artworkFilters.js';
+  initializeArtworkFilters();
+</script>

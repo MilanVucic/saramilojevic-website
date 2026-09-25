@@ -1,0 +1,52 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ArtworkImage from '../../components/ArtworkImage.astro';
+import ArtworkFilters from '../../components/ArtworkFilters.astro';
+import { getPortfolio } from '../../lib/content';
+
+const { works, collections } = await getPortfolio();
+const collectionTitle = (slug: string) => collections.find(collection => collection.slug === slug)?.title || slug;
+const years = [...new Set(works.map(artwork => artwork.year).filter((year): year is number => typeof year === 'number'))].sort((a, b) => b - a);
+const hasUndatedWorks = works.some(artwork => !artwork.year);
+const sizeCategory = (width: number, height: number) => {
+  const longestSide = Math.max(width, height);
+  if (longestSide <= 60) return 'small';
+  if (longestSide <= 120) return 'medium';
+  return 'large';
+};
+---
+<Layout title="Artworks" description="Browse every published artwork by Sara Milojević.">
+  <section class="section all-works-page">
+    <header class="all-works-heading">
+      <div><p class="eyebrow">Complete archive</p><h1>All artworks</h1></div>
+    </header>
+
+    <ArtworkFilters
+      collections={collections.map(collection => ({ value: collection.slug, label: collection.title }))}
+      years={years.map(year => ({ value: String(year), label: String(year) }))}
+      includeUndated={hasUndatedWorks}
+      artworkCount={works.length}
+    />
+
+    <div class="all-works-grid" data-all-works>
+      {works.map(artwork => <a
+        class="all-work-item"
+        href={`/artwork/${artwork.slug}/`}
+        data-work-item
+        data-collection={artwork.collection}
+        data-year={artwork.year ? String(artwork.year) : 'undated'}
+        data-size={sizeCategory(artwork.dimensions.widthCm, artwork.dimensions.heightCm)}
+        data-search={`${artwork.title} ${collectionTitle(artwork.collection)} ${artwork.medium} ${artwork.year || ''}`.toLowerCase()}
+      >
+        <div class="all-work-media"><ArtworkImage image={artwork.images[0]} /></div>
+        <div class="all-work-copy">
+          <h2>{artwork.title}</h2>
+          <p>{collectionTitle(artwork.collection)}{artwork.year && <span class="all-work-inline-year">{` · ${artwork.year}`}</span>}</p>
+        </div>
+        {artwork.year && <span class="all-work-year">{artwork.year}</span>}
+        <p class="all-work-details">{artwork.medium}{artwork.dimensions && ` · ${artwork.dimensions.widthCm} × ${artwork.dimensions.heightCm} cm`}</p>
+      </a>)}
+    </div>
+    <p class="all-works-empty" data-works-empty hidden>No artworks match the current search and filters.</p>
+  </section>
+</Layout>

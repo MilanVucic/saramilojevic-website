@@ -3,8 +3,16 @@ const TRANSITION_MS = 1300;
 
 export function startHero(host) {
   const fallback = host.querySelector('img');
-  const sources = JSON.parse(host.dataset.heroSources || '[]').filter(Boolean);
+  const mobileQuery = matchMedia('(max-width: 760px)');
+  const desktopSources = JSON.parse(host.dataset.heroDesktopSources || '[]').filter(Boolean);
+  const desktopLinks = JSON.parse(host.dataset.heroDesktopLinks || '[]').filter(Boolean);
+  const mobileSources = JSON.parse(host.dataset.heroMobileSources || '[]').filter(Boolean);
+  const mobileLinks = JSON.parse(host.dataset.heroMobileLinks || '[]').filter(Boolean);
+  const sources = (mobileQuery.matches && mobileSources.length ? mobileSources : desktopSources).slice();
+  const links = (mobileQuery.matches && mobileLinks.length ? mobileLinks : desktopLinks).slice();
+  const artworkLink = host.closest('.hero')?.querySelector('.hero-artwork-cta');
   if (!sources.length && fallback) sources.push(fallback.currentSrc || fallback.src);
+  if (artworkLink && links[0]) artworkLink.href = links[0];
   if (!fallback || sources.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   const firstShell = fallback.closest('[data-image-loader]');
@@ -29,16 +37,19 @@ export function startHero(host) {
   let activeIndex = 0;
   let timer = 0;
   let transitionTimer = 0;
+  let transitioning = false;
   let disposed = false;
 
   const schedule = () => {
     clearTimeout(timer);
-    if (disposed || document.hidden) return;
+    if (disposed || transitioning || document.hidden) return;
     timer = window.setTimeout(showNext, HOLD_MS);
   };
 
   const showNext = () => {
     if (disposed || document.hidden) return schedule();
+    if (transitioning) return;
+    transitioning = true;
     const nextIndex = (activeIndex + 1) % sources.length;
     backShell.classList.remove('is-loaded', 'has-error');
     backShell.style.opacity = '0';
@@ -53,6 +64,8 @@ export function startHero(host) {
         [frontShell, backShell] = [backShell, frontShell];
         [frontImage, backImage] = [backImage, frontImage];
         activeIndex = nextIndex;
+        if (artworkLink && links[activeIndex]) artworkLink.href = links[activeIndex];
+        transitioning = false;
         schedule();
       }, TRANSITION_MS);
     };
@@ -60,6 +73,7 @@ export function startHero(host) {
       backShell.classList.add('is-loaded', 'has-error');
       backShell.style.zIndex = '0';
       frontShell.style.zIndex = '1';
+      transitioning = false;
       schedule();
     };
     backImage.src = sources[nextIndex];
@@ -68,18 +82,38 @@ export function startHero(host) {
   const onVisibility = () => {
     if (document.hidden) {
       clearTimeout(timer);
-      clearTimeout(transitionTimer);
     } else {
       schedule();
     }
   };
-  document.addEventListener('visibilitychange', onVisibility);
-  window.addEventListener('pagehide', () => {
-    disposed = true;
+  const onPageShow = event => {
+    if (!event.persisted) return;
+    disposed = false;
+    schedule();
+  };
+  const onPageHide = event => {
     clearTimeout(timer);
+    if (event.persisted) {
+      clearTimeout(transitionTimer);
+      backImage.onload = null;
+      backImage.onerror = null;
+      if (transitioning) {
+        backShell.style.opacity = '0';
+        backShell.style.zIndex = '0';
+        frontShell.style.opacity = '1';
+        frontShell.style.zIndex = '1';
+        transitioning = false;
+      }
+      return;
+    }
+    disposed = true;
     clearTimeout(transitionTimer);
     document.removeEventListener('visibilitychange', onVisibility);
+    window.removeEventListener('pageshow', onPageShow);
     secondShell.remove();
-  }, { once: true });
+  };
+  document.addEventListener('visibilitychange', onVisibility);
+  window.addEventListener('pageshow', onPageShow);
+  window.addEventListener('pagehide', onPageHide);
   schedule();
 }

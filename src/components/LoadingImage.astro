@@ -6,10 +6,19 @@ interface Props {
   alt: string;
   eager?: boolean;
   className?: string;
+  mobileSrc?: string;
+  mobileMedia?: string;
 }
 
-const { src, width, height, alt, eager = false, className } = Astro.props;
+const { src, width, height, alt, eager = false, className, mobileSrc, mobileMedia = '(max-width: 760px)' } = Astro.props;
 ---
 <span class:list={['loading-image', className]} data-image-loader style={`aspect-ratio:${width}/${height}`}>
-  <img src={src} width={width} height={height} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} />
+  {mobileSrc ? (
+    <picture>
+      <source media={mobileMedia} srcset={mobileSrc} />
+      <img src={src} width={width} height={height} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} />
+    </picture>
+  ) : (
+    <img src={src} width={width} height={height} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} />
+  )}
 </span>
