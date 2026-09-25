@@ -27,7 +27,7 @@ const artwork = defineCollection({
 });
 const portfolioCollection = defineCollection({
   loader: glob({ pattern: '*.json', base: './content/collections' }),
-  schema: z.object({ slug, title: z.string().min(1), description: z.string(), year: z.string().optional(), order: z.number().default(0) }),
+  schema: z.object({ slug, title: z.string().min(1), description: z.string(), year: z.string().min(1), order: z.number().default(0) }),
 });
 const exhibition = defineCollection({
   loader: glob({ pattern: '*.json', base: './content/exhibitions' }),
