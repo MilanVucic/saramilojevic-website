@@ -38,8 +38,8 @@ const carouselFrameRatio = Math.min(...a.images.map(image => image.width / image
 <Layout title={a.title} description={a.description}>
   <section class="section artwork-page">
     <div class="detail-meta-row">
-      <BackBreadcrumb href={`/collection/${c.slug}/`} label={c.title} />
-      <p class="eyebrow">{c.title}{a.year && ` / ${a.year}`}</p>
+      <BackBreadcrumb href={`/collection/${c.slug}/`} label={`Collection: ${c.title}`} />
+      {a.year && <p class="eyebrow">{a.year}</p>}
     </div>
     <div class="artwork-layout">
       <div class="gallery" id="gallery">
@@ -68,7 +68,7 @@ const carouselFrameRatio = Math.min(...a.images.map(image => image.width / image
     </div>
   </section>
   <section class="section">
-    <div class="section-heading"><h2>From the same <em>collection</em></h2><CTA href="/artworks/">View all artworks</CTA></div>
+    <div class="section-heading"><h2>From the same <em>collection</em></h2><CTA href={`/collection/${c.slug}/`}>View collection</CTA></div>
     <div class="works-grid">{related.map(artwork => <ArtworkCard artwork={artwork}/>)}</div>
   </section>
 </Layout>

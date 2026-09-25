@@ -251,7 +251,7 @@ p + p {
     right: 8%;
     z-index: 2;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     font-size: 10px;
     letter-spacing: .1em;
     text-transform: uppercase;
@@ -1105,10 +1105,47 @@ dd {
     }
 
     .footer-bottom {
-        align-items: start;
-        flex-direction: column;
-        gap: 12px;
+        display: grid;
+        grid-template-columns:minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 24px 12px;
         margin-top: 35px
+    }
+
+    .footer-bottom > .wordmark {
+        grid-column:1;
+        grid-row:1;
+        min-width:0;
+        font-size:clamp(18px, 5.4vw, 22px)
+    }
+
+    .footer-social {
+        grid-column:2;
+        grid-row:1;
+        justify-self:end;
+        gap:7px
+    }
+
+    .footer-social .social-icon {
+        width:32px;
+        height:32px
+    }
+
+    .footer-social .social-icon svg {
+        width:15px;
+        height:15px
+    }
+
+    .footer-bottom > span {
+        grid-column:1;
+        grid-row:2
+    }
+
+    .footer-bottom > a:last-child {
+        grid-column:2;
+        grid-row:2;
+        justify-self:end;
+        text-align:right
     }
 
     .artwork-layout {

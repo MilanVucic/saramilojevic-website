@@ -40,6 +40,13 @@ export function startHero(host) {
   let transitioning = false;
   let disposed = false;
 
+  const setImageSource = (image, src) => {
+    image.closest('picture')?.querySelectorAll('source').forEach(source => {
+      source.srcset = src;
+    });
+    image.src = src;
+  };
+
   const schedule = () => {
     clearTimeout(timer);
     if (disposed || transitioning || document.hidden) return;
@@ -76,7 +83,7 @@ export function startHero(host) {
       transitioning = false;
       schedule();
     };
-    backImage.src = sources[nextIndex];
+    setImageSource(backImage, sources[nextIndex]);
   };
 
   const onVisibility = () => {
