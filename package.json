@@ -10,7 +10,8 @@
     "test:links": "node tools/check.mjs",
     "test:browser": "node tools/browser-check.mjs",
     "images:generate": "node tools/generate-image-variants.mjs",
-    "images:generate:exhibitions": "node tools/generate-exhibition-image-variants.mjs"
+    "images:generate:exhibitions": "node tools/generate-exhibition-image-variants.mjs",
+    "images:generate:assets": "node tools/generate-local-image-variants.mjs"
   },
   "engines": {
     "node": ">=22.12.0"

@@ -46,11 +46,11 @@ function variantPath(src: string, width: number) {
 
 /** Enable only after the generated files have been uploaded to R2. */
 export function responsiveImageSrcSet(src: string) {
-  if (!site.responsiveImagesEnabled || src.startsWith('https://') || src.startsWith('/assets/')) return undefined;
+  if (!site.responsiveImagesEnabled || src.startsWith('https://')) return undefined;
   return responsiveWidths.map(width => `${imageUrl(variantPath(src, width))} ${width}w`).join(', ');
 }
 
 export function responsiveImageUrl(src: string, width: number) {
-  if (!site.responsiveImagesEnabled || src.startsWith('https://') || src.startsWith('/assets/')) return imageUrl(src);
+  if (!site.responsiveImagesEnabled || src.startsWith('https://')) return imageUrl(src);
   return imageUrl(variantPath(src, width));
 }

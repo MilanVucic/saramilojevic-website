@@ -75,7 +75,7 @@ The `r2.dev` URL is for development and is rate limited. At launch, connect the 
 
 R2 stores files but does not resize them. This project generates WebP versions at 640, 1080, and 1920 pixels wide and serves the appropriate version through `srcset`. Originals remain the fallback and are used by the fullscreen viewer.
 
-1. Run `npm run images:generate` for artwork, or `npm run images:generate:exhibitions` for exhibition galleries. Each command downloads its originals from R2 and writes variants locally. Artwork output is in `generated-images/`; exhibition output is in `generated-exhibition-images/`. Existing variants are skipped, so each can be run again after adding images.
+1. Run `npm run images:generate` for artwork, `npm run images:generate:exhibitions` for exhibition galleries, or `npm run images:generate:assets` for local images in `public/assets/`. The R2 commands download originals and write variants locally; the assets command reads local files and writes variants beside them. Existing variants are skipped, so each can be run again after adding images.
 2. Upload the contents of the corresponding output folder to the public R2 bucket, keeping folders intact. For example, an exhibition original `exhibitions/root-of-bark/1.jpg` gets `exhibitions/root-of-bark/1-640w.webp`, `1-1080w.webp`, and `1-1920w.webp` beside it.
 3. Review a few images, then set `responsiveImagesEnabled` to `true` in `content/site.json`, run `npm run build`, and deploy. Exhibition pages will use responsive variants automatically.
 
