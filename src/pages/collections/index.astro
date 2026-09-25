@@ -4,7 +4,7 @@ import CollectionArchiveRow from '../../components/CollectionArchiveRow.astro';
 import { getPortfolio } from '../../lib/content';
 const { works, collections } = await getPortfolio();
 ---
-<Layout title="Collections">
+<Layout title="Collections" description="Explore Sara Milojević’s painting collections, including works on canvas, paper, and studies in contemporary love and visual culture.">
   <div class="collection-archive">
     {collections.map((collection, index) => <CollectionArchiveRow collection={collection} works={works.filter(artwork => artwork.collection === collection.slug)} index={index} />)}
   </div>

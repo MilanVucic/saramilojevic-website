@@ -103,6 +103,12 @@ error_page 404 /404.html;
 
 Cleanly replace prior deployed pages when publishing removals; copying new files over old output alone will leave deleted artwork URLs accessible. Keep a recoverable previous deployment if desired. No GitHub Actions required.
 
+## SEO and analytics
+
+Set `siteUrl` in `content/site.json` to the canonical public HTTPS origin (for example, `https://example.com`, without a path) before building. This is used for canonical links, social metadata, JSON-LD, `sitemap.xml`, `robots.txt`, and `llms.txt`; the build intentionally stops if it is missing or invalid. The sitemap includes published routes and image URLs. Submit `https://your-domain/sitemap.xml` in Google Search Console after deployment and verify the domain there.
+
+`llms.txt` is a plain-text discovery aid for AI systems; it is an emerging convention, not a Google ranking factor. Google Analytics uses measurement ID `G-VRYGNNVET7` and loads on each page.
+
 ## Libraries and behavior
 
 Installed through npm: GSAP 3.13.0 (moving artwork rows), Three.js 0.181.0 (subtle desktop hero shader), PhotoSwipe 5.4.4 (fullscreen overlay, swipe, zoom, arrow keys, Escape). Versions are recorded in `package.json` and `package-lock.json`. Astro bundles and splits the browser code into `dist/_astro/`. GSAP license: https://gsap.com/standard-license/ ; upstream notices are retained in package distributions.

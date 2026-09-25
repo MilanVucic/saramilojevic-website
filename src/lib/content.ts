@@ -54,3 +54,12 @@ export function responsiveImageUrl(src: string, width: number) {
   if (!site.responsiveImagesEnabled || src.startsWith('https://')) return imageUrl(src);
   return imageUrl(variantPath(src, width));
 }
+
+export function getSiteOrigin() {
+  if (!site.siteUrl) throw new Error('Set siteUrl in content/site.json to the public HTTPS website origin.');
+  const parsed = new URL(site.siteUrl);
+  if (parsed.protocol !== 'https:' || parsed.pathname !== '/' || parsed.search || parsed.hash) {
+    throw new Error('siteUrl must be an HTTPS origin only, such as https://example.com.');
+  }
+  return parsed.origin;
+}

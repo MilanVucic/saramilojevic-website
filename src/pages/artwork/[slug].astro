@@ -4,7 +4,7 @@ import ArtworkCard from '../../components/ArtworkCard.astro';
 import BackBreadcrumb from '../../components/BackBreadcrumb.astro';
 import ImageCarousel from '../../components/ImageCarousel.astro';
 import CTA from '../../components/CTA.astro';
-import { getPortfolio, imageUrl } from '../../lib/content';
+import { getPortfolio, imageUrl, site } from '../../lib/content';
 
 export async function getStaticPaths() {
   const { collections, works } = await getPortfolio();
@@ -35,7 +35,27 @@ const galleryItems = a.images.map((image, index) => ({
 }));
 const carouselFrameRatio = Math.min(...a.images.map(image => image.width / image.height));
 ---
-<Layout title={a.title} description={a.description}>
+<Layout
+  title={a.title}
+  description={a.description}
+  socialImage={imageUrl(a.images[0].src)}
+  socialImageAlt={a.images[0].alt}
+  structuredData={{
+    '@type': 'VisualArtwork',
+    '@id': `${site.siteUrl.replace(/\/$/, '')}/artwork/${a.slug}/#artwork`,
+    name: a.title,
+    url: `${site.siteUrl.replace(/\/$/, '')}/artwork/${a.slug}/`,
+    description: a.description,
+    image: a.images.map(image => imageUrl(image.src)),
+    artMedium: a.medium,
+    artform: 'Painting',
+    dateCreated: a.year ? String(a.year) : undefined,
+    creator: { '@id': `${site.siteUrl.replace(/\/$/, '')}/#artist` },
+    width: { '@type': 'QuantitativeValue', value: a.dimensions.widthCm, unitCode: 'CMT' },
+    height: { '@type': 'QuantitativeValue', value: a.dimensions.heightCm, unitCode: 'CMT' },
+    isPartOf: { '@type': 'CreativeWorkSeries', name: c.title, url: `${site.siteUrl.replace(/\/$/, '')}/collection/${c.slug}/` },
+  }}
+>
   <section class="section artwork-page">
     <div class="detail-meta-row">
       <BackBreadcrumb href={`/collection/${c.slug}/`} label={`Collection: ${c.title}`} />

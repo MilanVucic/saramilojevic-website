@@ -21,7 +21,7 @@ const selectedGroups = collections
   .filter(group => group.works.length);
 const [firstName, ...surname] = site.name.split(' ');
 ---
-<Layout title="Selected works">
+<Layout title="Selected works" description={site.seoDescription} socialImage={initialHeroEntry?.src} socialImageAlt={initialHeroEntry?.image.alt}>
   {hero && <section class="hero">
     <div
       class="hero-art"

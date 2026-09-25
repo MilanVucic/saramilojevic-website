@@ -29,7 +29,7 @@ const images = Array.from({ length: exhibition.imageCount }, (_, offset) => {
   };
 });
 ---
-<Layout title={exhibition.title} description={exhibition.summary}>
+<Layout title={exhibition.title} description={exhibition.summary} socialImage={imageUrl(images[0].image.src)} socialImageAlt={`${exhibition.title} exhibition view`}>
   <section class="section exhibition-detail-intro" data-reveal>
     <div class="detail-meta-row">
       <BackBreadcrumb href="/exhibitions/" label="All exhibitions" />
