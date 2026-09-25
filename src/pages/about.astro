@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import LoadingImage from '../components/LoadingImage.astro';
+import ImageCarousel from '../components/ImageCarousel.astro';
 
 const education = [
   { year: '2025', detail: 'Doctor of Arts in Painting, Faculty of Fine Arts, University of Arts in Belgrade', note: 'Doctoral Artistic Project: “Exercises in Tenderness: visual expression of contemporary love discourse”' },
@@ -30,33 +30,37 @@ const groupExhibitions = [
   ['2023', 'Exceptional Women of Serbia Project; mural dedicated to Vera Crvenčanin Kulenović, first Serbian female director and dramaturg, Novi Sad'],
   ['2022', 'Project They Live: Exhibition & Mural, in partnership with the Youth Foundation, SKC Obrenovac, Obrenovac'],
 ];
+
+const portraitItems = [
+  {
+    image: { src: '/assets/artist-1.JPG', alt: 'Portrait of Sara Milojević', width: 1452, height: 1390 },
+    title: 'Sara Milojević',
+  },
+  {
+    image: { src: '/assets/artist-2.JPG', alt: 'Sara Milojević holding paintbrushes in her studio', width: 3252, height: 3752 },
+    title: 'Sara Milojević',
+  },
+  {
+    image: { src: '/assets/artist-3.JPG', alt: 'Sara Milojević standing beside a large green and pink painting in her atelier', width: 4320, height: 3456 },
+    title: 'Sara Milojević',
+    slideClass: 'about-carousel-slide-atelier',
+  },
+];
 ---
 <Layout title="About" description="About contemporary visual artist, painter, and muralist Sara Milojević.">
   <section class="section about-hero">
     <div class="about-portrait-column">
       <p class="eyebrow">The artist</p>
       <h1>Sara<br/><em>Milojević</em></h1>
-      <div class="about-portrait" data-about-carousel aria-roledescription="carousel" aria-label="Portraits of Sara Milojević">
-        <div class="about-carousel-viewport">
-          <div class="about-carousel-slide is-active" data-carousel-slide aria-hidden="false">
-            <LoadingImage src="/assets/artist-1.JPG" alt="Portrait of Sara Milojević" width={1452} height={1390} eager />
-          </div>
-          <div class="about-carousel-slide" data-carousel-slide aria-hidden="true">
-            <LoadingImage src="/assets/artist-2.JPG" alt="Sara Milojević holding paintbrushes in her studio" width={3252} height={3752} />
-          </div>
-          <div class="about-carousel-slide about-carousel-slide-atelier" data-carousel-slide aria-hidden="true">
-            <LoadingImage src="/assets/artist-3.JPG" alt="Sara Milojević standing beside a large green and pink painting in her atelier" width={4320} height={3456} />
-          </div>
-        </div>
-        <div class="collection-carousel-navigation about-carousel-controls">
-          <button type="button" data-carousel-previous aria-label="Previous portrait">←</button>
-          <div class="collection-carousel-caption" aria-live="polite">
-            <div class="collection-carousel-titles"><span>Artist portrait — Sara Milojević</span></div>
-            <span class="collection-carousel-count"><span data-carousel-current>01</span> / 03</span>
-          </div>
-          <button type="button" data-carousel-next aria-label="Next portrait">→</button>
-        </div>
-      </div>
+      <ImageCarousel
+        items={portraitItems}
+        label="Portraits of Sara Milojević"
+        className="about-portrait"
+        viewportClass="about-carousel-viewport"
+        slideClass="about-carousel-slide"
+        controlsClass="about-carousel-controls"
+        eagerFirst
+      />
     </div>
     <div class="about-biography">
       <div class="about-copy">

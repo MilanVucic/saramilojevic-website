@@ -1,0 +1,87 @@
+---
+import ArtworkImage from './ArtworkImage.astro';
+import type { ArtworkImage as ArtworkImageData } from '../lib/content';
+
+export interface CarouselItem {
+  image: ArtworkImageData;
+  title: string;
+  href?: string;
+  fullSrc?: string;
+  ariaLabel?: string;
+  slideClass?: string;
+}
+
+interface Props {
+  items: CarouselItem[];
+  label: string;
+  className?: string;
+  viewportClass?: string;
+  slideClass?: string;
+  controlsClass?: string;
+  eagerFirst?: boolean;
+  viewportStyle?: string;
+}
+
+const {
+  items,
+  label,
+  className,
+  viewportClass,
+  slideClass,
+  controlsClass,
+  eagerFirst = false,
+  viewportStyle,
+} = Astro.props;
+---
+<div class:list={['image-carousel', className]} data-image-carousel aria-roledescription="carousel" aria-label={label}>
+  <div class:list={['image-carousel-viewport', viewportClass]} style={viewportStyle}>
+    {items.map((item, index) => item.href ? (
+      <a
+        class:list={['image-carousel-slide', slideClass, item.slideClass, { 'is-active': index === 0 }]}
+        data-carousel-slide
+        aria-hidden={index === 0 ? 'false' : 'true'}
+        href={item.href}
+      >
+        <ArtworkImage image={item.image} eager={eagerFirst && index === 0} />
+      </a>
+    ) : item.fullSrc ? (
+      <figure
+        class:list={['image-carousel-slide', slideClass, item.slideClass, { 'is-active': index === 0 }]}
+        data-carousel-slide
+        aria-hidden={index === 0 ? 'false' : 'true'}
+      >
+        <button
+          type="button"
+          class="gallery-trigger"
+          data-full-src={item.fullSrc}
+          aria-label={item.ariaLabel || `Enlarge ${item.title} image ${index + 1}`}
+        >
+          <ArtworkImage image={item.image} eager={eagerFirst && index === 0} />
+          <span class="zoom-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path><path d="M10.5 7.5v6M7.5 10.5h6"></path></svg>
+          </span>
+        </button>
+      </figure>
+    ) : (
+      <div
+        class:list={['image-carousel-slide', slideClass, item.slideClass, { 'is-active': index === 0 }]}
+        data-carousel-slide
+        aria-hidden={index === 0 ? 'false' : 'true'}
+      >
+        <ArtworkImage image={item.image} eager={eagerFirst && index === 0} />
+      </div>
+    ))}
+  </div>
+  {items.length > 0 && (
+    <div class:list={['collection-carousel-navigation', controlsClass]}>
+      <button type="button" data-carousel-previous aria-label={`Previous image in ${label}`} disabled={items.length < 2}>&#8592;</button>
+      <div class="collection-carousel-caption" aria-live="polite">
+        <div class="collection-carousel-titles">
+          {items.map((item, index) => <span data-carousel-title hidden={index !== 0}>{item.title}</span>)}
+        </div>
+        <span class="collection-carousel-count"><span data-carousel-current>01</span> / {String(items.length).padStart(2, '0')}</span>
+      </div>
+      <button type="button" data-carousel-next aria-label={`Next image in ${label}`} disabled={items.length < 2}>&#8594;</button>
+    </div>
+  )}
+</div>

@@ -39,6 +39,7 @@ if (galleryItems.length) {
  let activeIndex=0;
  let lastTrigger;
  let touchStart=0;
+ let viewerTransitioning=false;
  const update=()=>{
   const item=galleryItems[activeIndex];
   const preview=item.querySelector('img');
@@ -51,6 +52,8 @@ if (galleryItems.length) {
  const open=index=>{
   activeIndex=index;
   lastTrigger=galleryItems[index];
+  imageLoader.getAnimations().forEach(animation=>animation.cancel());
+  viewerTransitioning=false;
   update();
   viewer.hidden=false;
   document.body.classList.add('viewer-active');
@@ -58,11 +61,48 @@ if (galleryItems.length) {
   closeButton.focus({preventScroll:true});
  };
  const close=()=>{
+  imageLoader.getAnimations().forEach(animation=>animation.cancel());
+  viewerTransitioning=false;
   viewer.classList.remove('is-open');
   document.body.classList.remove('viewer-active');
   window.setTimeout(()=>{viewer.hidden=true;image.removeAttribute('src');lastTrigger?.focus({preventScroll:true});},reduced?0:300);
  };
- const move=direction=>{activeIndex=(activeIndex+direction+galleryItems.length)%galleryItems.length;update();};
+ const waitForImage=()=>image.complete
+  ? Promise.resolve()
+  : new Promise(resolve=>{
+    const finish=()=>resolve();
+    image.addEventListener('load',finish,{once:true});
+    image.addEventListener('error',finish,{once:true});
+    window.setTimeout(finish,1200);
+   });
+ const move=async direction=>{
+  if(viewerTransitioning||galleryItems.length<2)return;
+  if(reduced){
+   activeIndex=(activeIndex+direction+galleryItems.length)%galleryItems.length;
+   update();
+   return;
+  }
+  viewerTransitioning=true;
+  const distance=Math.min(window.innerWidth*.16,160);
+  try{
+   await imageLoader.animate([
+    {opacity:1,transform:'translate3d(0,0,0)'},
+    {opacity:0,transform:`translate3d(${-direction*distance}px,0,0)`}
+   ],{duration:220,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'}).finished;
+   activeIndex=(activeIndex+direction+galleryItems.length)%galleryItems.length;
+   update();
+   await waitForImage();
+   await imageLoader.animate([
+    {opacity:0,transform:`translate3d(${direction*distance}px,0,0)`},
+    {opacity:1,transform:'translate3d(0,0,0)'}
+   ],{duration:320,easing:'cubic-bezier(.2,.75,.25,1)',fill:'forwards'}).finished;
+  }catch{
+   update();
+  }finally{
+   imageLoader.getAnimations().forEach(animation=>animation.cancel());
+   viewerTransitioning=false;
+  }
+ };
  galleryItems.forEach((item,index)=>item.addEventListener('click',()=>open(index)));
  closeButton.addEventListener('click',close);
  viewer.querySelector('.viewer-backdrop').addEventListener('click',close);
@@ -73,11 +113,11 @@ if (galleryItems.length) {
   if(event.key==='ArrowLeft')move(-1);
   if(event.key==='ArrowRight')move(1);
  });
- image.addEventListener('touchstart',event=>{touchStart=event.changedTouches[0].clientX;},{passive:true});
- image.addEventListener('touchend',event=>{const distance=event.changedTouches[0].clientX-touchStart;if(Math.abs(distance)>45)move(distance>0?-1:1);},{passive:true});
+ viewer.addEventListener('touchstart',event=>{touchStart=event.changedTouches[0].clientX;},{passive:true});
+ viewer.addEventListener('touchend',event=>{const distance=event.changedTouches[0].clientX-touchStart;if(Math.abs(distance)>45)move(distance>0?-1:1);},{passive:true});
  if(galleryItems.length<2){previousButton.hidden=true;nextButton.hidden=true;}
 }
-document.querySelectorAll('[data-about-carousel], [data-collection-carousel]').forEach(carousel=>{
+document.querySelectorAll('[data-image-carousel]').forEach(carousel=>{
  const slides=[...carousel.querySelectorAll('[data-carousel-slide]')];
  const titles=[...carousel.querySelectorAll('[data-carousel-title]')];
  const current=carousel.querySelector('[data-carousel-current]');
