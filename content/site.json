@@ -5,6 +5,7 @@
   "biography": "Sara Milojević is a contemporary visual artist, painter, and muralist whose vibrant practice moves between intimate works on paper and canvas and impactful public art.",
   "email": "sara.milojevic.art@gmail.com",
   "imageBaseUrl": "https://pub-0cd4ec3155d8403885715be1046a4e68.r2.dev",
+  "responsiveImagesEnabled": false,
   "heroDesktopImages": [
     { "artwork": "the-blue-clips", "image": 1 },
     { "artwork": "dont-worry", "image": 1 },

@@ -71,6 +71,18 @@ For the optional Three.js desktop hero, configure R2 CORS to allow GET/HEAD from
 
 The `r2.dev` URL is for development and is rate limited. At launch, connect the public R2 bucket to your custom domain and change only `imageBaseUrl` to `https://images.yourdomain.com`. Public access exposes the bucket's objects; keep private originals in a separate private bucket, not a prefix in this public bucket.
 
+### Responsive image delivery
+
+R2 stores files but does not resize them. This project generates WebP versions at 640, 1080, and 1920 pixels wide and serves the appropriate version through `srcset`. Originals remain the fallback and are used by the fullscreen viewer.
+
+1. Run `npm run images:generate` for artwork, or `npm run images:generate:exhibitions` for exhibition galleries. Each command downloads its originals from R2 and writes variants locally. Artwork output is in `generated-images/`; exhibition output is in `generated-exhibition-images/`. Existing variants are skipped, so each can be run again after adding images.
+2. Upload the contents of the corresponding output folder to the public R2 bucket, keeping folders intact. For example, an exhibition original `exhibitions/root-of-bark/1.jpg` gets `exhibitions/root-of-bark/1-640w.webp`, `1-1080w.webp`, and `1-1920w.webp` beside it.
+3. Review a few images, then set `responsiveImagesEnabled` to `true` in `content/site.json`, run `npm run build`, and deploy. Exhibition pages will use responsive variants automatically.
+
+Keep `responsiveImagesEnabled` false until every generated file is uploaded; this prevents broken image URLs. The mobile hero deliberately does not auto-rotate, avoiding background downloads of several paintings on a phone.
+
+You can use a Cloudflare custom domain while keeping Namecheap as the registrar. Add the domain as a Cloudflare zone, then at Namecheap replace its nameservers with the two Cloudflare nameservers shown in the zone setup. Once active, add a subdomain such as `images.yourdomain.com` to the R2 bucket's custom domains and set `imageBaseUrl` to that address. This gives you proper CDN delivery and lets you configure long browser cache times; it does not require transferring the domain registration to Cloudflare.
+
 ## Editing content
 
 - Site name, introductory text, biography, contact email, hero artwork, and image base URL: `content/site.json`.

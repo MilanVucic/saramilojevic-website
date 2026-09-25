@@ -8,17 +8,23 @@ interface Props {
   className?: string;
   mobileSrc?: string;
   mobileMedia?: string;
+  sizes?: string;
+  webpSrcSet?: string;
 }
 
-const { src, width, height, alt, eager = false, className, mobileSrc, mobileMedia = '(max-width: 760px)' } = Astro.props;
+const { src, width, height, alt, eager = false, className, mobileSrc, mobileMedia = '(max-width: 760px)', sizes = '100vw', webpSrcSet } = Astro.props;
 ---
 <span class:list={['loading-image', className]} data-image-loader style={`aspect-ratio:${width}/${height}`}>
   {mobileSrc ? (
     <picture>
       <source media={mobileMedia} srcset={mobileSrc} />
-      <img src={src} width={width} height={height} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} />
+      {webpSrcSet && <source type="image/webp" srcset={webpSrcSet} sizes={sizes} />}
+      <img src={src} width={width} height={height} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} sizes={sizes} />
     </picture>
   ) : (
-    <img src={src} width={width} height={height} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} />
+    <picture>
+      {webpSrcSet && <source type="image/webp" srcset={webpSrcSet} sizes={sizes} />}
+      <img src={src} width={width} height={height} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchpriority={eager ? 'high' : undefined} sizes={sizes} />
+    </picture>
   )}
 </span>

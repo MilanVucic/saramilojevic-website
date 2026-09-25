@@ -4,13 +4,13 @@ import LoadingImage from '../components/LoadingImage.astro';
 import ArtworkCard from '../components/ArtworkCard.astro';
 import CollectionFeature from '../components/CollectionFeature.astro';
 import CTA from '../components/CTA.astro';
-import { getPortfolio, imageUrl, site } from '../lib/content';
+import { getPortfolio, imageUrl, responsiveImageSrcSet, responsiveImageUrl, site } from '../lib/content';
 const { works, collections } = await getPortfolio();
 const resolveHeroEntries = (selections: Array<{ artwork: string; image?: number }>) => selections.flatMap(selection => {
   const work = works.find(item => item.slug === selection.artwork);
   if (!work || work.collection === 'shadowplay') return [];
   const image = work.images[Math.max(0, (selection.image || 1) - 1)] || work.images[0];
-  return [{ work, image, src: imageUrl(image.full || image.src), href: `/artwork/${work.slug}/` }];
+  return [{ work, image, src: imageUrl(image.src), mobileSrc: responsiveImageUrl(image.src, 1080), desktopSrc: responsiveImageUrl(image.src, 1920), href: `/artwork/${work.slug}/` }];
 });
 const desktopHeroEntries = resolveHeroEntries(site.heroDesktopImages);
 const mobileHeroEntries = resolveHeroEntries(site.heroMobileImages);
@@ -26,18 +26,20 @@ const [firstName, ...surname] = site.name.split(' ');
     <div
       class="hero-art"
       data-hero
-      data-hero-desktop-sources={JSON.stringify(desktopHeroEntries.map(entry => entry.src))}
+      data-hero-desktop-sources={JSON.stringify(desktopHeroEntries.map(entry => entry.desktopSrc))}
       data-hero-desktop-links={JSON.stringify(desktopHeroEntries.map(entry => entry.href))}
-      data-hero-mobile-sources={JSON.stringify(mobileHeroEntries.map(entry => entry.src))}
+      data-hero-mobile-sources={JSON.stringify(mobileHeroEntries.map(entry => entry.mobileSrc))}
       data-hero-mobile-links={JSON.stringify(mobileHeroEntries.map(entry => entry.href))}
+      data-hero-mobile-autoplay="false"
     >
       <LoadingImage
-        src={initialHeroEntry.src}
-        mobileSrc={mobileHeroEntries[0]?.src}
+        src={initialHeroEntry.desktopSrc}
+        mobileSrc={mobileHeroEntries[0]?.mobileSrc}
         width={initialHeroEntry.image.width}
         height={initialHeroEntry.image.height}
         alt="Selected artwork by Sara Milojević"
         eager
+        webpSrcSet={responsiveImageSrcSet(initialHeroEntry.image.src)}
       />
       <div class="hero-shade"></div>
     </div>

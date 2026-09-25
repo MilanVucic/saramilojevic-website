@@ -42,7 +42,7 @@ const {
         aria-hidden={index === 0 ? 'false' : 'true'}
         href={item.href}
       >
-        <ArtworkImage image={item.image} eager={eagerFirst && index === 0} />
+        <ArtworkImage image={item.image} eager={eagerFirst && index === 0} sizes="(max-width: 760px) 100vw, 80vw" />
       </a>
     ) : item.fullSrc ? (
       <figure
@@ -56,7 +56,7 @@ const {
           data-full-src={item.fullSrc}
           aria-label={item.ariaLabel || `Enlarge ${item.title} image ${index + 1}`}
         >
-          <ArtworkImage image={item.image} eager={eagerFirst && index === 0} />
+          <ArtworkImage image={item.image} eager={eagerFirst && index === 0} sizes="(max-width: 760px) 100vw, 80vw" />
           <span class="zoom-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path><path d="M10.5 7.5v6M7.5 10.5h6"></path></svg>
           </span>
@@ -68,7 +68,7 @@ const {
         data-carousel-slide
         aria-hidden={index === 0 ? 'false' : 'true'}
       >
-        <ArtworkImage image={item.image} eager={eagerFirst && index === 0} />
+        <ArtworkImage image={item.image} eager={eagerFirst && index === 0} sizes="(max-width: 760px) 100vw, 80vw" />
       </div>
     ))}
   </div>

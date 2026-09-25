@@ -1,7 +1,7 @@
 ---
-import { imageUrl, type ArtworkImage } from '../lib/content';
+import { imageUrl, responsiveImageSrcSet, type ArtworkImage } from '../lib/content';
 import LoadingImage from './LoadingImage.astro';
-interface Props { image: ArtworkImage; eager?: boolean; decorative?: boolean }
-const { image, eager = false, decorative = false } = Astro.props;
+interface Props { image: ArtworkImage; eager?: boolean; decorative?: boolean; sizes?: string }
+const { image, eager = false, decorative = false, sizes = '(max-width: 760px) 100vw, (max-width: 1200px) 50vw, 33vw' } = Astro.props;
 ---
-<LoadingImage src={imageUrl(image.src)} width={image.width} height={image.height} alt={decorative ? '' : image.alt} eager={eager} />
+<LoadingImage src={imageUrl(image.src)} width={image.width} height={image.height} alt={decorative ? '' : image.alt} eager={eager} sizes={sizes} webpSrcSet={responsiveImageSrcSet(image.src)} />

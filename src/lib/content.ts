@@ -37,3 +37,20 @@ export function imageUrl(src: string) {
   if (src.startsWith('https://') || src.startsWith('/assets/')) return src;
   return `${site.imageBaseUrl.replace(/\/$/, '')}/${src.replace(/^\//, '').split('/').map(encodeURIComponent).join('/')}`;
 }
+
+const responsiveWidths = [640, 1080, 1920];
+
+function variantPath(src: string, width: number) {
+  return src.replace(/\.[^.]+$/, `-${width}w.webp`);
+}
+
+/** Enable only after the generated files have been uploaded to R2. */
+export function responsiveImageSrcSet(src: string) {
+  if (!site.responsiveImagesEnabled || src.startsWith('https://') || src.startsWith('/assets/')) return undefined;
+  return responsiveWidths.map(width => `${imageUrl(variantPath(src, width))} ${width}w`).join(', ');
+}
+
+export function responsiveImageUrl(src: string, width: number) {
+  if (!site.responsiveImagesEnabled || src.startsWith('https://') || src.startsWith('/assets/')) return imageUrl(src);
+  return imageUrl(variantPath(src, width));
+}

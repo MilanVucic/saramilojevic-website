@@ -13,7 +13,7 @@ export function startHero(host) {
   const artworkLink = host.closest('.hero')?.querySelector('.hero-artwork-cta');
   if (!sources.length && fallback) sources.push(fallback.currentSrc || fallback.src);
   if (artworkLink && links[0]) artworkLink.href = links[0];
-  if (!fallback || sources.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!fallback || sources.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches || (mobileQuery.matches && host.dataset.heroMobileAutoplay === 'false')) return;
 
   const firstShell = fallback.closest('[data-image-loader]');
   if (!firstShell) return;
