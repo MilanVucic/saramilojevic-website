@@ -3,6 +3,7 @@
   "title": "Dreamy Softness",
   "originalTitle": "Meko od snova",
   "venue": "KvArt BW / Gallery Štab",
+  "venueUrl": "https://www.belgradewaterfront.com/kvart/",
   "location": "Belgrade",
   "year": 2023,
   "kind": "Solo exhibition",
@@ -27,8 +28,12 @@
       "url": "https://issuu.com/galerija-stab/docs/sara_milojevi_katalog_issuu/5?e=22&o=1"
     },
     {
-      "label": "Politika exhibition coverage",
+      "label": "Politika exhibition article",
       "url": "https://www.politika.rs/scc/clanak/561681/meko-od-snova"
+    },
+    {
+      "label": "Gallery exhibition article",
+      "url": "https://www.belgradewaterfront.com/dogadjaji/izlozba-meko-od-snova/"
     }
   ],
   "imageCount": 17,
