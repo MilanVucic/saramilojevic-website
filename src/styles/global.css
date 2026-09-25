@@ -330,12 +330,12 @@ p + p {
 }
 
 .selected-works-stage {
-    position: relative
+    display: grid
 }
 
 .selected-works-group {
-    position: absolute;
-    inset: 0;
+    grid-area: 1 / 1;
+    min-width: 0;
     z-index: 0;
     opacity: 0;
     visibility: hidden;
@@ -345,7 +345,6 @@ p + p {
 }
 
 .selected-works-group.is-active {
-    position: relative;
     z-index: 2;
     opacity: 1;
     visibility: visible;
