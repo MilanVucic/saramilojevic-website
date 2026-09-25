@@ -12,6 +12,7 @@
   "readyToHang": true,
   "order": 3,
   "featured": false,
+  "available": true,
   "published": true,
   "images": [
     {

@@ -2,6 +2,7 @@
   "slug": "unsent-letter",
   "title": "Unsent Letter",
   "collection": "crimson-and-scarlet",
+  "year": 2023,
   "medium": "Oil on canvas",
   "dimensions": {
     "widthCm": 40,
@@ -11,6 +12,7 @@
   "readyToHang": true,
   "order": 5,
   "featured": false,
+  "available": true,
   "published": true,
   "images": [
     {

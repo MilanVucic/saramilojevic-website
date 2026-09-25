@@ -2,6 +2,7 @@
   "slug": "melted-kiss",
   "title": "Melted Kiss",
   "collection": "crimson-and-scarlet",
+  "year": 2023,
   "medium": "Oil on canvas",
   "dimensions": {
     "widthCm": 40,
@@ -11,6 +12,7 @@
   "readyToHang": true,
   "order": 2,
   "featured": false,
+  "available": true,
   "published": true,
   "images": [
     {

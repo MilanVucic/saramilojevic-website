@@ -17,6 +17,7 @@ const artwork = defineCollection({
     dimensions: z.object({ widthCm: z.number().positive(), heightCm: z.number().positive() }),
     description: z.string(), order: z.number().default(0),
     readyToHang: z.boolean().optional(),
+    available: z.boolean().default(true),
     featured: z.boolean().default(false), published: z.boolean().default(true),
     images: z.array(z.object({
       src: imagePath, full: imagePath.optional(), width: z.number().int().positive(),
@@ -35,6 +36,7 @@ const exhibition = defineCollection({
     title: z.string().min(1),
     originalTitle: z.string().min(1).optional(),
     venue: z.string().min(1),
+    venueUrl: z.url(),
     location: z.string().min(1),
     year: z.number().int(),
     kind: z.string().min(1),

@@ -2,6 +2,7 @@
   "slug": "my-scarlet-and-her-crimson-die-02",
   "title": "My Scarlet and Her Crimson Die 02",
   "collection": "crimson-and-scarlet",
+  "year": 2023,
   "medium": "Oil on canvas",
   "dimensions": {
     "widthCm": 40,
@@ -10,6 +11,7 @@
   "description": "This work is part of an intimate series of small-format oil paintings that explores the deep emotional resonance of chromatic intensity. Through layered textures and tactile brushwork, these pieces transform rich hues of red into a psychological landscape of passion, vulnerability, and quiet introspection.",
   "order": 8,
   "featured": false,
+  "available": true,
   "published": true,
   "images": [
     {
