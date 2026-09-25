@@ -1364,7 +1364,11 @@ dd {
     color: var(--accent)
 }
 
-.about-link {
+.about-ctas {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
     margin-top: 28px
 }
 
@@ -1438,6 +1442,40 @@ dd {
     font-size: 22px;
     line-height: 1.55;
     color: var(--ink)
+}
+
+.about-copy a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px
+}
+
+.about-copy a:hover {
+    color: var(--ink)
+}
+
+.about-discover {
+    margin-top: 34px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line)
+}
+
+.about-discover h2 {
+    margin: 0 0 6px;
+    font-family: var(--serif);
+    font-size: 23px;
+    font-weight: 400
+}
+
+.about-discover > p {
+    margin: 0 0 16px;
+    color: var(--muted);
+    font-size: 13px
+}
+
+.about-social-links {
+    justify-content: flex-start
 }
 
 .cv-section {
