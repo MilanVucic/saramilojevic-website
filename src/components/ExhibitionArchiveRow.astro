@@ -1,0 +1,31 @@
+---
+import ArtworkImage from './ArtworkImage.astro';
+import CTA from './CTA.astro';
+import { exhibitionImagePath, type Exhibition } from '../lib/content';
+
+interface Props {
+  exhibition: Exhibition;
+  index: number;
+}
+
+const { exhibition, index } = Astro.props;
+const cover = {
+  src: exhibitionImagePath(exhibition, 1),
+  width: 1600,
+  height: 1067,
+  alt: `Installation view of ${exhibition.title}`,
+};
+---
+<section class:list={['section', 'exhibition-archive-row', { 'is-reversed': index % 2 === 1 }]} data-reveal>
+  <a class="exhibition-archive-media" href={`/exhibition/${exhibition.slug}/`} aria-label={`View ${exhibition.title}`}>
+    <ArtworkImage image={cover} eager={index === 0} />
+  </a>
+  <div class="exhibition-archive-copy">
+    <p class="eyebrow">{exhibition.kind} / {exhibition.year}</p>
+    <h2>{exhibition.title}</h2>
+    {exhibition.originalTitle && <p class="exhibition-original-title">{exhibition.originalTitle}</p>}
+    <p class="exhibition-venue">{exhibition.venue}, {exhibition.location}</p>
+    <p class="exhibition-summary">{exhibition.summary}</p>
+    <CTA href={`/exhibition/${exhibition.slug}/`}>View exhibition</CTA>
+  </div>
+</section>

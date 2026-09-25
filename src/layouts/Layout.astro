@@ -14,13 +14,18 @@ const path = Astro.url.pathname;
     <title>{title} — {site.name}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#f6f4ef" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <header class="header">
       <a href="/" class="wordmark">{site.name}</a>
-      <nav aria-label="Main navigation">
+      <button class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="main-navigation" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="main-navigation" data-mobile-nav aria-label="Main navigation">
         <a href="/collections/" aria-current={path.startsWith('/collections') || path.startsWith('/collection/') ? 'page' : undefined}>Collections</a>
+        <a href="/exhibitions/" aria-current={path.startsWith('/exhibitions') || path.startsWith('/exhibition/') ? 'page' : undefined}>Exhibitions</a>
         <a href="/about/" aria-current={path === '/about/' ? 'page' : undefined}>About</a>
         <a href="/contact/" aria-current={path === '/contact/' ? 'page' : undefined}>Contact</a>
       </nav>

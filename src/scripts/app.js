@@ -1,4 +1,23 @@
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const header=document.querySelector('.header');
+const menuToggle=header?.querySelector('.mobile-menu-toggle');
+const mobileNav=header?.querySelector('[data-mobile-nav]');
+if(header&&menuToggle&&mobileNav){
+ const setMenuOpen=open=>{
+  header.classList.toggle('is-menu-open',open);
+  menuToggle.setAttribute('aria-expanded',String(open));
+  menuToggle.setAttribute('aria-label',open?'Close menu':'Open menu');
+ };
+ menuToggle.addEventListener('click',()=>setMenuOpen(menuToggle.getAttribute('aria-expanded')!=='true'));
+ mobileNav.addEventListener('click',event=>{if(event.target.closest('a'))setMenuOpen(false);});
+ document.addEventListener('click',event=>{if(!header.contains(event.target))setMenuOpen(false);});
+ document.addEventListener('keydown',event=>{
+  if(event.key!=='Escape'||menuToggle.getAttribute('aria-expanded')!=='true')return;
+  setMenuOpen(false);
+  menuToggle.focus();
+ });
+ matchMedia('(min-width: 761px)').addEventListener('change',event=>{if(event.matches)setMenuOpen(false);});
+}
 const initializeImageLoader=shell=>{
  const image=shell.querySelector('img');
  if(!image||shell.dataset.loaderReady)return;
@@ -27,7 +46,7 @@ if (galleryItems.length) {
  viewer.setAttribute('role','dialog');
  viewer.setAttribute('aria-modal','true');
  viewer.setAttribute('aria-label','Artwork image viewer');
- viewer.innerHTML='<div class="viewer-backdrop"></div><button class="viewer-close" type="button" aria-label="Close fullscreen image">×</button><button class="viewer-nav viewer-prev" type="button" aria-label="Previous image">←</button><div class="viewer-frame"><span class="loading-image viewer-image-loader" data-image-loader><img alt=""></span><p class="viewer-caption"></p></div><button class="viewer-nav viewer-next" type="button" aria-label="Next image">→</button>';
+ viewer.innerHTML='<div class="viewer-backdrop"></div><p class="viewer-swipe-hint" aria-hidden="true">&larr; swipe &rarr;</p><button class="viewer-close" type="button" aria-label="Close fullscreen image">&times;</button><button class="viewer-nav viewer-prev" type="button" aria-label="Previous image">&#8592;</button><div class="viewer-frame"><span class="loading-image viewer-image-loader" data-image-loader><img alt=""></span><p class="viewer-caption"></p></div><button class="viewer-nav viewer-next" type="button" aria-label="Next image">&#8594;</button>';
  document.body.append(viewer);
  const image=viewer.querySelector('img');
  const imageLoader=viewer.querySelector('[data-image-loader]');
@@ -36,10 +55,23 @@ if (galleryItems.length) {
  const closeButton=viewer.querySelector('.viewer-close');
  const previousButton=viewer.querySelector('.viewer-prev');
  const nextButton=viewer.querySelector('.viewer-next');
+ const backdrop=viewer.querySelector('.viewer-backdrop');
+ const mobileViewer=window.matchMedia('(max-width: 760px)');
  let activeIndex=0;
  let lastTrigger;
  let touchStart=0;
+ let suppressBackgroundTap=false;
  let viewerTransitioning=false;
+ const syncCarousel=()=>{
+  const item=galleryItems[activeIndex];
+  const carousel=item.closest('[data-image-carousel]');
+  if(!carousel)return;
+  const slides=[...carousel.querySelectorAll('[data-carousel-slide]')];
+  const slideIndex=slides.findIndex(slide=>slide.contains(item));
+  if(slideIndex<0)return;
+  carousel.dispatchEvent(new CustomEvent('carousel:show',{detail:{index:slideIndex}}));
+  lastTrigger=item;
+ };
  const update=()=>{
   const item=galleryItems[activeIndex];
   const preview=item.querySelector('img');
@@ -79,6 +111,7 @@ if (galleryItems.length) {
   if(viewerTransitioning||galleryItems.length<2)return;
   if(reduced){
    activeIndex=(activeIndex+direction+galleryItems.length)%galleryItems.length;
+   syncCarousel();
    update();
    return;
   }
@@ -90,6 +123,7 @@ if (galleryItems.length) {
     {opacity:0,transform:`translate3d(${-direction*distance}px,0,0)`}
    ],{duration:220,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'}).finished;
    activeIndex=(activeIndex+direction+galleryItems.length)%galleryItems.length;
+   syncCarousel();
    update();
    await waitForImage();
    await imageLoader.animate([
@@ -105,7 +139,11 @@ if (galleryItems.length) {
  };
  galleryItems.forEach((item,index)=>item.addEventListener('click',()=>open(index)));
  closeButton.addEventListener('click',close);
- viewer.querySelector('.viewer-backdrop').addEventListener('click',close);
+ viewer.addEventListener('click',event=>{
+  if(event.target===backdrop){close();return;}
+  if(!mobileViewer.matches||suppressBackgroundTap||event.target===image||event.target.closest('button'))return;
+  close();
+ });
  previousButton.addEventListener('click',()=>move(-1));
  nextButton.addEventListener('click',()=>move(1));
  viewer.addEventListener('keydown',event=>{
@@ -114,7 +152,13 @@ if (galleryItems.length) {
   if(event.key==='ArrowRight')move(1);
  });
  viewer.addEventListener('touchstart',event=>{touchStart=event.changedTouches[0].clientX;},{passive:true});
- viewer.addEventListener('touchend',event=>{const distance=event.changedTouches[0].clientX-touchStart;if(Math.abs(distance)>45)move(distance>0?-1:1);},{passive:true});
+ viewer.addEventListener('touchend',event=>{
+  const distance=event.changedTouches[0].clientX-touchStart;
+  if(Math.abs(distance)<=45)return;
+  suppressBackgroundTap=true;
+  window.setTimeout(()=>{suppressBackgroundTap=false;},400);
+  move(distance>0?-1:1);
+ },{passive:true});
  if(galleryItems.length<2){previousButton.hidden=true;nextButton.hidden=true;}
 }
 document.querySelectorAll('[data-image-carousel]').forEach(carousel=>{
@@ -134,6 +178,7 @@ document.querySelectorAll('[data-image-carousel]').forEach(carousel=>{
   if(current)current.textContent=String(activeIndex+1).padStart(2,'0');
  };
  const move=direction=>show(activeIndex+direction);
+ carousel.addEventListener('carousel:show',event=>show(event.detail.index));
  carousel.querySelector('[data-carousel-previous]')?.addEventListener('click',()=>move(-1));
  carousel.querySelector('[data-carousel-next]')?.addEventListener('click',()=>move(1));
  carousel.addEventListener('keydown',event=>{

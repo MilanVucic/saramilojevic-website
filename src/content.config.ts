@@ -28,4 +28,29 @@ const portfolioCollection = defineCollection({
   loader: glob({ pattern: '*.json', base: './content/collections' }),
   schema: z.object({ slug, title: z.string().min(1), description: z.string(), year: z.string().optional(), order: z.number().default(0) }),
 });
-export const collections = { artwork, portfolioCollection };
+const exhibition = defineCollection({
+  loader: glob({ pattern: '*.json', base: './content/exhibitions' }),
+  schema: z.object({
+    slug,
+    title: z.string().min(1),
+    originalTitle: z.string().min(1).optional(),
+    venue: z.string().min(1),
+    location: z.string().min(1),
+    year: z.number().int(),
+    kind: z.string().min(1),
+    summary: z.string().min(1),
+    sections: z.array(z.object({
+      heading: z.string().min(1),
+      body: z.string().min(1),
+    })).min(1),
+    links: z.array(z.object({
+      label: z.string().min(1),
+      url: z.url(),
+    })).default([]),
+    imageCount: z.number().int().positive(),
+    imageExtension: z.enum(['jpg', 'jpeg', 'png', 'webp']).default('jpg'),
+    order: z.number().default(0),
+    published: z.boolean().default(true),
+  }),
+});
+export const collections = { artwork, portfolioCollection, exhibition };

@@ -1,0 +1,78 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ImageCarousel from '../../components/ImageCarousel.astro';
+import { exhibitionImagePath, getExhibitions, imageUrl } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const exhibitions = await getExhibitions();
+  return exhibitions.map(exhibition => ({
+    params: { slug: exhibition.slug },
+    props: { exhibition },
+  }));
+}
+
+const { exhibition } = Astro.props;
+const images = Array.from({ length: exhibition.imageCount }, (_, offset) => {
+  const index = offset + 1;
+  const src = exhibitionImagePath(exhibition, index);
+  return {
+    image: {
+      src,
+      width: 1600,
+      height: 1067,
+      alt: `${exhibition.title} exhibition view ${index}`,
+    },
+    title: exhibition.title,
+    fullSrc: imageUrl(src),
+    ariaLabel: `Enlarge ${exhibition.title} exhibition image ${index}`,
+  };
+});
+---
+<Layout title={exhibition.title} description={exhibition.summary}>
+  <section class="section exhibition-detail-intro" data-reveal>
+    <a class="text-link" href="/exhibitions/">&#8592; All exhibitions</a>
+    <p class="eyebrow">{exhibition.kind} / {exhibition.year}</p>
+    <h1>{exhibition.title}</h1>
+    {exhibition.originalTitle && <p class="exhibition-detail-original">{exhibition.originalTitle}</p>}
+    <p class="exhibition-detail-venue">{exhibition.venue}, {exhibition.location}</p>
+  </section>
+
+  <section class="section exhibition-gallery-section" data-reveal>
+    <div class="gallery exhibition-gallery">
+      <ImageCarousel
+        items={images}
+        label={`${exhibition.title} exhibition images`}
+        className="exhibition-image-carousel"
+        viewportClass="exhibition-gallery-viewport"
+        slideClass="exhibition-gallery-slide"
+        eagerFirst
+      />
+    </div>
+  </section>
+
+  <section class="section exhibition-description" data-reveal>
+    <div class="exhibition-description-heading">
+      <p class="eyebrow">About the exhibition</p>
+      <p class="exhibition-description-summary">{exhibition.summary}</p>
+    </div>
+    <div class="exhibition-description-body">
+      {exhibition.sections.map(section => (
+        <section class="exhibition-text-section">
+          <h2>{section.heading}</h2>
+          <p>{section.body}</p>
+        </section>
+      ))}
+      {exhibition.links.length > 0 && (
+        <div class="exhibition-resources">
+          <p class="eyebrow">External links</p>
+          {exhibition.links.map(link => (
+            <a href={link.url} target="_blank" rel="noreferrer">
+              <span>{link.label}</span>
+              <span aria-hidden="true">&#8599;</span>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Layout>

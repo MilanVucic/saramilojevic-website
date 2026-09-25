@@ -4,6 +4,7 @@ export { site };
 export type Artwork = CollectionEntry<'artwork'>['data'];
 export type PortfolioCollection = CollectionEntry<'portfolioCollection'>['data'];
 export type ArtworkImage = Artwork['images'][number];
+export type Exhibition = CollectionEntry<'exhibition'>['data'];
 
 export async function getPortfolio() {
   const collections = (await getCollection('portfolioCollection')).map(e => e.data).sort((a,b) => a.order-b.order);
@@ -19,6 +20,17 @@ export async function getPortfolio() {
     if (!collections.some(c => c.slug === artwork.collection)) throw new Error(`Unknown collection for ${artwork.slug}`);
   }
   return { collections, works: all.filter(a => a.published) };
+}
+
+export async function getExhibitions() {
+  return (await getCollection('exhibition'))
+    .map(entry => entry.data)
+    .filter(exhibition => exhibition.published)
+    .sort((a, b) => a.order - b.order);
+}
+
+export function exhibitionImagePath(exhibition: Exhibition, index: number) {
+  return `exhibitions/${exhibition.slug}/${index}.${exhibition.imageExtension}`;
 }
 
 export function imageUrl(src: string) {

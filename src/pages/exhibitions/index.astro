@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ExhibitionArchiveRow from '../../components/ExhibitionArchiveRow.astro';
+import { getExhibitions } from '../../lib/content';
+
+const exhibitions = await getExhibitions();
+const description = "A curated archive of solo and group exhibitions, site-specific installations, and artistic residencies. A space where paintings, drawings, and installations engage directly with architecture and the viewer.";
+---
+<Layout title="Exhibitions" description={description}>
+  <section class="section exhibitions-intro" data-reveal>
+    <p class="eyebrow">Exhibition archive</p>
+    <h1>Exhibitions</h1>
+    <p>{description}</p>
+  </section>
+  <div class="exhibition-archive">
+    {exhibitions.map((exhibition, index) => <ExhibitionArchiveRow exhibition={exhibition} index={index} />)}
+  </div>
+</Layout>
