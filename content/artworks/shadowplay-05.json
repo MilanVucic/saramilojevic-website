@@ -1,0 +1,48 @@
+{
+  "slug": "shadowplay-05",
+  "title": "Shadowplay 05",
+  "collection": "shadowplay",
+  "year": 2026,
+  "medium": "Colored Pencil on Paper",
+  "dimensions": {
+    "widthCm": 50,
+    "heightCm": 70
+  },
+  "description": "This piece is from the 'Shadowplay' drawing series, which develops around the bittersweet concept of a 'petrified world' - a space of everyday objects, interiors, and light whose proximity simultaneously comforts and distances us. The series takes its title from the song 'Shadowplay' by the band Wallners, capturing an atmosphere of transience and absent closeness. Executed in a mixed media of ink and colored pencils on paper, these works focus on windows as boundaries between inner and outer worlds, channeling a Sartrean sentiment of a world 'stiff as a lacquered miniature.' The human figure remains strictly absent, yet its presence is constantly felt through the haunting traces left behind: the shadow of a plant, a window frame, an empty room, or light falling on silent objects. The shadows themselves become the true carriers of our internal states.",
+  "order": 5,
+  "featured": false,
+  "available": true,
+  "published": true,
+  "images": [
+    {
+      "src": "shadowplay/shadowplay-05-1.JPG",
+      "width": 2836,
+      "height": 4126,
+      "alt": "Shadowplay 05-1, colored pencil on paper"
+    },
+    {
+      "src": "shadowplay/shadowplay-05-2.jpg",
+      "width": 1500,
+      "height": 1200,
+      "alt": "Shadowplay 05-2, colored pencil on paper"
+    },
+    {
+      "src": "shadowplay/shadowplay-05-3.JPG",
+      "width": 5184,
+      "height": 3456,
+      "alt": "Shadowplay 05-3, colored pencil on paper"
+    },
+    {
+      "src": "shadowplay/shadowplay-05-4.JPG",
+      "width": 5184,
+      "height": 3456,
+      "alt": "Shadowplay 05-4, colored pencil on paper"
+    },
+    {
+      "src": "shadowplay/shadowplay-05-5.JPG",
+      "width": 5184,
+      "height": 3456,
+      "alt": "Shadowplay 05-5, colored pencil on paper"
+    }
+  ]
+}
