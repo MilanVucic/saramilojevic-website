@@ -4,9 +4,9 @@
   "intro": "A space for colour, gesture, and the things that remain.",
   "biography": "Sara Milojević is a contemporary visual artist, painter, and muralist whose vibrant practice moves between intimate works on paper and canvas and impactful public art.",
   "email": "sara.milojevic.art@gmail.com",
-  "siteUrl": "",
+  "siteUrl": "https://saramilojevic.com/",
   "seoDescription": "Sara Milojević is a Belgrade-based visual artist and painter. Explore original paintings, selected works, exhibitions, and her studio practice.",
-  "imageBaseUrl": "https://pub-0cd4ec3155d8403885715be1046a4e68.r2.dev",
+  "imageBaseUrl": "https://images.saramilojevic.com",
   "responsiveImagesEnabled": true,
   "heroDesktopImages": [
     { "artwork": "the-blue-clips", "image": 1 },
