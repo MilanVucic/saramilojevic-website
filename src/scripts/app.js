@@ -370,17 +370,27 @@ if (!reduced) {
     state.section.addEventListener('pointerleave',()=>{state.target=0;requestRender();});
    });
   }else{
-   const updateFromScroll=()=>{
-    const viewportHeight=innerHeight;
+   let viewportHeight=innerHeight;
+   const measureSections=()=>{
+    viewportHeight=innerHeight;
     sections.forEach(state=>{
      const rect=state.section.getBoundingClientRect();
-     const progress=Math.max(0,Math.min(1,(viewportHeight-rect.top)/(viewportHeight+rect.height)))-.5;
+     state.top=rect.top+scrollY;
+     state.height=rect.height;
+    });
+   };
+   const updateFromScroll=()=>{
+    const scrollTop=scrollY;
+    sections.forEach(state=>{
+     const sectionTop=state.top-scrollTop;
+     const progress=Math.max(0,Math.min(1,(viewportHeight-sectionTop)/(viewportHeight+state.height)))-.5;
      state.target=progress*144;
     });
     requestRender();
    };
    addEventListener('scroll',updateFromScroll,{passive:true});
-   addEventListener('resize',updateFromScroll,{passive:true});
+   addEventListener('resize',()=>{measureSections();updateFromScroll();},{passive:true});
+   measureSections();
    updateFromScroll();
   }
  }

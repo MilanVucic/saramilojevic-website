@@ -1,9 +1,29 @@
 ---
 ---
-<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-VRYGNNVET7"></script>
 <script is:inline>
   window.dataLayer = window.dataLayer || [];
   function gtag(){window.dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-VRYGNNVET7');
+
+  function loadGoogleAnalytics(){
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=G-VRYGNNVET7';
+    document.head.appendChild(script);
+  }
+
+  function scheduleGoogleAnalytics(){
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(loadGoogleAnalytics, { timeout: 3000 });
+    } else {
+      window.setTimeout(loadGoogleAnalytics, 1000);
+    }
+  }
+
+  if (document.readyState === 'complete') {
+    scheduleGoogleAnalytics();
+  } else {
+    window.addEventListener('load', scheduleGoogleAnalytics, { once: true });
+  }
 </script>
