@@ -1,10 +1,13 @@
 ---
 interface Props {
-  href: string;
+  href?: string;
   variant?: 'default' | 'light';
   className?: string;
+  type?: 'button' | 'submit' | 'reset';
 }
 
-const { href, variant = 'default', className } = Astro.props;
+const { href, variant = 'default', className, type = 'button' } = Astro.props;
 ---
-<a href={href} class:list={['button', variant === 'light' && 'light', className]}><slot /></a>
+{href
+  ? <a href={href} class:list={['button', variant === 'light' && 'light', className]}><slot /></a>
+  : <button type={type} class:list={['button', variant === 'light' && 'light', className]}><slot /></button>}

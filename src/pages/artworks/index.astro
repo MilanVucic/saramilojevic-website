@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import ArtworkImage from '../../components/ArtworkImage.astro';
 import ArtworkFilters from '../../components/ArtworkFilters.astro';
+import CTA from '../../components/CTA.astro';
 import { getPortfolio } from '../../lib/content';
 
 const { works, collections } = await getPortfolio();
@@ -47,6 +48,9 @@ const sizeCategory = (width: number, height: number) => {
         <p class="all-work-details">{artwork.medium}{artwork.dimensions && ` · ${artwork.dimensions.widthCm} × ${artwork.dimensions.heightCm} cm`}</p>
       </a>)}
     </div>
-    <p class="all-works-empty" data-works-empty hidden>No artworks match the current search and filters.</p>
+    <div class="all-works-empty" data-works-empty hidden>
+      <p>No artworks match the current search and filters.</p>
+      <CTA className="all-works-empty-clear">Clear filters</CTA>
+    </div>
   </section>
 </Layout>

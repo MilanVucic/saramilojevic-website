@@ -5,13 +5,14 @@ import '../styles/global.css';
 interface Props { title: string; description?: string; bodyClass?: string }
 const { title, description = site.intro, bodyClass } = Astro.props;
 const path = Astro.url.pathname;
+const pageTitle = path === '/' ? 'Sara Milojević - Visual Artist' : `${title} - ${site.name}`;
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>{title} — {site.name}</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#f6f4ef" />
     <link rel="icon" type="image/png" href="/favicon.png" />

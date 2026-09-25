@@ -26,6 +26,10 @@ function Assert-LastExitCode([string]$Step) {
     }
 }
 
+$deploymentId = [Guid]::NewGuid().ToString('N')
+$archivePath = Join-Path ([System.IO.Path]::GetTempPath()) "saramilojevic-$deploymentId.tar.gz"
+$remoteArchive = "/tmp/saramilojevic-$deploymentId.tar.gz"
+
 Push-Location $PSScriptRoot
 try {
     npm run check
@@ -34,16 +38,23 @@ try {
     npm run build
     Assert-LastExitCode "Build"
 
-    ssh @sshOptions $Remote "mkdir -p '$RemoteRoot'"
-    Assert-LastExitCode "Creating remote web directory"
+    if (-not (Test-Path -LiteralPath .\dist\index.html)) {
+        throw "Build output is missing dist/index.html."
+    }
 
-    scp @scpOptions -r .\dist\* "${Remote}:${RemoteRoot}/"
-    Assert-LastExitCode "Uploading site"
+    tar.exe -czf $archivePath -C .\dist .
+    Assert-LastExitCode "Creating deployment archive"
 
-    ssh @sshOptions $Remote "chmod -R a+rX '$RemoteRoot' && test -f '$RemoteRoot/index.html'"
-    Assert-LastExitCode "Setting permissions and verifying deployment"
+    scp @scpOptions $archivePath "${Remote}:${remoteArchive}"
+    Assert-LastExitCode "Uploading deployment archive"
+
+    ssh @sshOptions $Remote "mkdir -p '$RemoteRoot' && tar -xzf '$remoteArchive' -C '$RemoteRoot' && rm -f '$remoteArchive' && chmod -R a+rX '$RemoteRoot' && test -f '$RemoteRoot/index.html'"
+    Assert-LastExitCode "Extracting and verifying deployment"
 
     Write-Host "Deployed Sara Milojevic website to ${Remote}:${RemoteRoot}"
 } finally {
+    if (Test-Path -LiteralPath $archivePath) {
+        Remove-Item -LiteralPath $archivePath -Force
+    }
     Pop-Location
 }

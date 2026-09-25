@@ -58,7 +58,6 @@ const groups = [
         <div class="all-works-filter-menus" id="artwork-filter-options" aria-label="Filter artworks">
           {groups.map(group => (
             <div class="all-works-filter-menu" data-filter-menu={group.name}>
-              <p class="all-works-mobile-filter-title">{group.label}</p>
               <button type="button" class="all-works-filter-toggle" data-filter-menu-toggle aria-expanded="false">
                 <span>{group.label}: <strong data-filter-summary>All</strong></span>
               </button>

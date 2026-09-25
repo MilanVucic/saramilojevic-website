@@ -22,6 +22,7 @@ export const initializeArtworkFilters = () => {
     const views = [...root.querySelectorAll('[data-work-view]')];
     const count = section?.querySelector('[data-work-count]');
     const empty = section?.querySelector('[data-works-empty]');
+    const emptyClear = section?.querySelector('.all-works-empty-clear');
 
     if (!allWorks || !search || !searchClear || !clearFilters || !mobileFilterModal || !mobileFilterClose || !mobileFilterClear || !mobileFilterApply || !count || !empty) return;
 
@@ -41,15 +42,72 @@ export const initializeArtworkFilters = () => {
         .map(input => input.value),
     );
 
-    const closeMenus = except => {
-      filterMenus.forEach(menu => {
-        if (menu === except) return;
-        menu.querySelector('[data-filter-popup]').hidden = true;
-        menu.querySelector('[data-filter-menu-toggle]').setAttribute('aria-expanded', 'false');
+    const mobileModalOpen = () => mobileFilters.matches && root.classList.contains('mobile-filters-open');
+    const menuAnimations = new WeakMap();
+
+    const setMenuOpen = (menu, opening, animate = mobileModalOpen()) => {
+      const popup = menu.querySelector('[data-filter-popup]');
+      const toggle = menu.querySelector('[data-filter-menu-toggle]');
+      const currentAnimation = menuAnimations.get(popup);
+      currentAnimation?.cancel();
+      menuAnimations.delete(popup);
+      toggle.setAttribute('aria-expanded', String(opening));
+
+      if (opening) {
+        if (!popup.hidden) return;
+        popup.hidden = false;
+      } else if (popup.hidden) {
+        return;
+      }
+
+      if (!animate || reducedMotion.matches || typeof popup.animate !== 'function') {
+        popup.hidden = !opening;
+        return;
+      }
+
+      const styles = getComputedStyle(popup);
+      const expanded = {
+        height: `${popup.getBoundingClientRect().height}px`,
+        marginTop: styles.marginTop,
+        paddingTop: styles.paddingTop,
+        paddingBottom: styles.paddingBottom,
+        borderTopWidth: styles.borderTopWidth,
+        borderBottomWidth: styles.borderBottomWidth,
+        opacity: 1,
+        transform: 'translateY(0)',
+      };
+      const collapsed = {
+        height: '0px',
+        marginTop: '0px',
+        paddingTop: '0px',
+        paddingBottom: '0px',
+        borderTopWidth: '0px',
+        borderBottomWidth: '0px',
+        opacity: 0,
+        transform: 'translateY(-6px)',
+      };
+      const animation = popup.animate(opening ? [collapsed, expanded] : [expanded, collapsed], {
+        duration: opening ? 320 : 240,
+        easing: 'cubic-bezier(.2,.75,.25,1)',
+        fill: 'both',
       });
+      menuAnimations.set(popup, animation);
+      animation.finished
+        .catch(() => {})
+        .then(() => {
+          if (menuAnimations.get(popup) !== animation) return;
+          menuAnimations.delete(popup);
+          if (!opening && toggle.getAttribute('aria-expanded') === 'false') popup.hidden = true;
+          animation.cancel();
+        });
     };
 
-    const mobileModalOpen = () => mobileFilters.matches && root.classList.contains('mobile-filters-open');
+    const closeMenus = (except, animate = mobileModalOpen()) => {
+      filterMenus.forEach(menu => {
+        if (menu === except) return;
+        setMenuOpen(menu, false, animate);
+      });
+    };
 
     const updateSummaries = () => {
       filterInputs.forEach(input => {
@@ -186,13 +244,10 @@ export const initializeArtworkFilters = () => {
 
     filterMenus.forEach(menu => {
       const toggle = menu.querySelector('[data-filter-menu-toggle]');
-      const popup = menu.querySelector('[data-filter-popup]');
       toggle.addEventListener('click', () => {
-        if (mobileModalOpen()) return;
-        const opening = popup.hidden;
+        const opening = toggle.getAttribute('aria-expanded') !== 'true';
         closeMenus(opening ? menu : null);
-        popup.hidden = !opening;
-        toggle.setAttribute('aria-expanded', String(opening));
+        setMenuOpen(menu, opening);
       });
     });
 
@@ -208,10 +263,7 @@ export const initializeArtworkFilters = () => {
       document.body.classList.add('filters-modal-open');
       mobileFilterModal.setAttribute('aria-modal', 'true');
       mobileFilterModal.setAttribute('aria-hidden', 'false');
-      filterMenus.forEach(menu => {
-        menu.querySelector('[data-filter-popup]').hidden = false;
-        menu.querySelector('[data-filter-menu-toggle]').setAttribute('aria-expanded', 'true');
-      });
+      closeMenus(null, false);
       mobileFilterToggle?.setAttribute('aria-expanded', 'true');
       mobileFilterToggle?.setAttribute('aria-label', 'Hide artwork filters');
       window.setTimeout(() => search.focus({ preventScroll: true }), reducedMotion.matches ? 0 : 220);
@@ -266,11 +318,16 @@ export const initializeArtworkFilters = () => {
       if (!event.matches && root.classList.contains('mobile-filters-open')) closeMobileFilters(true);
     });
 
-    clearFilters.addEventListener('click', () => {
+    const resetFilters = () => {
       search.value = '';
       filterInputs.forEach(input => { input.checked = false; });
+      searchClear.hidden = true;
+      closeMenus();
       update();
-    });
+    };
+
+    clearFilters.addEventListener('click', resetFilters);
+    emptyClear?.addEventListener('click', resetFilters);
 
     document.addEventListener('click', event => {
       if (mobileModalOpen()) return;

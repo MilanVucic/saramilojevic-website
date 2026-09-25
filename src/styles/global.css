@@ -1057,6 +1057,10 @@ dd {
         gap: 30px 18px
     }
 
+    .selected-works-group > .work-card:nth-child(n+3) {
+        display: none
+    }
+
     .work-image {
         padding: 12px
     }
@@ -1281,6 +1285,10 @@ dd {
 
     .works-grid {
         grid-template-columns:1fr
+    }
+
+    .selected-works-group {
+        grid-template-columns:repeat(2, minmax(0, 1fr))
     }
 
     .hero h1 {
@@ -1587,7 +1595,7 @@ dd {
     color: #9b9b90
 }
 
-.all-works-controls .all-works-search-clear {
+.all-works-search-clear {
     display: grid;
     place-items: center;
     width: 24px;
@@ -1686,7 +1694,7 @@ dd {
     position: relative
 }
 
-.all-works-controls .all-works-filter-toggle {
+.all-works-filter-toggle {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -1966,11 +1974,26 @@ dd {
 }
 
 .all-works-empty {
+    display: grid;
+    justify-items: center;
+    gap: 24px;
     padding: 90px 0;
     color: var(--muted);
     font-family: var(--serif);
     font-size: 24px;
     text-align: center
+}
+
+.all-works-empty p {
+    margin: 0
+}
+
+.all-works-empty .button {
+    justify-content: center;
+    background: transparent;
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: pointer
 }
 
 .contact-page {
@@ -2568,21 +2591,13 @@ dd {
     .all-works-filter-menus {
         display: grid;
         flex: 1 1 auto;
-        gap: 24px;
+        align-content: start;
+        gap: 10px;
         min-height: 0;
         width: 100%;
         padding: 20px 2px;
         overflow-y: auto;
         overscroll-behavior: contain
-    }
-
-    .all-works-mobile-filter-title {
-        display: block;
-        margin-bottom: 8px;
-        color: var(--muted);
-        font: 9px/1.4 Arial, sans-serif;
-        letter-spacing: .12em;
-        text-transform: uppercase
     }
 
     .all-works-toolbar > .all-works-views {
@@ -2602,8 +2617,12 @@ dd {
         width: 100%
     }
 
-    .all-works-controls .all-works-filter-toggle {
-        display: none
+    .all-works-filter-toggle {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        min-height: 48px;
+        background: #fff
     }
 
     .all-works-filter-popup {
@@ -2614,12 +2633,17 @@ dd {
         width: 100%;
         min-width: 0;
         max-width: none;
-        max-height: none;
-        padding: 0;
-        overflow: visible;
-        border: 0;
-        background: transparent;
-        box-shadow: none
+        max-height: 230px;
+        margin-top: 8px;
+        padding: 8px;
+        overflow-y: auto;
+        border: 1px solid var(--line);
+        background: #fff;
+        box-shadow: 0 12px 28px rgba(28, 28, 24, .08)
+    }
+
+    .all-works-filter-popup[hidden] {
+        display: none
     }
 
     .all-works-filter-popup label + label {
@@ -2701,10 +2725,6 @@ dd {
 
     .all-works-grid.is-list .all-work-inline-year {
         display: inline
-    }
-
-    .inquiry-toggle > div {
-        grid-template-columns:1fr
     }
 
     .contact-form-footer {
