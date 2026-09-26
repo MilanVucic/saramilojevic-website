@@ -61,7 +61,7 @@ const [firstName, ...surname] = site.name.split(' ');
     </div>
     <div class="mobile-all-artworks"><CTA href="/artworks/">All artworks</CTA></div>
   </section>
-  <section id="about" class="section about" data-reveal><div><div class="about-home-portrait"><LoadingImage src={responsiveImageUrl('/assets/artist-2.JPG', 1080)} width={3252} height={3752} alt="Sara Milojević holding paintbrushes in her studio" sizes="(max-width: 760px) 88vw, 40vw" webpSrcSet={responsiveImageSrcSet('/assets/artist-2.JPG')} /></div></div><div><p class="intro">{site.intro}</p><span class="signature">{site.name}</span><p>{site.biography}</p><div class="about-ctas"><CTA href="/about/">Read about Sara</CTA><CTA href="/exhibitions/">Explore the exhibitions</CTA></div></div></section>
+  <section id="about" class="section about" data-reveal><div><div class="about-home-portrait"><LoadingImage src={responsiveImageUrl('/assets/artist-2.JPG', 1080)} width={3252} height={3752} alt="Sara Milojević holding paintbrushes in her studio" sizes="(max-width: 760px) 88vw, 40vw" webpSrcSet={responsiveImageSrcSet('/assets/artist-2.JPG')} /></div></div><div><p class="intro">{site.intro}</p><img class="about-home-signature" src="/assets/sara-milojevic-signature.svg" alt="Sara Milojević signature" /><p>{site.biography}</p><div class="about-ctas"><CTA href="/about/">Read about Sara</CTA><CTA href="/exhibitions/">Explore the exhibitions</CTA></div></div></section>
   <div class="collection-features">
     {collections.map(collection => <CollectionFeature collection={collection} works={works.filter(artwork => artwork.collection === collection.slug)}/>)}
   </div>

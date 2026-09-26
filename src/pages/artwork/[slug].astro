@@ -84,7 +84,10 @@ const carouselFrameRatio = Math.min(...a.images.map(image => image.width / image
           <div><dt>Availability</dt><dd>{a.available ? 'Available for sale' : 'Not available'}</dd></div>
           {a.readyToHang && <div><dt>Ready to hang</dt><dd>Yes</dd></div>}
         </dl>
-        <CTA href={`/contact/?artwork=${encodeURIComponent(a.slug)}`}>Enquire about this work</CTA>
+        <div class="artwork-enquiry-row">
+          <img class="artwork-enquiry-signature" src="/assets/sara-milojevic-signature.svg" alt="Sara Milojević signature" />
+          <CTA href={`/contact/?artwork=${encodeURIComponent(a.slug)}`}>Enquire about this work</CTA>
+        </div>
       </aside>
     </div>
   </section>

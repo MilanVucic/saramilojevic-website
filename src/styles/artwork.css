@@ -99,6 +99,28 @@
     margin: 35px 0
 }
 
+.artwork-enquiry-row {
+    display: flex;
+    align-items: center;
+    gap: 36px
+}
+
+.artwork-enquiry-signature {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 50%;
+    height: auto
+}
+
+.artwork-enquiry-row .button {
+    flex: 1 1 0;
+    min-width: 0;
+    width: 50%;
+    justify-content: center;
+    padding: 14px 12px;
+    text-align: center
+}
+
 .artwork-info dl > div {
     display: flex;
     justify-content: space-between;
@@ -135,6 +157,20 @@ dd {
 
     .artwork-info dl {
         margin: 25px 0
+    }
+
+    .artwork-enquiry-row {
+        gap: 28px
+    }
+
+    .artwork-enquiry-signature {
+        width: 50%
+    }
+
+    .artwork-enquiry-row .button {
+        padding: 13px 8px;
+        font-size: 9px;
+        letter-spacing: .09em
     }
 
     .artwork-gallery-carousel {

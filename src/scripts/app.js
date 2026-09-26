@@ -72,7 +72,7 @@ if (galleryItems.length) {
      pswpModule:()=>import('photoswipe'),
      showHideAnimationType:reduced?'none':'fade',
      initialZoomLevel:'fit',
-     secondaryZoomLevel:2.5,
+     secondaryZoomLevel:zoomLevels=>window.matchMedia('(max-width: 760px)').matches?zoomLevels.initial*2:2.5,
      maxZoomLevel:zoomLevels=>zoomLevels.fit*4,
      zoom:false,
      counter:false,
