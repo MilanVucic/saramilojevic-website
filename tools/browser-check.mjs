@@ -56,7 +56,7 @@ try {
             deviceScaleFactor: 1,
             mobile: width < 500
         });
-        for (const route of ['/', '/about/', '/collections/', '/artworks/', '/contact/', '/collection/cinematic-stills/', '/artwork/dont-look/']) {
+        for (const route of ['/', '/about/', '/collections/', '/artworks/', '/contact/', '/exhibitions/', '/collection/cinematic-stills/', '/artwork/dont-look/']) {
             await call('Page.navigate', {url: `${baseUrl}${route}`});
             await new Promise(r => setTimeout(r, 1500));
             const result = await evaluate(`({title:document.title,overflow:document.documentElement.scrollWidth>innerWidth,broken:[...document.images].filter(i=>i.hasAttribute('src')&&i.complete&&!i.naturalWidth).length})`);
@@ -67,10 +67,11 @@ try {
             }
             if (route === '/') {
                 if (width < 761) {
-                    if (await evaluate(`!!document.querySelector('[data-hero] .hero-slide-loader')||performance.getEntriesByType('resource').some(resource=>resource.name.includes('/_astro/hero.'))`)) throw Error(`${width} homepage: unnecessary timed-hero module loaded on mobile`);
+                    if (!await evaluate(`!!document.querySelector('[data-hero] .hero-slide-loader')&&!document.querySelector('[data-hero] canvas')`)) throw Error(`${width} homepage: timed hero did not initialize on mobile`);
                 } else if (!await evaluate(`!!document.querySelector('[data-hero] .hero-slide-loader')&&!document.querySelector('[data-hero] canvas')`)) throw Error(`${width} homepage: timed hero did not initialize`);
                 if (!await evaluate(`document.documentElement.classList.contains('reveal-enabled')`)) throw Error(`${width} homepage: section reveals did not initialize`);
                 if (!await evaluate(`document.querySelector('#selected .section-heading .button')?.getAttribute('href')==='/artworks/'&&[...document.querySelectorAll('[data-selected-group]')].every(group=>group.querySelectorAll('.work-card').length<=3)&&document.querySelector('[data-selected-group].is-active')?.querySelectorAll('.work-card').length===3`)) throw Error(`${width} homepage: Selected Works groups or CTA are incorrect`);
+                if (width < 761 && !await evaluate(`(()=>{const group=document.querySelector('[data-selected-group].is-active');const cards=[...group.querySelectorAll('.work-card')].filter(card=>getComputedStyle(card).display!=='none');return getComputedStyle(group).gridTemplateColumns.split(' ').length===2&&cards.length===2})()`)) throw Error(`${width} homepage: selected works are not shown as one row of two items`);
                 if (width === 1440) {
                     const selectedCollection = await evaluate(`document.querySelector('[data-selected-group].is-active').dataset.collection`);
                     await new Promise(r => setTimeout(r, 4500));
@@ -107,6 +108,8 @@ try {
                 if (!await evaluate(`(()=>{const heading=document.querySelector('.contact-page h1').getBoundingClientRect();const panel=document.querySelector('.contact-panel').getBoundingClientRect();return !(heading.left<panel.right&&heading.right>panel.left&&heading.top<panel.bottom&&heading.bottom>panel.top)})()`)) throw Error(`${width} contact: heading overlaps the form panel`);
                 if (!await evaluate(`document.querySelector('[data-contact-form]')?.getAttribute('action')==='https://api.web3forms.com/submit'&&document.querySelector('input[name="access_key"]')?.value==='8b8c138f-4f4c-47e9-920f-59cfbd559db5'`)) throw Error(`${width} contact: Web3Forms configuration is missing`);
                 if (!await evaluate(`document.querySelector('input[name="inquiry_type"][value="General inquiry"]').checked&&document.querySelector('[data-artwork-field]').hidden&&document.querySelector('[data-artwork-search]').disabled`)) throw Error(`${width} contact: general inquiry is not the default`);
+                await evaluate(`document.querySelector('[data-contact-form]').requestSubmit()`);
+                if (!await evaluate(`document.querySelectorAll('.contact-field-error:not([hidden])').length===3&&[...document.querySelectorAll('.contact-form [aria-invalid="true"]')].length===3&&document.querySelector('.contact-form-status').dataset.state==='error'`)) throw Error(`${width} contact: required-field errors are not displayed inline`);
                 await evaluate(`document.querySelector('input[name="inquiry_type"][value="Specific artwork"]').click()`);
                 if (!await evaluate(`!document.querySelector('[data-artwork-field]').hidden&&!document.querySelector('[data-artwork-search]').disabled&&document.querySelector('[data-artwork-search]').required&&document.querySelectorAll('[data-artwork-option]').length>1`)) throw Error(`${width} contact: artwork inquiry controls did not activate`);
                 await evaluate(`document.querySelector('[data-artwork-search]').click()`);
@@ -118,6 +121,9 @@ try {
                 if (!await evaluate(`document.querySelector('[data-artwork-options]').hidden&&!document.querySelector('[data-artwork-preview]').hidden&&!document.querySelector('[data-artwork-clear]').hidden&&getComputedStyle(document.querySelector('[data-artwork-clear]')).backgroundColor==='rgb(0, 0, 0)'&&!!document.querySelector('[data-artwork-preview] img').getAttribute('src')&&!!document.querySelector('[data-preview-title]').textContent`)) throw Error(`${width} contact: selected artwork preview or black clear button is incorrect`);
                 await evaluate(`document.querySelector('[data-artwork-clear]').click()`);
                 if (!await evaluate(`document.querySelector('[data-artwork-search]').value===''&&document.querySelector('[data-artwork-preview]').hidden&&document.querySelector('[data-artwork-clear]').hidden`)) throw Error(`${width} contact: artwork clear button did not remove the selection`);
+            }
+            if (route === '/exhibitions/' && width < 761) {
+                if (!await evaluate(`(()=>[...document.querySelectorAll('.exhibition-archive-row')].every(row=>{const image=row.querySelector('.exhibition-archive-media').getBoundingClientRect();const copy=row.querySelector('.exhibition-archive-copy').getBoundingClientRect();return image.left>=innerWidth*.05&&image.right<=innerWidth*.95&&copy.left>=innerWidth*.05&&copy.right<=innerWidth*.95}))()`)) throw Error(`${width} exhibitions: archive content touches the mobile viewport edge`);
             }
             if (!await evaluate(`document.querySelector('.footer-social a[aria-label="Sara Milojević on Behance"]')?.getAttribute('href')==='https://www.behance.net/Sarami'`)) throw Error(`${width} ${route}: Behance footer link is missing`);
             if (route.startsWith('/artwork')) {
@@ -151,11 +157,12 @@ try {
                     });
                 }
                 await new Promise(r => setTimeout(r, 650));
-                if (!await evaluate(`!!document.querySelector('.artwork-viewer.is-open')`)) {
-                    const state = await evaluate(`({url:location.href,viewer:[...document.querySelectorAll('.artwork-viewer')].map(el=>el.className),gallery:!!document.querySelector('#gallery')})`);
+                if (!await evaluate(`!!document.querySelector('.pswp.pswp--open')`)) {
+                    const state = await evaluate(`({url:location.href,viewer:[...document.querySelectorAll('.pswp')].map(el=>el.className),gallery:!!document.querySelector('#gallery')})`);
                     throw Error(`Lightbox did not open: ${JSON.stringify(state)}${errors.length ? `\n${errors.join('\n')}` : ''}`);
                 }
-                await evaluate(`document.querySelector('.viewer-close').click()`);
+                if (!await evaluate(`!document.querySelector('.pswp__button--zoom')&&!!document.querySelector('.pswp__swipe-hint')`)) throw Error(`${width} artwork: fullscreen zoom UI or swipe hint is incorrect`);
+                await evaluate(`document.querySelector('.pswp__button--close').click()`);
             }
             console.log(`PASS ${width}px ${route}`);
         }

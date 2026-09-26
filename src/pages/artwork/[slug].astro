@@ -81,7 +81,7 @@ const carouselFrameRatio = Math.min(...a.images.map(image => image.width / image
           <div><dt>Medium</dt><dd>{a.medium}</dd></div>
           {a.dimensions && <div><dt>Dimensions</dt><dd>{a.dimensions.widthCm} × {a.dimensions.heightCm} cm (W × H)</dd></div>}
           {a.year && <div><dt>Year</dt><dd>{a.year}</dd></div>}
-          <div><dt>Availability</dt><dd>{a.available ? 'Available for sale' : 'In a collection'}</dd></div>
+          <div><dt>Availability</dt><dd>{a.available ? 'Available for sale' : 'Not available'}</dd></div>
           {a.readyToHang && <div><dt>Ready to hang</dt><dd>Yes</dd></div>}
         </dl>
         <CTA href={`/contact/?artwork=${encodeURIComponent(a.slug)}`}>Enquire about this work</CTA>

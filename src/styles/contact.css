@@ -352,6 +352,39 @@
     font-size: 12px
 }
 
+.contact-form-status[data-state="error"],
+.contact-field-error {
+    color: var(--accent)
+}
+
+.contact-field-error {
+    max-height: 0;
+    overflow: hidden;
+    margin: 0;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: max-height .22s ease, margin .22s ease, opacity .18s ease, transform .22s ease;
+    font: italic 13px/1.4 var(--serif)
+}
+
+.contact-field-error.is-visible {
+    max-height: 5rem;
+    margin: 8px 0 0;
+    opacity: 1;
+    transform: translateY(0)
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .contact-field-error {
+        transition: none
+    }
+}
+
+.contact-form input[aria-invalid="true"],
+.contact-form textarea[aria-invalid="true"] {
+    border-color: var(--accent)
+}
+
 @media (max-width: 1050px) {
     .contact-page {
         grid-template-columns:1fr;

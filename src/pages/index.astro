@@ -31,7 +31,6 @@ const [firstName, ...surname] = site.name.split(' ');
       data-hero-desktop-links={JSON.stringify(desktopHeroEntries.map(entry => entry.href))}
       data-hero-mobile-sources={JSON.stringify(mobileHeroEntries.map(entry => entry.mobileSrc))}
       data-hero-mobile-links={JSON.stringify(mobileHeroEntries.map(entry => entry.href))}
-      data-hero-mobile-autoplay="false"
     >
       <LoadingImage
         src={initialHeroEntry.desktopSrc}
@@ -44,10 +43,10 @@ const [firstName, ...surname] = site.name.split(' ');
       />
       <div class="hero-shade"></div>
     </div>
-    <div class="hero-copy"><p class="eyebrow">{site.subtitle}</p><h1>{firstName}<br/><em>{surname.join(' ')}</em></h1><p class="hero-tagline">{site.intro}</p><CTA href={initialHeroEntry.href} variant="light" className="hero-artwork-cta">View artwork</CTA></div>
+    <div class="hero-copy"><p class="eyebrow">{site.subtitle}</p><h1>{firstName}<br/><em>{surname.join(' ')}</em></h1><CTA href={initialHeroEntry.href} variant="light" className="hero-artwork-cta">View artwork</CTA></div>
   </section>}
   <section id="selected" class="section" data-reveal>
-    <div class="section-heading"><div><p class="eyebrow">A selection from the studio</p><h2>Selected <em>works</em></h2></div><CTA href="/artworks/">All artworks</CTA></div>
+    <div class="section-heading"><div><p class="eyebrow">A selection from the studio</p><h2>Selected <em>works</em></h2></div><div class="desktop-all-artworks"><CTA href="/artworks/">All artworks</CTA></div></div>
     <div class="selected-works-stage" data-selected-works>
       {selectedGroups.map((group, groupIndex) =>
         <div
@@ -60,6 +59,7 @@ const [firstName, ...surname] = site.name.split(' ');
         </div>
       )}
     </div>
+    <div class="mobile-all-artworks"><CTA href="/artworks/">All artworks</CTA></div>
   </section>
   <section id="about" class="section about" data-reveal><div><div class="about-home-portrait"><LoadingImage src={responsiveImageUrl('/assets/artist-2.JPG', 1080)} width={3252} height={3752} alt="Sara Milojević holding paintbrushes in her studio" sizes="(max-width: 760px) 88vw, 40vw" webpSrcSet={responsiveImageSrcSet('/assets/artist-2.JPG')} /></div></div><div><p class="intro">{site.intro}</p><span class="signature">{site.name}</span><p>{site.biography}</p><div class="about-ctas"><CTA href="/about/">Read about Sara</CTA><CTA href="/exhibitions/">Explore the exhibitions</CTA></div></div></section>
   <div class="collection-features">

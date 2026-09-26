@@ -253,8 +253,13 @@
     .exhibition-archive-row, .exhibition-archive-row.is-reversed {
         grid-template-columns:1fr;
         gap: 38px;
-        padding-top: 65px;
-        padding-bottom: 70px
+        padding: 65px 6% 70px;
+        box-sizing: border-box
+    }
+
+    .exhibition-archive-row > * {
+        min-width: 0;
+        max-width: 100%
     }
 
     .exhibition-archive-row.is-reversed .exhibition-archive-media {

@@ -40,30 +40,22 @@ if (!reduced) {
 // Every content link and image works before these progressive enhancements load.
 const galleryItems=[...document.querySelectorAll('.gallery-trigger')];
 if (galleryItems.length) {
- const viewer=document.createElement('div');
- viewer.className='artwork-viewer';
- viewer.hidden=true;
- viewer.setAttribute('role','dialog');
- viewer.setAttribute('aria-modal','true');
- viewer.setAttribute('aria-label','Artwork image viewer');
- viewer.innerHTML='<div class="viewer-backdrop"></div><p class="viewer-swipe-hint" aria-hidden="true">&larr; swipe &rarr;</p><button class="viewer-close" type="button" aria-label="Close fullscreen image">&times;</button><button class="viewer-nav viewer-prev" type="button" aria-label="Previous image">&#8592;</button><div class="viewer-frame"><span class="loading-image viewer-image-loader" data-image-loader><img alt=""></span><p class="viewer-caption"></p></div><button class="viewer-nav viewer-next" type="button" aria-label="Next image">&#8594;</button>';
- document.body.append(viewer);
- const image=viewer.querySelector('img');
- const imageLoader=viewer.querySelector('[data-image-loader]');
- initializeImageLoader(imageLoader);
- const caption=viewer.querySelector('.viewer-caption');
- const closeButton=viewer.querySelector('.viewer-close');
- const previousButton=viewer.querySelector('.viewer-prev');
- const nextButton=viewer.querySelector('.viewer-next');
- const backdrop=viewer.querySelector('.viewer-backdrop');
- const mobileViewer=window.matchMedia('(max-width: 760px)');
- let activeIndex=0;
+ const dataSource=galleryItems.map(item=>{
+  const preview=item.querySelector('img');
+  return {
+   src:item.dataset.fullSrc,
+   width:Number(preview?.getAttribute('width'))||preview?.naturalWidth||1,
+   height:Number(preview?.getAttribute('height'))||preview?.naturalHeight||1,
+   alt:preview?.alt||'',
+   msrc:preview?.currentSrc||preview?.src,
+   element:item
+  };
+ });
+ let lightboxPromise;
  let lastTrigger;
- let touchStart=0;
- let suppressBackgroundTap=false;
- let viewerTransitioning=false;
- const syncCarousel=()=>{
-  const item=galleryItems[activeIndex];
+ const syncCarousel=index=>{
+  const item=galleryItems[index];
+  if(!item)return;
   const carousel=item.closest('[data-image-carousel]');
   if(!carousel)return;
   const slides=[...carousel.querySelectorAll('[data-carousel-slide]')];
@@ -72,94 +64,87 @@ if (galleryItems.length) {
   carousel.dispatchEvent(new CustomEvent('carousel:show',{detail:{index:slideIndex}}));
   lastTrigger=item;
  };
- const update=()=>{
-  const item=galleryItems[activeIndex];
-  const preview=item.querySelector('img');
-  imageLoader.classList.remove('is-loaded','has-error');
-  image.src=item.dataset.fullSrc;
-  image.alt=preview?.alt||'';
-  if(image.complete)requestAnimationFrame(()=>imageLoader.classList.add('is-loaded'));
-  caption.textContent=item.closest('figure')?.querySelector('figcaption')?.textContent||'';
- };
- const open=index=>{
-  activeIndex=index;
-  lastTrigger=galleryItems[index];
-  imageLoader.getAnimations().forEach(animation=>animation.cancel());
-  viewerTransitioning=false;
-  update();
-  viewer.hidden=false;
-  document.body.classList.add('viewer-active');
-  requestAnimationFrame(()=>viewer.classList.add('is-open'));
-  closeButton.focus({preventScroll:true});
- };
- const close=()=>{
-  imageLoader.getAnimations().forEach(animation=>animation.cancel());
-  viewerTransitioning=false;
-  viewer.classList.remove('is-open');
-  document.body.classList.remove('viewer-active');
-  window.setTimeout(()=>{viewer.hidden=true;image.removeAttribute('src');lastTrigger?.focus({preventScroll:true});},reduced?0:300);
- };
- const waitForImage=()=>image.complete
-  ? Promise.resolve()
-  : new Promise(resolve=>{
-    const finish=()=>resolve();
-    image.addEventListener('load',finish,{once:true});
-    image.addEventListener('error',finish,{once:true});
-    window.setTimeout(finish,1200);
+ const getLightbox=()=>{
+  if(!lightboxPromise){
+   lightboxPromise=Promise.all([import('photoswipe/lightbox'),import('photoswipe/style.css')]).then(([module])=>{
+    const lightbox=new module.default({
+     dataSource,
+     pswpModule:()=>import('photoswipe'),
+     showHideAnimationType:reduced?'none':'fade',
+     initialZoomLevel:'fit',
+     secondaryZoomLevel:2.5,
+     maxZoomLevel:zoomLevels=>zoomLevels.fit*4,
+     zoom:false,
+     counter:false,
+     pinchToClose:false,
+     closeOnVerticalDrag:false,
+     allowPanToNext:false,
+     bgOpacity:.96,
+     preload:[1,2],
+     closeTitle:'Close fullscreen image',
+     arrowPrevTitle:'Previous image',
+     arrowNextTitle:'Next image',
+     errorMsg:'This image could not be loaded.'
+    });
+    lightbox.on('uiRegister',()=>{
+     lightbox.pswp.ui.registerElement({
+      name:'swipeHint',
+      className:'pswp__swipe-hint',
+      order:19,
+      isButton:false,
+      html:'&larr; swipe &rarr;',
+      onInit:(element,pswp)=>{
+       element.setAttribute('aria-hidden','true');
+       const update=({slide}={})=>{
+        const currentSlide=slide||pswp.currSlide;
+        const zoomed=currentSlide&&currentSlide.currZoomLevel>currentSlide.zoomLevels.initial+.01;
+        element.classList.toggle('is-zoomed',Boolean(zoomed));
+       };
+       pswp.on('zoomPanUpdate',update);
+       pswp.on('change',update);
+      }
+     });
+     lightbox.pswp.ui.registerElement({
+      name:'imageCaption',
+      className:'pswp__image-caption',
+      order:9,
+      appendTo:'root',
+      isButton:false,
+      onInit:(element,pswp)=>{
+       const update=()=>{
+        const item=galleryItems[pswp.currIndex];
+        element.textContent=item?.closest('figure')?.querySelector('figcaption')?.textContent||'';
+       };
+       pswp.on('change',update);
+       update();
+      }
+     });
+    });
+    lightbox.on('beforeOpen',()=>document.body.classList.add('viewer-active'));
+    lightbox.on('change',()=>syncCarousel(lightbox.pswp.currIndex));
+    lightbox.on('close',()=>{
+     document.body.classList.remove('viewer-active');
+     lastTrigger?.focus({preventScroll:true});
+    });
+    lightbox.init();
+    return lightbox;
+   }).catch(error=>{
+    lightboxPromise=undefined;
+    throw error;
    });
- const move=async direction=>{
-  if(viewerTransitioning||galleryItems.length<2)return;
-  if(reduced){
-   activeIndex=(activeIndex+direction+galleryItems.length)%galleryItems.length;
-   syncCarousel();
-   update();
-   return;
   }
-  viewerTransitioning=true;
-  const distance=Math.min(window.innerWidth*.16,160);
-  try{
-   await imageLoader.animate([
-    {opacity:1,transform:'translate3d(0,0,0)'},
-    {opacity:0,transform:`translate3d(${-direction*distance}px,0,0)`}
-   ],{duration:220,easing:'cubic-bezier(.4,0,.6,1)',fill:'forwards'}).finished;
-   activeIndex=(activeIndex+direction+galleryItems.length)%galleryItems.length;
-   syncCarousel();
-   update();
-   await waitForImage();
-   await imageLoader.animate([
-    {opacity:0,transform:`translate3d(${direction*distance}px,0,0)`},
-    {opacity:1,transform:'translate3d(0,0,0)'}
-   ],{duration:320,easing:'cubic-bezier(.2,.75,.25,1)',fill:'forwards'}).finished;
-  }catch{
-   update();
-  }finally{
-   imageLoader.getAnimations().forEach(animation=>animation.cancel());
-   viewerTransitioning=false;
-  }
+  return lightboxPromise;
  };
- galleryItems.forEach((item,index)=>item.addEventListener('click',()=>open(index)));
- closeButton.addEventListener('click',close);
- viewer.addEventListener('click',event=>{
-  if(event.target===backdrop){close();return;}
-  if(!mobileViewer.matches||suppressBackgroundTap||event.target===image||event.target.closest('button'))return;
-  close();
- });
- previousButton.addEventListener('click',()=>move(-1));
- nextButton.addEventListener('click',()=>move(1));
- viewer.addEventListener('keydown',event=>{
-  if(event.key==='Escape')close();
-  if(event.key==='ArrowLeft')move(-1);
-  if(event.key==='ArrowRight')move(1);
- });
- viewer.addEventListener('touchstart',event=>{touchStart=event.changedTouches[0].clientX;},{passive:true});
- viewer.addEventListener('touchend',event=>{
-  const distance=event.changedTouches[0].clientX-touchStart;
-  if(Math.abs(distance)<=45)return;
-  suppressBackgroundTap=true;
-  window.setTimeout(()=>{suppressBackgroundTap=false;},400);
-  move(distance>0?-1:1);
- },{passive:true});
- if(galleryItems.length<2){previousButton.hidden=true;nextButton.hidden=true;}
+ galleryItems.forEach((item,index)=>item.addEventListener('click',async event=>{
+  event.preventDefault();
+  lastTrigger=item;
+  try{
+   const lightbox=await getLightbox();
+   lightbox.loadAndOpen(index);
+  }catch(error){
+   console.error('Unable to open the artwork viewer.',error);
+  }
+ }));
 }
 document.querySelectorAll('[data-image-carousel]').forEach(carousel=>{
  const slides=[...carousel.querySelectorAll('[data-carousel-slide]')];
@@ -190,6 +175,7 @@ document.querySelectorAll('[data-image-carousel]').forEach(carousel=>{
 });
 const contactForm=document.querySelector('[data-contact-form]');
 if(contactForm){
+ contactForm.noValidate=true;
  const inquiryTypes=[...contactForm.querySelectorAll('input[name="inquiry_type"]')];
  const artworkField=contactForm.querySelector('[data-artwork-field]');
  const artworkCombobox=contactForm.querySelector('[data-artwork-combobox]');
@@ -205,6 +191,40 @@ if(contactForm){
  const previewCollection=artworkPreview.querySelector('[data-preview-collection]');
  const status=contactForm.querySelector('[data-form-status]');
  const submitButton=contactForm.querySelector('[type="submit"]');
+ const validationFields=[
+  {control:contactForm.querySelector('#contact-name'),container:contactForm.querySelector('#contact-name').parentElement,missing:'Please enter your name.'},
+  {control:contactForm.querySelector('#contact-email'),container:contactForm.querySelector('#contact-email').parentElement,missing:'Please enter your email address.',invalid:'Please enter a valid email address.'},
+  {control:contactForm.querySelector('#contact-message'),container:contactForm.querySelector('#contact-message').parentElement,missing:'Please write a message.'},
+  {control:artworkInput,container:artworkField,missing:'Please choose an artwork or switch to a general enquiry.'}
+ ].map(field=>{
+  const error=document.createElement('p');
+  error.className='contact-field-error';
+  error.id=`${field.control.id}-error`;
+  error.setAttribute('aria-live','polite');
+  error.hidden=true;
+  field.container.append(error);
+  field.control.setAttribute('aria-describedby',error.id);
+  return {...field,error};
+ });
+ let validationAttempted=false;
+ const validateField=field=>{
+  const {control,error}=field;
+  if(control.disabled||!control.required||control.validity.valid){
+   error.classList.remove('is-visible');
+   window.setTimeout(()=>{if(!error.classList.contains('is-visible')){error.hidden=true;error.textContent='';}},220);
+   control.removeAttribute('aria-invalid');
+   return true;
+  }
+  error.textContent=control.validity.typeMismatch&&field.invalid?field.invalid:field.missing;
+  error.hidden=false;
+  requestAnimationFrame(()=>error.classList.add('is-visible'));
+  control.setAttribute('aria-invalid','true');
+  return false;
+ };
+ validationFields.forEach(field=>{
+  field.control.addEventListener('input',()=>{if(validationAttempted)validateField(field);});
+  field.control.addEventListener('change',()=>{if(validationAttempted)validateField(field);});
+ });
  const setArtworkOptionsOpen=open=>{
   const shouldOpen=open&&!artworkInput.disabled;
   artworkOptionsPanel.hidden=!shouldOpen;
@@ -292,18 +312,31 @@ if(contactForm){
  updateInquiryType();
  contactForm.addEventListener('submit',async event=>{
   event.preventDefault();
+  validationAttempted=true;
+  const invalidFields=validationFields.filter(field=>!validateField(field));
+  if(invalidFields.length){
+   status.dataset.state='error';
+   status.textContent='A couple of details need your attention before we send this.';
+   invalidFields[0].control.focus();
+   return;
+  }
   const originalLabel=submitButton.textContent;
   submitButton.disabled=true;
   submitButton.textContent='Sending…';
   status.textContent='';
+  delete status.dataset.state;
   try{
    const response=await fetch(contactForm.action,{method:'POST',body:new FormData(contactForm),headers:{Accept:'application/json'}});
    const result=await response.json();
    if(!response.ok||!result.success)throw Error(result.message||'Unable to send your message.');
    contactForm.reset();
    updateInquiryType();
+   validationAttempted=false;
+   validationFields.forEach(validateField);
+   status.dataset.state='success';
    status.textContent='Thank you. Your enquiry has been sent.';
   }catch(error){
+   status.dataset.state='error';
    status.textContent=error instanceof Error?error.message:'Unable to send your message. Please try again.';
   }finally{
    submitButton.disabled=false;
