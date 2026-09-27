@@ -162,7 +162,7 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    width: 220px;
+    width: 154px;
     min-height: 45px;
     padding: 13px 17px;
     border: 1px solid var(--ink);
@@ -532,6 +532,7 @@
         display: flex;
         flex-direction: column;
         width: min(100%, 520px);
+        height: calc(100svh - 28px);
         max-height: calc(100svh - 28px);
         padding: 22px;
         background: var(--paper);
@@ -627,7 +628,13 @@
         justify-content: flex-start;
         width: 100%;
         min-height: 48px;
-        background: #fff
+        background: transparent
+    }
+
+    .all-works-filter-menu:not(.has-selection) .all-works-filter-toggle:not([aria-expanded="true"]),
+    .all-works-filter-menu:not(.has-selection) .all-works-filter-toggle:not([aria-expanded="true"]):hover {
+        background: transparent;
+        color: var(--ink)
     }
 
     .all-works-filter-popup {
@@ -664,8 +671,11 @@
         flex: 0 0 auto;
         grid-template-columns:1fr 1fr;
         gap: 10px;
-        padding-top: 16px;
-        border-top: 1px solid var(--line)
+        margin-top: auto;
+        padding: 16px 0 0;
+        border-top: 1px solid var(--line);
+        background: transparent;
+        box-shadow: none
     }
 
     .all-works-filter-actions button {
@@ -675,17 +685,20 @@
         font: 10px/1.4 Arial, sans-serif;
         letter-spacing: .12em;
         text-transform: uppercase;
+        appearance: none;
+        background: transparent;
+        color: var(--ink);
+        box-shadow: none;
         cursor: pointer
     }
 
     .all-works-filter-clear-all {
-        background: transparent;
-        color: var(--ink)
+        background: transparent
     }
 
     .all-works-filter-apply {
-        background: var(--ink);
-        color: var(--paper)
+        background: none;
+        color: var(--ink)
     }
 
     .all-works-grid {

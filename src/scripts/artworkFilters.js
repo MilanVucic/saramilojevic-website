@@ -156,14 +156,16 @@ export const initializeArtworkFilters = () => {
       cancelAnimations();
       const terms = normalize(search.value.trim()).split(/\s+/).filter(Boolean);
       const collections = selectedValues('collection');
+      const types = selectedValues('type');
       const years = selectedValues('year');
       const sizes = selectedValues('size');
       const matches = new Map(items.map(item => {
         const matchesSearch = terms.every(term => normalize(item.dataset.search).includes(term));
         const matchesCollection = !collections.size || collections.has(item.dataset.collection);
+        const matchesType = !types.size || types.has(item.dataset.type);
         const matchesYear = !years.size || years.has(item.dataset.year);
         const matchesSize = !sizes.size || sizes.has(item.dataset.size);
-        return [item, matchesSearch && matchesCollection && matchesYear && matchesSize];
+        return [item, matchesSearch && matchesCollection && matchesType && matchesYear && matchesSize];
       }));
       const visible = [...matches.values()].filter(Boolean).length;
 

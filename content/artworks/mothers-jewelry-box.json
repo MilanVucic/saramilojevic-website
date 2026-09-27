@@ -2,6 +2,7 @@
   "slug": "mothers-jewelry-box",
   "title": "Mother’s Jewelry Box",
   "collection": "favorite-objects",
+  "type": "painting",
   "year": 2024,
   "medium": "Acrylic on canvas",
   "dimensions": {
@@ -10,7 +11,7 @@
   },
   "description": "This painting belongs to my Favorite Objects series, focusing on close-up depictions of intimate items carrying deep personal history. Featured here is my mother’s ceramic jewelry box - a piece rendered in vivid, layered green tones, set against a rich, contrasting blue background. Over decades, this delicate object was broken and reassembled countless times. The extreme close-up composition emphasizes the tactile memory of home, maternal affection, and the fragile nature of time.",
   "readyToHang": true,
-  "order": 3,
+  "order": 5,
   "featured": false,
   "available": true,
   "published": true,

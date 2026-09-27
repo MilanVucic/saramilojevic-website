@@ -7,9 +7,19 @@ import CTA from '../../components/CTA.astro';
 import { getPortfolio } from '../../lib/content';
 
 const { works, collections } = await getPortfolio();
-const collectionTitle = (slug: string) => collections.find(collection => collection.slug === slug)?.title || slug;
-const years = [...new Set(works.map(artwork => artwork.year).filter((year): year is number => typeof year === 'number'))].sort((a, b) => b - a);
-const hasUndatedWorks = works.some(artwork => !artwork.year);
+const types = [
+  { value: 'painting', label: 'Painting' },
+  { value: 'drawing', label: 'Drawing' },
+];
+const orderedCollections = [...collections].sort((a, b) => a.order - b.order);
+const collectionOrder = new Map(orderedCollections.map((collection, index) => [collection.slug, index]));
+const orderedWorks = [...works].sort((a, b) =>
+  (collectionOrder.get(a.collection) ?? Number.MAX_SAFE_INTEGER) - (collectionOrder.get(b.collection) ?? Number.MAX_SAFE_INTEGER)
+  || a.order - b.order
+);
+const collectionTitle = (slug: string) => orderedCollections.find(collection => collection.slug === slug)?.title || slug;
+const years = [...new Set(orderedWorks.map(artwork => artwork.year).filter((year): year is number => typeof year === 'number'))].sort((a, b) => b - a);
+const hasUndatedWorks = orderedWorks.some(artwork => !artwork.year);
 const sizeCategory = (width: number, height: number) => {
   const longestSide = Math.max(width, height);
   if (longestSide <= 60) return 'small';
@@ -24,21 +34,23 @@ const sizeCategory = (width: number, height: number) => {
     </header>
 
     <ArtworkFilters
-      collections={collections.map(collection => ({ value: collection.slug, label: collection.title }))}
+      collections={orderedCollections.map(collection => ({ value: collection.slug, label: collection.title }))}
+      types={types}
       years={years.map(year => ({ value: String(year), label: String(year) }))}
       includeUndated={hasUndatedWorks}
-      artworkCount={works.length}
+      artworkCount={orderedWorks.length}
     />
 
     <div class="all-works-grid" data-all-works>
-      {works.map(artwork => <a
+      {orderedWorks.map(artwork => <a
         class="all-work-item"
         href={`/artwork/${artwork.slug}/`}
         data-work-item
         data-collection={artwork.collection}
+        data-type={artwork.type}
         data-year={artwork.year ? String(artwork.year) : 'undated'}
         data-size={sizeCategory(artwork.dimensions.widthCm, artwork.dimensions.heightCm)}
-        data-search={`${artwork.title} ${collectionTitle(artwork.collection)} ${artwork.medium} ${artwork.year || ''}`.toLowerCase()}
+        data-search={`${artwork.title} ${collectionTitle(artwork.collection)}`.toLowerCase()}
       >
         <div class="all-work-media"><ArtworkImage image={artwork.images[0]} /></div>
         <div class="all-work-copy">

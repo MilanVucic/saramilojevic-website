@@ -7,12 +7,13 @@ interface FilterOption {
 
 interface Props {
   collections: FilterOption[];
+  types: FilterOption[];
   years: FilterOption[];
   includeUndated?: boolean;
   artworkCount: number;
 }
 
-const { collections, years, includeUndated = false, artworkCount } = Astro.props;
+const { collections, types, years, includeUndated = false, artworkCount } = Astro.props;
 const sizeOptions: FilterOption[] = [
   { value: 'small', label: 'Small', description: 'Longest side up to 60 cm' },
   { value: 'medium', label: 'Medium', description: 'Longest side 61–120 cm' },
@@ -21,6 +22,7 @@ const sizeOptions: FilterOption[] = [
 
 const groups = [
   { name: 'collection', label: 'Collection', options: collections },
+  { name: 'type', label: 'Type', options: types },
   { name: 'year', label: 'Year', options: includeUndated ? [...years, { value: 'undated', label: 'Undated' }] : years },
   { name: 'size', label: 'Dimensions', options: sizeOptions },
 ];
@@ -49,7 +51,7 @@ const groups = [
 
         <div class="all-works-search">
           <label for="artwork-search">Search</label>
-          <input id="artwork-search" type="search" data-work-search placeholder="Search by title, collection, medium, or year" autocomplete="off" />
+          <input id="artwork-search" type="search" data-work-search placeholder="Search by artwork title or collection" autocomplete="off" />
           <button type="button" class="all-works-search-clear" data-clear-work-search aria-label="Clear artwork search" hidden>
             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m6 6 8 8M14 6l-8 8"></path></svg>
           </button>

@@ -2,6 +2,7 @@
   "slug": "preserved",
   "title": "Preserved",
   "collection": "favorite-objects",
+  "type": "painting",
   "year": 2024,
   "medium": "Oil on canvas",
   "dimensions": {
@@ -10,7 +11,7 @@
   },
   "description": "“Preserved” is an intimate oil painting on canvas that was showcased as part of my solo exhibition Dreamy Softness. Stylistically and texturally, this piece is a sister work to my painting The Self-Indulgent Doe, utilizing the same vibrant, multi-colored background. The composition centers on a pair of male hands tightly cradling a glass sphere, inside of which a tiny female body is enclosed. This imagery opens up a tense, double-edged narrative about romantic agony, control, and the melancholy of escape. With a distinct feminist undercurrent, the painting questions the thin line between protection and captivity - exploring whether this woman is being kept safe from the outside world, or selfishly trapped and objectified by the male gaze. It is a visual critique of a love that suffocates, leaving the viewer to wonder: is she saved, or is she imprisoned?",
   "readyToHang": true,
-  "order": 5,
+  "order": 3,
   "featured": false,
   "available": true,
   "published": true,

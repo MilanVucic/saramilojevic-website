@@ -13,6 +13,7 @@ const artwork = defineCollection({
   loader: glob({ pattern: '*.json', base: './content/artworks' }),
   schema: z.object({
     slug, title: z.string().min(1), collection: slug,
+    type: z.enum(['painting', 'drawing']),
     year: z.number().int().optional(), medium: z.string().min(1),
     dimensions: z.object({ widthCm: z.number().positive(), heightCm: z.number().positive() }),
     description: z.string(), order: z.number().default(0),
