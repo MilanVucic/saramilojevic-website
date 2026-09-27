@@ -2,7 +2,7 @@
     height: min(820px, calc(100svh - 88px));
     min-height: 570px;
     position: relative;
-    margin: 22px 24px 0;
+    margin: 0;
     color: #f7f3e9;
     overflow: hidden;
     background: #554e3e
@@ -116,16 +116,24 @@
     display: grid;
     grid-template-columns:1fr 1fr;
     gap: 10%;
-    border-top: 1px solid var(--line);
-    padding-top: 80px;
+    padding-top: 0;
     padding-bottom: 110px
 }
 
 .about-home-portrait {
     width: min(100%, 440px);
     aspect-ratio: 4/5;
+    position: relative;
     overflow: hidden;
     background: #e9e6de
+}
+
+.about-home-portrait::after {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 2px solid #fff;
+    pointer-events: none
 }
 
 .about-home-portrait .loading-image {
@@ -236,7 +244,7 @@
 @media (max-width: 760px) {
 
     .hero {
-        margin: 12px 12px 0;
+        margin: 0;
         height: calc(90svh - 88px);
         min-height: 490px
     }

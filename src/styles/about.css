@@ -41,6 +41,15 @@
     background: #e9e6de
 }
 
+.about-carousel-viewport::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    inset: 8px;
+    border: 2px solid #fff;
+    pointer-events: none
+}
+
 .about-carousel-slide {
     position: absolute;
     inset: 0;
