@@ -13,7 +13,6 @@ const { collection:c, works } = Astro.props;
   <section class="section page-intro">
     <div class="detail-meta-row">
       <BackBreadcrumb href="/collections/" label="All collections" />
-      {c.year && <p class="eyebrow">Collection / {c.year}</p>}
     </div>
     <h1>{c.title}</h1>
     <p>{c.description}</p>
