@@ -1,0 +1,182 @@
+---
+import Layout from '../layouts/Layout.astro';
+import '../styles/room-calibration.css';
+import { getPortfolio, responsiveImageSrcSet, responsiveImageUrl } from '../lib/content';
+import { experimentalRoomScenes, roomCalibrationScenes } from '../lib/roomScenes';
+
+const { works } = await getPortfolio();
+const samples = works
+  .filter(work => work.published && work.images[0]?.width && work.dimensions?.widthCm && work.dimensions?.heightCm)
+  .slice(0, 3);
+const artworkBySlug = new Map(works.map(work => [work.slug, work]));
+const artworkForPreview = (slug: string) => {
+  const artwork = artworkBySlug.get(slug);
+  if (!artwork) throw new Error(`Room calibration preview artwork not found: ${slug}`);
+  return artwork;
+};
+
+function layoutArtworks(scene: (typeof experimentalRoomScenes)[number], artworks: typeof samples) {
+  const { widthCm: wallWidth, heightCm: wallHeight, corners } = scene.wall;
+  const boundsWidth = corners.topRight.xPct - corners.topLeft.xPct;
+  const boundsHeight = corners.bottomLeft.yPct - corners.topLeft.yPct;
+  const gapCm = artworks.length > 1 ? 12 : 0;
+  const rawGroupWidth = artworks.reduce((sum, artwork) => sum + artwork.dimensions.widthCm, 0) + gapCm * Math.max(0, artworks.length - 1);
+  const maxArtworkHeight = Math.max(...artworks.map(artwork => artwork.dimensions.heightCm));
+  const scale = Math.min(1, wallWidth / rawGroupWidth, wallHeight / maxArtworkHeight);
+  const groupWidth = rawGroupWidth * scale;
+  let cursor = (wallWidth - groupWidth) / 2;
+
+  return artworks.map(artwork => {
+    const width = artwork.dimensions.widthCm * scale;
+    const height = artwork.dimensions.heightCm * scale;
+    const centerX = cursor + width / 2;
+    cursor += width + gapCm * scale;
+    const centerXPct = corners.topLeft.xPct + (centerX / wallWidth) * boundsWidth;
+    const centerYPct = corners.topLeft.yPct + boundsHeight / 2;
+    const widthPct = (width / wallWidth) * boundsWidth;
+    const heightPct = (height / wallHeight) * boundsHeight;
+    return {
+      artwork,
+      style: `--art-center-x:${centerXPct}%;--art-center-y:${centerYPct}%;--art-width:${widthPct}%;--art-height:${heightPct}%;--shadow-x:${scene.shadowOffsetPx.x}px;--shadow-y:${scene.shadowOffsetPx.y}px;`,
+    };
+  });
+}
+
+const singleArtworkByRoom = {
+  small: samples[0],
+  medium: artworkForPreview('dont-worry'),
+  large: artworkForPreview('something-soft-is-what-you-need'),
+};
+const singlePreviews = experimentalRoomScenes.map(scene => ({
+  scene,
+  artworks: layoutArtworks(scene, [singleArtworkByRoom[scene.id as keyof typeof singleArtworkByRoom]]),
+})).filter(preview => preview.artworks.length > 0);
+const largeScene = experimentalRoomScenes.find(scene => scene.id === 'large')!;
+const smallScene = experimentalRoomScenes.find(scene => scene.id === 'small')!;
+const groupPreviewArtworks = [
+  [artworkForPreview('the-blue-clips'), artworkForPreview('dont-look')],
+  [artworkForPreview('shadowplay-08'), artworkForPreview('shadowplay-09'), artworkForPreview('shadowplay-10')],
+];
+const groupPreviews = groupPreviewArtworks.map(artworks => ({
+  count: artworks.length,
+  scene: artworks.length === 2 ? smallScene : largeScene,
+  artworks: layoutArtworks(artworks.length === 2 ? smallScene : largeScene, artworks),
+}));
+
+const markerColors = ['#ff4e3a', '#39d98a', '#35a7ff', '#ffcf45'];
+const calibrations = roomCalibrationScenes.map((scene) => {
+  const { topLeft, topRight, bottomRight, bottomLeft } = scene.corners;
+  return {
+    ...scene,
+    boundsStyle: `--safe-left:${topLeft.xPct}%;--safe-top:${topLeft.yPct}%;--safe-width:${topRight.xPct - topLeft.xPct}%;--safe-height:${bottomLeft.yPct - topLeft.yPct}%;`,
+    points: [
+      { name: 'Top left', short: 'TL', point: topLeft },
+      { name: 'Top right', short: 'TR', point: topRight },
+      { name: 'Bottom right', short: 'BR', point: bottomRight },
+      { name: 'Bottom left', short: 'BL', point: bottomLeft },
+    ].map((item, index) => ({ ...item, color: markerColors[index] })),
+  };
+});
+---
+
+<Layout title="Room mockup calibration" description="Experimental room photography and proposed artwork placement areas." noindex>
+  <div class="section room-calibration-page">
+    <header class="room-calibration-intro">
+      <p class="eyebrow">Experimental · calibration draft</p>
+      <h1>Room wall areas</h1>
+      <p>Proposed artwork-safe rectangles for three room sizes. The colored dots mark editable corners; the centimeter measurements are visual estimates for now.</p>
+    </header>
+
+    <div class="room-calibration-grid">
+      {calibrations.map((scene, index) => (
+        <section class="room-calibration-card" aria-labelledby={`room-title-${scene.id}`}>
+          <div class="room-calibration-card-heading">
+            <div>
+              <p class="eyebrow">Room {String(index + 1).padStart(2, '0')}</p>
+              <h2 id={`room-title-${scene.id}`}>{scene.title}</h2>
+            </div>
+            <p class="room-calibration-measurement">{scene.estimatedWall.widthCm} × {scene.estimatedWall.heightCm} cm <span>estimated</span></p>
+          </div>
+
+          <figure>
+            <div class="room-calibration-canvas">
+              <img
+                class="room-calibration-background"
+                src={responsiveImageUrl(scene.image, 1080)}
+                srcset={responsiveImageSrcSet(scene.image)}
+                sizes="(max-width: 760px) 100vw, 90vw"
+                width={scene.imageWidth}
+                height={scene.imageHeight}
+                alt={`Candidate ${scene.id} room background with a proposed artwork-safe wall area`}
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="room-calibration-safe-area" style={scene.boundsStyle} aria-label={`Proposed safe area, approximately ${scene.estimatedWall.widthCm} centimeters wide by ${scene.estimatedWall.heightCm} centimeters tall`}>
+                <span class="room-calibration-width">{scene.estimatedWall.widthCm} cm wide</span>
+                <span class="room-calibration-height">{scene.estimatedWall.heightCm} cm tall</span>
+              </div>
+              {scene.points.map((marker) => (
+                <span
+                  class="room-calibration-marker"
+                  style={`--point-x:${marker.point.xPct}%;--point-y:${marker.point.yPct}%;--point-color:${marker.color};`}
+                  title={`${marker.name}: ${marker.point.xPct}%, ${marker.point.yPct}%`}
+                >
+                  <span>{marker.short}</span>
+                </span>
+              ))}
+              <span class="room-calibration-center" style={`--center-x:${scene.corners.topLeft.xPct + (scene.corners.topRight.xPct - scene.corners.topLeft.xPct) / 2}%;--center-y:${scene.corners.topLeft.yPct + (scene.corners.bottomLeft.yPct - scene.corners.topLeft.yPct) / 2}%;`}>Artwork center</span>
+            </div>
+            <figcaption>
+              <span>Safe area: {scene.estimatedWall.widthCm} cm wide × {scene.estimatedWall.heightCm} cm tall (estimate)</span>
+              <span>TL {scene.corners.topLeft.xPct}%, {scene.corners.topLeft.yPct}% · TR {scene.corners.topRight.xPct}%, {scene.corners.topRight.yPct}% · BR {scene.corners.bottomRight.xPct}%, {scene.corners.bottomRight.yPct}% · BL {scene.corners.bottomLeft.xPct}%, {scene.corners.bottomLeft.yPct}%</span>
+            </figcaption>
+          </figure>
+        </section>
+      ))}
+    </div>
+
+    <section class="room-calibration-previews" aria-labelledby="room-preview-title">
+      <header class="room-calibration-intro room-calibration-preview-intro">
+        <p class="eyebrow">Scale and composition tests</p>
+        <h2 id="room-preview-title">Artwork on the wall</h2>
+        <p>Sample works are sized from their listed dimensions. A single piece is centered; in the multi-work examples, the complete row is centered as one composition.</p>
+      </header>
+
+      <div class="room-calibration-grid">
+        {singlePreviews.map(({ scene, artworks }) => (
+          <section class="room-calibration-card" aria-labelledby={`single-${scene.id}`}>
+            <div class="room-calibration-card-heading">
+              <div><p class="eyebrow">One artwork</p><h3 id={`single-${scene.id}`}>{scene.title}</h3></div>
+              <p class="room-calibration-measurement">{artworks[0].artwork.title}</p>
+            </div>
+            <figure>
+              <div class="room-calibration-canvas room-calibration-preview-canvas" style={`aspect-ratio:${scene.imageWidth}/${scene.imageHeight}`}>
+                <img class="room-calibration-background" src={responsiveImageUrl(scene.image, 1080)} srcset={responsiveImageSrcSet(scene.image)} sizes="(max-width: 760px) 100vw, 90vw" width={scene.imageWidth} height={scene.imageHeight} alt="" loading="lazy" decoding="async" />
+                {artworks.map(({ artwork, style }) => <img class="room-calibration-artwork" style={style} src={responsiveImageUrl(artwork.images[0].src, 640)} srcset={responsiveImageSrcSet(artwork.images[0].src)} sizes="(max-width: 760px) 35vw, 18vw" width={artwork.images[0].width} height={artwork.images[0].height} alt={artwork.title} loading="lazy" decoding="async" />)}
+              </div>
+              <figcaption><span>One piece, centered within the estimated safe area.</span><span>{artworks[0].artwork.dimensions.widthCm} × {artworks[0].artwork.dimensions.heightCm} cm · {artworks[0].artwork.title}</span></figcaption>
+            </figure>
+          </section>
+        ))}
+      </div>
+
+      <div class="room-calibration-grid room-calibration-group-grid">
+        {groupPreviews.map(({ count, scene, artworks }) => (
+          <section class="room-calibration-card" aria-labelledby={`group-${count}`}>
+            <div class="room-calibration-card-heading">
+              <div><p class="eyebrow">{scene.title} · composition test</p><h3 id={`group-${count}`}>{count} artworks side by side</h3></div>
+              <p class="room-calibration-measurement">Centered as a group</p>
+            </div>
+            <figure>
+              <div class="room-calibration-canvas room-calibration-preview-canvas" style={`aspect-ratio:${scene.imageWidth}/${scene.imageHeight}`}>
+                <img class="room-calibration-background" src={responsiveImageUrl(scene.image, 1080)} srcset={responsiveImageSrcSet(scene.image)} sizes="(max-width: 760px) 100vw, 90vw" width={scene.imageWidth} height={scene.imageHeight} alt="" loading="lazy" decoding="async" />
+                {artworks.map(({ artwork, style }) => <img class="room-calibration-artwork" style={style} src={responsiveImageUrl(artwork.images[0].src, 640)} srcset={responsiveImageSrcSet(artwork.images[0].src)} sizes="(max-width: 760px) 25vw, 15vw" width={artwork.images[0].width} height={artwork.images[0].height} alt={artwork.title} loading="lazy" decoding="async" />)}
+              </div>
+              <figcaption><span>The {count}-piece row is scaled to fit and centered as one composition.</span><span>{artworks.map(({ artwork }) => artwork.title).join(' · ')}</span></figcaption>
+            </figure>
+          </section>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>
