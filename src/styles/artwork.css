@@ -105,11 +105,38 @@
     gap: 36px
 }
 
-.artwork-enquiry-signature {
+.artwork-enquiry-signature-wrap {
     flex: 1 1 0;
     min-width: 0;
     width: 50%;
+}
+
+.artwork-enquiry-signature {
+    display: block;
+    width: 100%;
     height: auto
+}
+
+.signature-drawing {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible
+}
+
+.signature-drawing path {
+    fill: transparent;
+    stroke: #919288;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: var(--path-dash);
+    stroke-dashoffset: var(--reveal-length);
+    transition: stroke-dashoffset var(--draw-time) cubic-bezier(.45, 0, .25, 1);
+}
+
+.signature-drawing path.is-drawing {
+    stroke-dashoffset: 0;
 }
 
 .artwork-enquiry-row .button {
@@ -163,7 +190,7 @@ dd {
         gap: 28px
     }
 
-    .artwork-enquiry-signature {
+    .artwork-enquiry-signature-wrap {
         width: 50%
     }
 
@@ -175,6 +202,15 @@ dd {
 
     .artwork-gallery-carousel {
         position: static
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .signature-drawing path {
+        fill: #919288;
+        stroke: none;
+        stroke-dashoffset: 0;
+        transition: none
     }
 }
 .artwork-page {
