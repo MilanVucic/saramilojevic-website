@@ -133,6 +133,35 @@
     padding-bottom: 55px
 }
 
+.exhibition-detail-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 8px
+}
+
+.exhibition-detail-meta-row > .back-breadcrumb {
+    display: flex;
+    align-items: center;
+    min-height: 24px
+}
+
+.exhibition-detail-meta {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-left: auto;
+    min-height: 24px;
+    text-align: right
+}
+
+.exhibition-detail-meta .eyebrow {
+    margin: 0
+}
+
 .exhibition-detail-intro h1 {
     max-width: 1100px;
     margin-top: 8px;
@@ -144,6 +173,10 @@
     margin-top: 22px;
     color: var(--muted);
     font: italic clamp(1.2rem, 2vw, 1.8rem)/1.4 var(--serif)
+}
+
+.exhibition-detail-original-separator {
+    padding-inline: .45em
 }
 
 .exhibition-gallery-section {

@@ -32,12 +32,18 @@ const images = Array.from({ length: exhibition.imageCount }, (_, offset) => {
 ---
 <Layout title={exhibition.title} description={exhibition.summary} socialImage={imageUrl(images[0].image.src)} socialImageAlt={`${exhibition.title} exhibition view`}>
   <section class="section exhibition-detail-intro" data-reveal>
-    <div class="detail-meta-row">
-      <BackBreadcrumb href="/exhibitions/" label="All exhibitions" />
-      <p class="eyebrow">{exhibition.kind} / {exhibition.year}</p>
+    <div class="exhibition-detail-meta-row">
+      <BackBreadcrumb href="/exhibitions/" label="Exhibitions" />
+      <div class="exhibition-detail-meta" aria-label="Exhibition type">
+        <span class="eyebrow">{exhibition.kind}</span>
+      </div>
     </div>
     <h1>{exhibition.title}</h1>
-    {exhibition.originalTitle && <p class="exhibition-detail-original">{exhibition.originalTitle}</p>}
+    {(exhibition.originalTitle || exhibition.year) && <p class="exhibition-detail-original">
+      {exhibition.originalTitle && <span>{exhibition.originalTitle}</span>}
+      {exhibition.originalTitle && exhibition.year && <span class="exhibition-detail-original-separator" aria-hidden="true">&#183;</span>}
+      {exhibition.year && <span>{exhibition.year}</span>}
+    </p>}
     <a class="exhibition-detail-venue" href={exhibition.venueUrl} target="_blank" rel="noopener noreferrer">
       <span>{exhibition.venue}, {exhibition.location}</span>
       <span aria-hidden="true">&#8599;</span>
