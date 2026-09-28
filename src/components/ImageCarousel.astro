@@ -19,6 +19,7 @@ interface Props {
   slideClass?: string;
   controlsClass?: string;
   eagerFirst?: boolean;
+  showTitles?: boolean;
   viewportStyle?: string;
 }
 
@@ -30,6 +31,7 @@ const {
   slideClass,
   controlsClass,
   eagerFirst = false,
+  showTitles = true,
   viewportStyle,
 } = Astro.props;
 ---
@@ -72,13 +74,13 @@ const {
       </div>
     ))}
   </div>
-  {items.length > 0 && (
+  {items.length > 1 && (
     <div class:list={['collection-carousel-navigation', controlsClass]}>
       <button type="button" data-carousel-previous aria-label={`Previous image in ${label}`} disabled={items.length < 2}>&#8592;</button>
       <div class="collection-carousel-caption" aria-live="polite">
-        <div class="collection-carousel-titles">
+        {showTitles && <div class="collection-carousel-titles">
           {items.map((item, index) => <span data-carousel-title hidden={index !== 0}>{item.title}</span>)}
-        </div>
+        </div>}
         <span class="collection-carousel-count"><span data-carousel-current>01</span> / {String(items.length).padStart(2, '0')}</span>
       </div>
       <button type="button" data-carousel-next aria-label={`Next image in ${label}`} disabled={items.length < 2}>&#8594;</button>

@@ -329,19 +329,22 @@
     display: grid;
     grid-template-columns:minmax(0, 1fr);
     align-content: start;
+    --artwork-tile-bg: #eae2db;
     color: inherit
 }
 
 .all-work-media {
     aspect-ratio: 4/5;
     overflow: hidden;
-    background: #e8e6df
+    background: var(--artwork-tile-bg)
 }
 
 .all-work-media .loading-image {
+    --loader-base: var(--artwork-tile-bg);
     height: 100%;
     padding: 16px;
-    aspect-ratio: auto !important
+    aspect-ratio: auto !important;
+    background: var(--artwork-tile-bg)
 }
 
 .all-work-media img {
@@ -454,7 +457,6 @@
 }
 
 @media (max-width: 760px) {
-
     .all-works-page {
         padding-top: 55px
     }
