@@ -19,22 +19,53 @@ function layoutArtworks(scene: (typeof experimentalRoomScenes)[number], artworks
   const { widthCm: wallWidth, heightCm: wallHeight, corners } = scene.wall;
   const boundsWidth = corners.topRight.xPct - corners.topLeft.xPct;
   const boundsHeight = corners.bottomLeft.yPct - corners.topLeft.yPct;
+  const aspectRatioOf = (artwork: (typeof samples)[number]) =>
+    artwork.images[0].width / artwork.images[0].height;
+
+  if (scene.unlimitedArtworkSize && artworks.length === 1) {
+    const artwork = artworks[0];
+    const artworkHeightCm = artwork.dimensions.widthCm / aspectRatioOf(artwork);
+    const maxWidthPx = (boundsWidth / 100) * scene.imageWidth * 0.9;
+    const maxHeightPx = (boundsHeight / 100) * scene.imageHeight * 0.9;
+    const scale = Math.min(
+      maxWidthPx / artwork.dimensions.widthCm,
+      maxHeightPx / artworkHeightCm,
+    );
+    const centerX = (corners.topLeft.xPct + corners.topRight.xPct) / 2;
+    const centerY = (corners.topLeft.yPct + corners.bottomLeft.yPct) / 2;
+    const widthPx = artwork.dimensions.widthCm * scale;
+    const heightPx = widthPx / aspectRatioOf(artwork);
+    const widthPct = (widthPx / scene.imageWidth) * 100;
+    const heightPct = (heightPx / scene.imageHeight) * 100;
+    return [{
+      artwork,
+      style: `--art-center-x:${centerX}%;--art-center-y:${centerY}%;--art-width:${widthPct}%;--art-height:${heightPct}%;--shadow-x:${scene.shadowOffsetPx.x}px;--shadow-y:${scene.shadowOffsetPx.y}px;`,
+    }];
+  }
+
+  if (!wallWidth || !wallHeight) return [];
   const gapCm = artworks.length > 1 ? 12 : 0;
   const rawGroupWidth = artworks.reduce((sum, artwork) => sum + artwork.dimensions.widthCm, 0) + gapCm * Math.max(0, artworks.length - 1);
-  const maxArtworkHeight = Math.max(...artworks.map(artwork => artwork.dimensions.heightCm));
-  const scale = Math.min(1, wallWidth / rawGroupWidth, wallHeight / maxArtworkHeight);
-  const groupWidth = rawGroupWidth * scale;
-  let cursor = (wallWidth - groupWidth) / 2;
+  const maxArtworkHeight = Math.max(...artworks.map(artwork => artwork.dimensions.widthCm / aspectRatioOf(artwork)));
+  const safeWidthPx = (boundsWidth / 100) * scene.imageWidth;
+  const safeHeightPx = (boundsHeight / 100) * scene.imageHeight;
+  const pixelsPerCm = Math.min(safeWidthPx / wallWidth, safeHeightPx / wallHeight);
+  const scale = Math.min(pixelsPerCm, safeWidthPx / rawGroupWidth, safeHeightPx / maxArtworkHeight);
+  const groupWidthPx = rawGroupWidth * scale;
+  let cursorPx = (safeWidthPx - groupWidthPx) / 2;
+  const safeLeftPx = (corners.topLeft.xPct / 100) * scene.imageWidth;
+  const safeTopPx = (corners.topLeft.yPct / 100) * scene.imageHeight;
 
   return artworks.map(artwork => {
-    const width = artwork.dimensions.widthCm * scale;
-    const height = artwork.dimensions.heightCm * scale;
-    const centerX = cursor + width / 2;
-    cursor += width + gapCm * scale;
-    const centerXPct = corners.topLeft.xPct + (centerX / wallWidth) * boundsWidth;
-    const centerYPct = corners.topLeft.yPct + boundsHeight / 2;
-    const widthPct = (width / wallWidth) * boundsWidth;
-    const heightPct = (height / wallHeight) * boundsHeight;
+    const widthPx = artwork.dimensions.widthCm * scale;
+    const heightPx = widthPx / aspectRatioOf(artwork);
+    const centerXPx = safeLeftPx + cursorPx + widthPx / 2;
+    const centerYPx = safeTopPx + safeHeightPx / 2;
+    cursorPx += widthPx + gapCm * scale;
+    const centerXPct = (centerXPx / scene.imageWidth) * 100;
+    const centerYPct = (centerYPx / scene.imageHeight) * 100;
+    const widthPct = (widthPx / scene.imageWidth) * 100;
+    const heightPct = (heightPx / scene.imageHeight) * 100;
     return {
       artwork,
       style: `--art-center-x:${centerXPct}%;--art-center-y:${centerYPct}%;--art-width:${widthPct}%;--art-height:${heightPct}%;--shadow-x:${scene.shadowOffsetPx.x}px;--shadow-y:${scene.shadowOffsetPx.y}px;`,
@@ -43,16 +74,18 @@ function layoutArtworks(scene: (typeof experimentalRoomScenes)[number], artworks
 }
 
 const singleArtworkByRoom = {
-  small: samples[0],
-  medium: artworkForPreview('dont-worry'),
-  large: artworkForPreview('something-soft-is-what-you-need'),
+  'bedroom-medium': artworkForPreview('dont-worry'),
+  'living-room-large': artworkForPreview('something-soft-is-what-you-need'),
+  'living-room-medium': artworkForPreview('the-blue-clips'),
+  'white-wall-brick': artworkForPreview('dont-look'),
+  'white-wall-horizontal': artworkForPreview('shadowplay-08'),
 };
 const singlePreviews = experimentalRoomScenes.map(scene => ({
   scene,
   artworks: layoutArtworks(scene, [singleArtworkByRoom[scene.id as keyof typeof singleArtworkByRoom]]),
 })).filter(preview => preview.artworks.length > 0);
-const largeScene = experimentalRoomScenes.find(scene => scene.id === 'large')!;
-const smallScene = experimentalRoomScenes.find(scene => scene.id === 'small')!;
+const largeScene = experimentalRoomScenes.find(scene => scene.id === 'living-room-large')!;
+const smallScene = experimentalRoomScenes.find(scene => scene.id === 'living-room-medium')!;
 const groupPreviewArtworks = [
   [artworkForPreview('the-blue-clips'), artworkForPreview('dont-look')],
   [artworkForPreview('shadowplay-08'), artworkForPreview('shadowplay-09'), artworkForPreview('shadowplay-10')],
@@ -68,6 +101,11 @@ const calibrations = roomCalibrationScenes.map((scene) => {
   const { topLeft, topRight, bottomRight, bottomLeft } = scene.corners;
   return {
     ...scene,
+    dimensionsLabel: scene.unlimitedArtworkSize
+      ? 'No fixed size · auto-fit'
+      : `${scene.estimatedWall.widthCm} × ${scene.estimatedWall.heightCm} cm estimated`,
+    areaWidthLabel: scene.unlimitedArtworkSize ? 'Flexible width' : `${scene.estimatedWall.widthCm} cm wide`,
+    areaHeightLabel: scene.unlimitedArtworkSize ? 'Flexible height' : `${scene.estimatedWall.heightCm} cm tall`,
     boundsStyle: `--safe-left:${topLeft.xPct}%;--safe-top:${topLeft.yPct}%;--safe-width:${topRight.xPct - topLeft.xPct}%;--safe-height:${bottomLeft.yPct - topLeft.yPct}%;`,
     points: [
       { name: 'Top left', short: 'TL', point: topLeft },
@@ -84,7 +122,7 @@ const calibrations = roomCalibrationScenes.map((scene) => {
     <header class="room-calibration-intro">
       <p class="eyebrow">Experimental · calibration draft</p>
       <h1>Room wall areas</h1>
-      <p>Proposed artwork-safe rectangles for three room sizes. The colored dots mark editable corners; the centimeter measurements are visual estimates for now.</p>
+      <p>Proposed artwork-safe rectangles for five new room backgrounds. The colored dots mark editable corners; measurements are initial estimates for review.</p>
     </header>
 
     <div class="room-calibration-grid">
@@ -95,11 +133,11 @@ const calibrations = roomCalibrationScenes.map((scene) => {
               <p class="eyebrow">Room {String(index + 1).padStart(2, '0')}</p>
               <h2 id={`room-title-${scene.id}`}>{scene.title}</h2>
             </div>
-            <p class="room-calibration-measurement">{scene.estimatedWall.widthCm} × {scene.estimatedWall.heightCm} cm <span>estimated</span></p>
+            <p class="room-calibration-measurement">{scene.dimensionsLabel}</p>
           </div>
 
           <figure>
-            <div class="room-calibration-canvas">
+            <div class="room-calibration-canvas" style={`aspect-ratio:${scene.imageWidth}/${scene.imageHeight}`}>
               <img
                 class="room-calibration-background"
                 src={responsiveImageUrl(scene.image, 1080)}
@@ -107,13 +145,13 @@ const calibrations = roomCalibrationScenes.map((scene) => {
                 sizes="(max-width: 760px) 100vw, 90vw"
                 width={scene.imageWidth}
                 height={scene.imageHeight}
-                alt={`Candidate ${scene.id} room background with a proposed artwork-safe wall area`}
+                alt={`Candidate ${scene.title} background with a proposed artwork-safe area`}
                 loading="lazy"
                 decoding="async"
               />
-              <div class="room-calibration-safe-area" style={scene.boundsStyle} aria-label={`Proposed safe area, approximately ${scene.estimatedWall.widthCm} centimeters wide by ${scene.estimatedWall.heightCm} centimeters tall`}>
-                <span class="room-calibration-width">{scene.estimatedWall.widthCm} cm wide</span>
-                <span class="room-calibration-height">{scene.estimatedWall.heightCm} cm tall</span>
+              <div class="room-calibration-safe-area" style={scene.boundsStyle} aria-label={scene.unlimitedArtworkSize ? 'Flexible safe area; artwork is scaled to fit with padding' : `Proposed safe area, approximately ${scene.estimatedWall.widthCm} centimeters wide by ${scene.estimatedWall.heightCm} centimeters tall`}>
+                <span class="room-calibration-width">{scene.areaWidthLabel}</span>
+                <span class="room-calibration-height">{scene.areaHeightLabel}</span>
               </div>
               {scene.points.map((marker) => (
                 <span
@@ -124,10 +162,10 @@ const calibrations = roomCalibrationScenes.map((scene) => {
                   <span>{marker.short}</span>
                 </span>
               ))}
-              <span class="room-calibration-center" style={`--center-x:${scene.corners.topLeft.xPct + (scene.corners.topRight.xPct - scene.corners.topLeft.xPct) / 2}%;--center-y:${scene.corners.topLeft.yPct + (scene.corners.bottomLeft.yPct - scene.corners.topLeft.yPct) / 2}%;`}>Artwork center</span>
+              <span class="room-calibration-center" style={`--center-x:${scene.corners.topLeft.xPct + (scene.corners.topRight.xPct - scene.corners.topLeft.xPct) / 2}%;--center-y:${scene.corners.topLeft.yPct + (scene.corners.bottomLeft.yPct - scene.corners.topLeft.yPct) / 2}%;`}>{scene.unlimitedArtworkSize ? 'Fit artwork within area' : 'Artwork center'}</span>
             </div>
             <figcaption>
-              <span>Safe area: {scene.estimatedWall.widthCm} cm wide × {scene.estimatedWall.heightCm} cm tall (estimate)</span>
+              <span>{scene.unlimitedArtworkSize ? 'Flexible safe area: artworks scale to fit with padding.' : `Safe area: ${scene.estimatedWall.widthCm} cm wide × ${scene.estimatedWall.heightCm} cm tall (estimate)`}</span>
               <span>TL {scene.corners.topLeft.xPct}%, {scene.corners.topLeft.yPct}% · TR {scene.corners.topRight.xPct}%, {scene.corners.topRight.yPct}% · BR {scene.corners.bottomRight.xPct}%, {scene.corners.bottomRight.yPct}% · BL {scene.corners.bottomLeft.xPct}%, {scene.corners.bottomLeft.yPct}%</span>
             </figcaption>
           </figure>
