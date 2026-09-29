@@ -30,8 +30,7 @@ export interface RoomScene {
   };
 }
 
-// Provisional calibration values; adjust the corners and dimensions after
-// reviewing /room-calibration/. Percentages refer to each image's displayed bounds.
+// Provisional room dimensions and placement bounds. Percentages refer to each image's displayed bounds.
 export const experimentalRoomScenes: RoomScene[] = [
   {
     id: 'bedroom-medium',
@@ -132,16 +131,3 @@ export const experimentalRoomScenes: RoomScene[] = [
   },
 ];
 
-export const roomCalibrationScenes = experimentalRoomScenes.map(scene => ({
-  id: scene.id,
-  title: scene.title,
-  image: scene.image,
-  imageWidth: scene.imageWidth,
-  imageHeight: scene.imageHeight,
-  unlimitedArtworkSize: scene.unlimitedArtworkSize ?? false,
-  estimatedWall: {
-    widthCm: scene.wall.widthCm,
-    heightCm: scene.wall.heightCm,
-  },
-  corners: scene.wall.corners,
-}));
