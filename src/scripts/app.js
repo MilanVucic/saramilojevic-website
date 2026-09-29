@@ -41,6 +41,19 @@ if (!reduced) {
 const galleryItems=[...document.querySelectorAll('.gallery-trigger')];
 if (galleryItems.length) {
  const dataSource=galleryItems.map(item=>{
+  if(item.dataset.roomPreview){
+   const escapeHTML=value=>String(value||'').replace(/[&<>\"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[char]));
+   const width=Number(item.dataset.roomWidth)||1600;
+   const height=Number(item.dataset.roomHeight)||1000;
+   return {
+    type:'html',
+    width,
+    height,
+    alt:item.dataset.roomAlt||'',
+    isRoomPreview:true,
+    html:`<div class="pswp__room-view"><img class="pswp__room-view-background" src="${escapeHTML(item.dataset.roomBackground)}" alt=""><img class="pswp__room-view-artwork" src="${escapeHTML(item.dataset.roomArtwork)}" alt="${escapeHTML(item.dataset.roomAlt)}" style="${escapeHTML(item.dataset.roomStyle)}"></div>`
+   };
+  }
   const preview=item.querySelector('img');
   return {
    src:item.dataset.fullSrc,
@@ -86,6 +99,7 @@ if (galleryItems.length) {
      arrowNextTitle:'Next image',
      errorMsg:'This image could not be loaded.'
     });
+    lightbox.addFilter('isContentZoomable',(zoomable,content)=>content.data.isRoomPreview||zoomable);
     lightbox.on('uiRegister',()=>{
      lightbox.pswp.ui.registerElement({
       name:'swipeHint',
@@ -149,9 +163,30 @@ if (galleryItems.length) {
 document.querySelectorAll('[data-image-carousel]').forEach(carousel=>{
  const slides=[...carousel.querySelectorAll('[data-carousel-slide]')];
  const titles=[...carousel.querySelectorAll('[data-carousel-title]')];
+ const viewport=carousel.querySelector('.image-carousel-viewport');
  const current=carousel.querySelector('[data-carousel-current]');
  let activeIndex=0;
  let touchStart=0;
+ const frameRatio=Number(slides[0]?.dataset.carouselRatio);
+ const updateFrame=()=>{
+  if(!viewport||!frameRatio)return;
+  viewport.style.aspectRatio=String(frameRatio);
+  const roomTrigger=slides[activeIndex].querySelector('.artwork-gallery-room-trigger');
+  if(roomTrigger){
+   const padding=getComputedStyle(roomTrigger);
+   const horizontalPadding=parseFloat(padding.paddingLeft)+parseFloat(padding.paddingRight);
+   const verticalPadding=parseFloat(padding.paddingTop)+parseFloat(padding.paddingBottom);
+   const stage=roomTrigger.querySelector('.artwork-gallery-room-preview');
+   if(stage){
+    const availableWidth=Math.max(1,roomTrigger.clientWidth-horizontalPadding);
+    const availableHeight=Math.max(1,roomTrigger.clientHeight-verticalPadding);
+    const roomRatio=(Number(roomTrigger.dataset.roomWidth)||1)/(Number(roomTrigger.dataset.roomHeight)||1);
+    const stageWidth=Math.min(availableWidth,availableHeight*roomRatio);
+    stage.style.width=`${stageWidth}px`;
+    stage.style.height=`${stageWidth/roomRatio}px`;
+   }
+  }
+ };
  const show=index=>{
   activeIndex=(index+slides.length)%slides.length;
   slides.forEach((slide,slideIndex)=>{
@@ -159,6 +194,7 @@ document.querySelectorAll('[data-image-carousel]').forEach(carousel=>{
    slide.classList.toggle('is-active',active);
    slide.setAttribute('aria-hidden',String(!active));
   });
+  updateFrame();
   titles.forEach((title,titleIndex)=>{title.hidden=titleIndex!==activeIndex;});
   if(current)current.textContent=String(activeIndex+1).padStart(2,'0');
  };
@@ -172,6 +208,8 @@ document.querySelectorAll('[data-image-carousel]').forEach(carousel=>{
  });
  carousel.addEventListener('touchstart',event=>{touchStart=event.changedTouches[0].clientX;},{passive:true});
  carousel.addEventListener('touchend',event=>{const distance=event.changedTouches[0].clientX-touchStart;if(Math.abs(distance)>45)move(distance>0?-1:1);},{passive:true});
+ window.addEventListener('resize',updateFrame,{passive:true});
+ show(0);
 });
 const contactForm=document.querySelector('[data-contact-form]');
 if(contactForm){

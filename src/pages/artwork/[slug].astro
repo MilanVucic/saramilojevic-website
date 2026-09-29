@@ -5,7 +5,8 @@ import ArtworkCard from '../../components/ArtworkCard.astro';
 import BackBreadcrumb from '../../components/BackBreadcrumb.astro';
 import ImageCarousel from '../../components/ImageCarousel.astro';
 import CTA from '../../components/CTA.astro';
-import { getPortfolio, imageUrl, site } from '../../lib/content';
+import { getPortfolio, imageUrl, site, type ArtworkImage as ArtworkImageData } from '../../lib/content';
+import { experimentalRoomScenes } from '../../lib/roomScenes';
 
 export async function getStaticPaths() {
   const { collections, works } = await getPortfolio();
@@ -28,13 +29,121 @@ export async function getStaticPaths() {
 }
 
 const { artwork: a, collection: c, related } = Astro.props;
-const galleryItems = a.images.map((image, index) => ({
+const carouselFrameRatio = a.images[0].width / a.images[0].height;
+const originalGalleryItems = a.images.map((image, index) => ({
   image,
   title: a.title,
   fullSrc: imageUrl(image.full || image.src),
   ariaLabel: `Enlarge ${a.title} image ${index + 1}`,
+  frameRatio: carouselFrameRatio,
 }));
-const carouselFrameRatio = Math.min(...a.images.map(image => image.width / image.height));
+
+const emptyWallBase = experimentalRoomScenes.find(scene => scene.unlimitedArtworkSize)!;
+const isPortraitArtwork = a.dimensions.heightCm > a.dimensions.widthCm;
+const emptyWallScene = isPortraitArtwork && emptyWallBase.verticalImage
+  ? {
+      ...emptyWallBase,
+      image: emptyWallBase.verticalImage,
+      imageWidth: emptyWallBase.verticalImageWidth!,
+      imageHeight: emptyWallBase.verticalImageHeight!,
+    }
+  : emptyWallBase;
+const furnishedRoomIds = ['white-wall-brick', 'bedroom-medium', 'living-room-medium', 'living-room-large'];
+const furnishedRooms = furnishedRoomIds
+  .map(id => experimentalRoomScenes.find(scene => scene.id === id)!)
+  .filter(scene => scene.wall.widthCm && scene.wall.heightCm);
+const artworkImage = a.images[0];
+const artworkAspectRatio = artworkImage.width / artworkImage.height;
+const artworkRenderedHeightCm = a.dimensions.widthCm / artworkAspectRatio;
+const compatibleRooms = furnishedRooms.filter(scene =>
+  a.dimensions.widthCm <= scene.wall.widthCm! && a.dimensions.heightCm <= scene.wall.heightCm!,
+);
+const comfortablyFittingRooms = furnishedRooms.filter(scene =>
+  a.dimensions.widthCm <= scene.wall.widthCm! * 0.95 && a.dimensions.heightCm <= scene.wall.heightCm! * 0.95,
+);
+const eligibleRooms = comfortablyFittingRooms.length ? comfortablyFittingRooms : compatibleRooms;
+const selectedRooms: typeof furnishedRooms = [];
+const addRoom = (room?: (typeof furnishedRooms)[number]) => {
+  if (room && !selectedRooms.some(selected => selected.id === room.id)) selectedRooms.push(room);
+};
+addRoom(compatibleRooms.find(scene => scene.id === 'white-wall-brick'));
+// The living-room medium scene is shown for every artwork that physically fits it.
+addRoom(compatibleRooms.find(scene => scene.id === 'living-room-medium'));
+const additionalMediumRooms = eligibleRooms
+  .filter(scene => scene.id !== 'living-room-large')
+  .sort((first, second) => {
+    const artworkArea = a.dimensions.widthCm * a.dimensions.heightCm;
+    const firstWallArea = first.wall.widthCm! * first.wall.heightCm!;
+    const secondWallArea = second.wall.widthCm! * second.wall.heightCm!;
+    return artworkArea / secondWallArea - artworkArea / firstWallArea;
+  });
+for (const room of additionalMediumRooms) {
+  if (selectedRooms.length >= 3) break;
+  addRoom(room);
+}
+if (!selectedRooms.length) addRoom(eligibleRooms.find(scene => scene.id === 'living-room-large'));
+
+function previewStyle(scene: (typeof experimentalRoomScenes)[number]) {
+  const { corners } = scene.wall;
+  const safeWidthPct = corners.topRight.xPct - corners.topLeft.xPct;
+  const safeHeightPct = corners.bottomLeft.yPct - corners.topLeft.yPct;
+  const safeWidthPx = safeWidthPct / 100 * scene.imageWidth;
+  const safeHeightPx = safeHeightPct / 100 * scene.imageHeight;
+  let widthPx: number;
+  let heightPx: number;
+
+  if (scene.unlimitedArtworkSize) {
+    const paddingScale = 0.9;
+    const fitScale = Math.min(
+      safeWidthPx * paddingScale / a.dimensions.widthCm,
+      safeHeightPx * paddingScale / artworkRenderedHeightCm,
+    );
+    widthPx = a.dimensions.widthCm * fitScale;
+    heightPx = widthPx / artworkAspectRatio;
+  } else {
+    const wallWidth = scene.wall.widthCm!;
+    const wallHeight = scene.wall.heightCm!;
+    const pxPerCm = Math.min(safeWidthPx / wallWidth, safeHeightPx / wallHeight);
+    const fitScale = Math.min(safeWidthPx / a.dimensions.widthCm, safeHeightPx / artworkRenderedHeightCm);
+    const scale = Math.min(pxPerCm, fitScale);
+    widthPx = a.dimensions.widthCm * scale;
+    heightPx = widthPx / artworkAspectRatio;
+  }
+
+  const centerXPct = corners.topLeft.xPct + safeWidthPct / 2;
+  const centerYPct = corners.topLeft.yPct + safeHeightPct / 2;
+  return `--art-center-x:${centerXPct}%;--art-center-y:${centerYPct}%;--art-width:${widthPx / scene.imageWidth * 100}%;--art-height:${heightPx / scene.imageHeight * 100}%;--shadow-x:${scene.shadowOffsetPx.x}px;--shadow-y:${scene.shadowOffsetPx.y}px;`;
+}
+
+const roomGalleryItems = [emptyWallScene, ...selectedRooms].map(scene => {
+  const background: ArtworkImageData = {
+    src: scene.image,
+    width: scene.imageWidth,
+    height: scene.imageHeight,
+    alt: `${scene.title} background`,
+  };
+  const title = scene.unlimitedArtworkSize
+    ? 'On a blank wall'
+    : scene.id === 'white-wall-brick'
+      ? 'On the white brick wall'
+      : `In the ${scene.title.toLowerCase()}`;
+  return {
+    image: artworkImage,
+    title,
+    frameRatio: carouselFrameRatio,
+    roomPreview: {
+      background,
+      artworkStyle: previewStyle(scene),
+      artworkAlt: `${a.title} placed ${scene.unlimitedArtworkSize
+        ? 'on a blank wall'
+        : scene.id === 'white-wall-brick'
+          ? 'on the white brick wall'
+          : `in the ${scene.title.toLowerCase()}`}`,
+      artworkFullSrc: imageUrl(artworkImage.full || artworkImage.src),
+    },
+  };
+});
+const galleryItems = [...originalGalleryItems, ...roomGalleryItems];
 ---
 <Layout
   title={a.title}
@@ -65,7 +174,7 @@ const carouselFrameRatio = Math.min(...a.images.map(image => image.width / image
       <div class="gallery" id="gallery">
         <ImageCarousel
           items={galleryItems}
-          label={`${a.title} images`}
+          label={`${a.title} images and room views`}
           className="artwork-gallery-carousel"
           viewportClass="artwork-gallery-viewport"
           slideClass="artwork-gallery-slide"

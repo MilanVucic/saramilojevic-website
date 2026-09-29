@@ -49,6 +49,76 @@
     transition: opacity .55s ease, visibility .55s ease
 }
 
+.artwork-gallery-room-slide {
+    margin: 0
+}
+
+.artwork-gallery-room-trigger {
+    height: 100%;
+    cursor: zoom-in
+}
+
+.artwork-gallery-room-preview {
+    position: relative;
+    flex: 0 0 auto;
+    overflow: hidden;
+    background: #ebe7df
+}
+
+.gallery .artwork-gallery-slide .artwork-gallery-room-background,
+.gallery .artwork-gallery-slide .artwork-gallery-room-artwork {
+    position: absolute;
+    display: block;
+}
+
+.gallery .artwork-gallery-slide .artwork-gallery-room-background {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.gallery .artwork-gallery-slide .artwork-gallery-room-artwork {
+    left: var(--art-center-x);
+    top: var(--art-center-y);
+    width: var(--art-width);
+    height: var(--art-height);
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    filter: drop-shadow(var(--shadow-x) var(--shadow-y) 10px rgb(0 0 0 / 38%))
+}
+
+.pswp__room-view {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none
+}
+
+.pswp__room-view img {
+    position: absolute;
+    display: block;
+    pointer-events: none
+}
+
+.pswp__room-view-background {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain
+}
+
+.pswp__room-view-artwork {
+    left: var(--art-center-x);
+    top: var(--art-center-y);
+    width: var(--art-width);
+    height: var(--art-height);
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    box-shadow: var(--shadow-x) var(--shadow-y) 18px rgb(0 0 0 / 34%), 0 1px 3px rgb(0 0 0 / 35%)
+}
+
 .artwork-gallery-slide.is-active {
     opacity: 1;
     visibility: visible;
