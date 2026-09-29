@@ -5,6 +5,7 @@ import ArtworkCard from '../../components/ArtworkCard.astro';
 import BackBreadcrumb from '../../components/BackBreadcrumb.astro';
 import ImageCarousel from '../../components/ImageCarousel.astro';
 import CTA from '../../components/CTA.astro';
+import AnimatedSignature from '../../components/AnimatedSignature.astro';
 import { getPortfolio, imageUrl, site, type ArtworkImage as ArtworkImageData } from '../../lib/content';
 import { experimentalRoomScenes } from '../../lib/roomScenes';
 
@@ -193,9 +194,7 @@ const galleryItems = [...originalGalleryItems, ...roomGalleryItems];
           {a.readyToHang && <div><dt>Ready to hang</dt><dd>Yes</dd></div>}
         </dl>
         <div class="artwork-enquiry-row">
-          <span class="artwork-enquiry-signature-wrap">
-            <img class="artwork-enquiry-signature" src="/assets/sara-milojevic-signature.svg" alt="Sara Milojević signature" />
-          </span>
+          <AnimatedSignature className="artwork-enquiry-signature-wrap" />
           <CTA href={`/contact/?artwork=${encodeURIComponent(a.slug)}`}>Enquire about this work</CTA>
         </div>
       </aside>
@@ -207,84 +206,3 @@ const galleryItems = [...originalGalleryItems, ...roomGalleryItems];
   </section>
 </Layout>
 
-<script>
-  const signatureWrap = document.querySelector('.artwork-enquiry-signature-wrap');
-
-  if (signatureWrap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    let signatureMarkupPromise;
-
-    const drawSignature = async () => {
-      try {
-        signatureMarkupPromise ||= fetch('/assets/sara-milojevic-signature.svg')
-          .then(response => response.ok ? response.text() : Promise.reject());
-        const markup = await signatureMarkupPromise;
-        const parsed = new DOMParser().parseFromString(markup, 'image/svg+xml');
-        const svg = parsed.documentElement;
-        const paths = [...svg.querySelectorAll('path')];
-        if (!paths.length || parsed.querySelector('parsererror')) return;
-
-        svg.removeAttribute('fill');
-        svg.classList.add('signature-drawing');
-        svg.setAttribute('role', 'img');
-        svg.setAttribute('aria-label', 'Sara Milojević signature');
-
-        paths.forEach(path => {
-          const length = path.getTotalLength();
-          path.dataset.length = String(length);
-          // The source SVG stores pen marks as closed outlines. Their first
-          // half follows one edge of the mark; the second half returns along
-          // the other edge to close the shape. Reveal only the forward edge.
-          const revealLength = length < 32 ? length : length / 2;
-          path.style.setProperty('--path-length', String(length));
-          path.style.setProperty('--reveal-length', String(revealLength));
-          path.style.setProperty('--path-dash', `${revealLength} ${length * 2}`);
-          const duration = Math.min(3, Math.max(0.6, revealLength / 1400));
-          path.dataset.duration = String(duration);
-          path.style.setProperty('--draw-time', `${duration}s`);
-        });
-
-        signatureWrap.replaceChildren(document.adoptNode(svg));
-        // Force the hidden dash offsets to paint before starting the first path.
-        svg.getBoundingClientRect();
-        paths.forEach(path => getComputedStyle(path).strokeDashoffset);
-
-        let nextPath = 0;
-        const startNextPath = () => {
-          const path = paths[nextPath++];
-          if (!path) return;
-          path.addEventListener('transitionend', event => {
-            if (event.propertyName === 'stroke-dashoffset') startNextPath();
-          }, { once: true });
-          path.classList.add('is-drawing');
-        };
-
-        const startWhenFullyVisible = () => {
-          const bounds = svg.getBoundingClientRect();
-          const fullyVisible = bounds.top >= 0
-            && bounds.left >= 0
-            && bounds.bottom <= window.innerHeight
-            && bounds.right <= window.innerWidth;
-
-          if (fullyVisible) {
-            window.removeEventListener('scroll', startWhenFullyVisible);
-            window.removeEventListener('resize', startWhenFullyVisible);
-            requestAnimationFrame(() => requestAnimationFrame(startNextPath));
-          }
-        };
-
-        startWhenFullyVisible();
-        if (nextPath === 0) {
-          window.addEventListener('scroll', startWhenFullyVisible, { passive: true });
-          window.addEventListener('resize', startWhenFullyVisible, { passive: true });
-        }
-      } catch {
-        // Keep the static signature image if loading or SVG parsing fails.
-      }
-    };
-
-    drawSignature();
-    window.addEventListener('pageshow', event => {
-      if (event.persisted) drawSignature();
-    });
-  }
-</script>

@@ -1,0 +1,92 @@
+---
+import '../styles/animated-signature.css';
+
+interface Props {
+  className?: string;
+  alt?: string;
+}
+
+const { className, alt = 'Sara Milojević signature' } = Astro.props;
+---
+<span class:list={['animated-signature', className]} data-animated-signature>
+  <img src="/assets/sara-milojevic-signature.svg" alt={alt} loading="lazy" decoding="async" />
+</span>
+
+<script>
+  const signatureWrappers = [...document.querySelectorAll<HTMLElement>('[data-animated-signature]')];
+
+  if (signatureWrappers.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let signatureMarkupPromise: Promise<string> | undefined;
+
+    const drawSignature = async (signatureWrap: HTMLElement) => {
+      try {
+        signatureMarkupPromise ||= fetch('/assets/sara-milojevic-signature.svg')
+          .then(response => response.ok ? response.text() : Promise.reject());
+        const markup = await signatureMarkupPromise;
+        const parsed = new DOMParser().parseFromString(markup, 'image/svg+xml');
+        const svg = parsed.documentElement;
+        const paths = [...svg.querySelectorAll<SVGPathElement>('path')];
+        if (!paths.length || parsed.querySelector('parsererror')) return;
+
+        svg.removeAttribute('fill');
+        svg.classList.add('signature-drawing');
+        svg.setAttribute('role', 'img');
+        svg.setAttribute('aria-label', signatureWrap.querySelector('img')?.alt || 'Sara Milojević signature');
+
+        paths.forEach(path => {
+          const length = path.getTotalLength();
+          // The source SVG stores pen marks as closed outlines. Reveal only
+          // the forward edge, rather than retracing it to close each shape.
+          const revealLength = length < 32 ? length : length / 2;
+          path.style.setProperty('--path-length', String(length));
+          path.style.setProperty('--reveal-length', String(revealLength));
+          path.style.setProperty('--path-dash', `${revealLength} ${length * 2}`);
+          const duration = Math.min(3, Math.max(0.6, revealLength / 1400));
+          path.style.setProperty('--draw-time', `${duration}s`);
+        });
+
+        signatureWrap.replaceChildren(document.adoptNode(svg));
+        // Paint the hidden starting offsets before beginning the first stroke.
+        svg.getBoundingClientRect();
+        paths.forEach(path => getComputedStyle(path).strokeDashoffset);
+
+        let nextPath = 0;
+        const startNextPath = () => {
+          const path = paths[nextPath++];
+          if (!path) return;
+          path.addEventListener('transitionend', event => {
+            if (event.propertyName === 'stroke-dashoffset') startNextPath();
+          }, { once: true });
+          path.classList.add('is-drawing');
+        };
+
+        const startWhenFullyVisible = () => {
+          const bounds = svg.getBoundingClientRect();
+          const fullyVisible = bounds.top >= 0
+            && bounds.left >= 0
+            && bounds.bottom <= window.innerHeight
+            && bounds.right <= window.innerWidth;
+
+          if (fullyVisible) {
+            window.removeEventListener('scroll', startWhenFullyVisible);
+            window.removeEventListener('resize', startWhenFullyVisible);
+            requestAnimationFrame(() => requestAnimationFrame(startNextPath));
+          }
+        };
+
+        startWhenFullyVisible();
+        if (nextPath === 0) {
+          window.addEventListener('scroll', startWhenFullyVisible, { passive: true });
+          window.addEventListener('resize', startWhenFullyVisible, { passive: true });
+        }
+      } catch {
+        // Keep the static signature image if loading or SVG parsing fails.
+      }
+    };
+
+    signatureWrappers.forEach(drawSignature);
+    window.addEventListener('pageshow', event => {
+      if (event.persisted) signatureWrappers.forEach(drawSignature);
+    });
+  }
+</script>

@@ -1,0 +1,30 @@
+.animated-signature {
+    display: block;
+    min-width: 0
+}
+
+.animated-signature > img,
+.animated-signature > .signature-drawing {
+    display: block;
+    width: 100%;
+    height: auto
+}
+
+.animated-signature > .signature-drawing {
+    overflow: visible
+}
+
+.signature-drawing path {
+    fill: transparent;
+    stroke: #919288;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: var(--path-dash);
+    stroke-dashoffset: var(--reveal-length);
+    transition: stroke-dashoffset var(--draw-time) cubic-bezier(.45, 0, .25, 1)
+}
+
+.signature-drawing path.is-drawing {
+    stroke-dashoffset: 0
+}

@@ -5,6 +5,7 @@ import LoadingImage from '../components/LoadingImage.astro';
 import ArtworkCard from '../components/ArtworkCard.astro';
 import CollectionFeature from '../components/CollectionFeature.astro';
 import CTA from '../components/CTA.astro';
+import AnimatedSignature from '../components/AnimatedSignature.astro';
 import { getPortfolio, imageUrl, responsiveImageSrcSet, responsiveImageUrl, site } from '../lib/content';
 const { works, collections } = await getPortfolio();
 const resolveHeroEntries = (selections: Array<{ artwork: string; image?: number }>) => selections.flatMap(selection => {
@@ -46,7 +47,7 @@ const [firstName, ...surname] = site.name.split(' ');
     <div class="hero-copy"><p class="eyebrow">{site.subtitle}</p><h1>{firstName}<br/><em>{surname.join(' ')}</em></h1><CTA href={initialHeroEntry.href} variant="light" className="hero-artwork-cta">View artwork</CTA></div>
   </section>}
   <section id="selected" class="section" data-reveal>
-    <div class="section-heading"><div><p class="eyebrow">A selection from the studio</p><h2>Selected <em>works</em></h2></div><div class="desktop-all-artworks"><CTA href="/artworks/">All artworks</CTA></div></div>
+    <div class="section-heading"><div><p class="eyebrow">A selection from the studio</p><h2>Selected <em>works</em></h2></div><div class="desktop-all-artworks"><CTA href="/artworks/">View all artworks</CTA></div></div>
     <div class="selected-works-stage" data-selected-works>
       {selectedGroups.map((group, groupIndex) =>
         <div
@@ -61,7 +62,7 @@ const [firstName, ...surname] = site.name.split(' ');
     </div>
     <div class="mobile-all-artworks"><CTA href="/artworks/">All artworks</CTA></div>
   </section>
-  <section id="about" class="section about" data-reveal><div><div class="about-home-portrait"><LoadingImage src={responsiveImageUrl('/assets/artist-2.JPG', 1080)} width={3252} height={3752} alt="Sara Milojević holding paintbrushes in her studio" sizes="(max-width: 760px) 88vw, 40vw" webpSrcSet={responsiveImageSrcSet('/assets/artist-2.JPG')} /></div></div><div><p class="intro">{site.intro}</p><img class="about-home-signature" src="/assets/sara-milojevic-signature.svg" alt="Sara Milojević signature" /><p>{site.biography}</p><div class="about-ctas"><CTA href="/about/">Read about Sara</CTA><CTA href="/exhibitions/">Explore the exhibitions</CTA></div></div></section>
+  <section id="about" class="section about" data-reveal><div><div class="about-home-portrait"><LoadingImage src={responsiveImageUrl('/assets/artist-2.JPG', 1080)} width={3252} height={3752} alt="Sara Milojević holding paintbrushes in her studio" sizes="(max-width: 760px) 88vw, 40vw" webpSrcSet={responsiveImageSrcSet('/assets/artist-2.JPG')} /></div></div><div><p class="intro">{site.intro}</p><AnimatedSignature className="about-home-signature" /><p>{site.biography}</p><div class="about-ctas"><CTA href="/about/">Read about Sara</CTA><CTA href="/exhibitions/">Explore the exhibitions</CTA></div></div></section>
   <div class="collection-features">
     {collections.map(collection => <CollectionFeature collection={collection} works={works.filter(artwork => artwork.collection === collection.slug)}/>)}
   </div>
