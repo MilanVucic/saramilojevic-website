@@ -1,5 +1,5 @@
 param(
-    [string]$Remote = "root@104.248.23.93",
+    [string]$Remote = "root@77.237.241.199",
     [string]$RemoteRoot = "/var/www/saramilojevic"
 )
 
