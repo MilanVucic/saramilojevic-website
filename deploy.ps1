@@ -48,7 +48,7 @@ try {
     scp @scpOptions $archivePath "${Remote}:${remoteArchive}"
     Assert-LastExitCode "Uploading deployment archive"
 
-    ssh @sshOptions $Remote "mkdir -p '$RemoteRoot' && tar -xzf '$remoteArchive' -C '$RemoteRoot' && rm -f '$remoteArchive' && chmod -R a+rX '$RemoteRoot' && test -f '$RemoteRoot/index.html'"
+    ssh @sshOptions $Remote "mkdir -p '$RemoteRoot' && tar -xzf '$remoteArchive' -C '$RemoteRoot' && rm -f '$remoteArchive' && chmod -R a+rX,go-w '$RemoteRoot' && test -f '$RemoteRoot/index.html'"
     Assert-LastExitCode "Extracting and verifying deployment"
 
     Write-Host "Deployed Sara Milojevic website to ${Remote}:${RemoteRoot}"
