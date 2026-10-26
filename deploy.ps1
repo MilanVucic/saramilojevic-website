@@ -4,6 +4,9 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+if ($RemoteRoot -notmatch '^/var/www/[A-Za-z0-9._/-]+$' -or $RemoteRoot.Split('/') -contains '..') {
+    throw 'RemoteRoot must be a site-specific path below /var/www.'
+}
 $sshOptions = @(
     "-n",
     "-T",
@@ -29,6 +32,8 @@ function Assert-LastExitCode([string]$Step) {
 $deploymentId = [Guid]::NewGuid().ToString('N')
 $archivePath = Join-Path ([System.IO.Path]::GetTempPath()) "saramilojevic-$deploymentId.tar.gz"
 $remoteArchive = "/tmp/saramilojevic-$deploymentId.tar.gz"
+$releaseId = (Get-Date -Format 'yyyyMMdd-HHmmss') + "-$deploymentId"
+$remoteRelease = "$RemoteRoot/releases/$releaseId"
 
 Push-Location $PSScriptRoot
 try {
@@ -48,10 +53,10 @@ try {
     scp @scpOptions $archivePath "${Remote}:${remoteArchive}"
     Assert-LastExitCode "Uploading deployment archive"
 
-    ssh @sshOptions $Remote "mkdir -p '$RemoteRoot' && tar -xzf '$remoteArchive' -C '$RemoteRoot' && rm -f '$remoteArchive' && chmod -R a+rX,go-w '$RemoteRoot' && test -f '$RemoteRoot/index.html'"
-    Assert-LastExitCode "Extracting and verifying deployment"
+    ssh @sshOptions $Remote "mkdir -p '$remoteRelease' && tar -xzf '$remoteArchive' -C '$remoteRelease' && test -f '$remoteRelease/index.html' && chmod -R a+rX,go-w '$remoteRelease' && ln -sfn '$remoteRelease' '$RemoteRoot/.current-next' && mv -Tf '$RemoteRoot/.current-next' '$RemoteRoot/current' && rm -f '$remoteArchive'"
+    Assert-LastExitCode "Extracting and activating release"
 
-    Write-Host "Deployed Sara Milojevic website to ${Remote}:${RemoteRoot}"
+    Write-Host "Deployed Sara Milojevic release $releaseId to ${Remote}:$RemoteRoot/current"
 } finally {
     if (Test-Path -LiteralPath $archivePath) {
         Remove-Item -LiteralPath $archivePath -Force
