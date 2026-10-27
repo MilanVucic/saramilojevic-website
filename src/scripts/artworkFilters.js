@@ -159,13 +159,15 @@ export const initializeArtworkFilters = () => {
       const types = selectedValues('type');
       const years = selectedValues('year');
       const sizes = selectedValues('size');
+      const availability = selectedValues('availability');
       const matches = new Map(items.map(item => {
         const matchesSearch = terms.every(term => normalize(item.dataset.search).includes(term));
         const matchesCollection = !collections.size || collections.has(item.dataset.collection);
         const matchesType = !types.size || types.has(item.dataset.type);
         const matchesYear = !years.size || years.has(item.dataset.year);
         const matchesSize = !sizes.size || sizes.has(item.dataset.size);
-        return [item, matchesSearch && matchesCollection && matchesType && matchesYear && matchesSize];
+        const matchesAvailability = !availability.size || item.dataset.available === 'true';
+        return [item, matchesSearch && matchesCollection && matchesType && matchesYear && matchesSize && matchesAvailability];
       }));
       const visible = [...matches.values()].filter(Boolean).length;
 

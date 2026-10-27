@@ -25,6 +25,7 @@ const groups = [
   { name: 'type', label: 'Type', options: types },
   { name: 'year', label: 'Year', options: includeUndated ? [...years, { value: 'undated', label: 'Undated' }] : years },
   { name: 'size', label: 'Dimensions', options: sizeOptions },
+  { name: 'availability', label: 'Availability', options: [{ value: 'available', label: 'Available only' }] },
 ];
 ---
 <div class="all-works-controls" data-artwork-filter-root>

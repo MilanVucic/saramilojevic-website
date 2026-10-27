@@ -50,6 +50,7 @@ const sizeCategory = (width: number, height: number) => {
         data-type={artwork.type}
         data-year={artwork.year ? String(artwork.year) : 'undated'}
         data-size={sizeCategory(artwork.dimensions.widthCm, artwork.dimensions.heightCm)}
+        data-available={String(artwork.available)}
         data-search={`${artwork.title} ${collectionTitle(artwork.collection)}`.toLowerCase()}
       >
         <div class="all-work-media"><ArtworkImage image={artwork.images[0]} /></div>
