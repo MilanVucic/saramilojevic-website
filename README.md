@@ -37,7 +37,7 @@ artworks/soft-return/03.webp
 
 These slugs are examples: use your real painting slugs if you prefer. Names are case-sensitive. Use lowercase and hyphens. Confirm a file opens directly, for example:
 
-https://pub-0cd4ec3155d8403885715be1046a4e68.r2.dev/artworks/quiet-earth/01.webp
+https://images.saramilojevic.com/artworks/quiet-earth/01.webp
 
 In `content/artworks/quiet-earth.json`, replace its `images` array with:
 
@@ -69,7 +69,7 @@ For the optional Three.js desktop hero, configure R2 CORS to allow GET/HEAD from
 [{ "AllowedOrigins": ["http://localhost:4321"], "AllowedMethods": ["GET", "HEAD"], "AllowedHeaders": ["*"] }]
 ```
 
-The `r2.dev` URL is for development and is rate limited. At launch, connect the public R2 bucket to your custom domain and change only `imageBaseUrl` to `https://images.yourdomain.com`. Public access exposes the bucket's objects; keep private originals in a separate private bucket, not a prefix in this public bucket.
+The site uses the R2 custom domain `https://images.saramilojevic.com` through `imageBaseUrl`. Keep private originals in a separate private bucket, not a prefix in this public bucket. The `r2.dev` public development URL can be disabled after the deployed site uses the custom domain.
 
 ### Responsive image delivery
 
