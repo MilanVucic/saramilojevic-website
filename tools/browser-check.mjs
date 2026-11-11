@@ -160,7 +160,7 @@ try {
             if (route === '/exhibitions/' && width < 761) {
                 if (!await evaluate(`(()=>[...document.querySelectorAll('.exhibition-archive-row')].every(row=>{const image=row.querySelector('.exhibition-archive-media').getBoundingClientRect();const copy=row.querySelector('.exhibition-archive-copy').getBoundingClientRect();return image.left>=innerWidth*.05&&image.right<=innerWidth*.95&&copy.left>=innerWidth*.05&&copy.right<=innerWidth*.95}))()`)) throw Error(`${width} exhibitions: archive content touches the mobile viewport edge`);
             }
-            if (!await evaluate(`document.querySelector('.footer-social a[aria-label="Sara Milojević on Behance"]')?.getAttribute('href')==='https://www.behance.net/Sarami'`)) throw Error(`${width} ${route}: Behance footer link is missing`);
+            if (!await evaluate(`document.querySelector('.footer-social a[aria-label="Sara Milojević on Behance"]')?.getAttribute('href')==='https://www.behance.net/Sarami/'`)) throw Error(`${width} ${route}: Behance footer link is missing`);
             if (route.startsWith('/artwork/')) {
                 if (!await evaluate(`document.querySelector('.artwork-info .button')?.getAttribute('href')==='/contact/?artwork=dont-look'&&document.querySelector('.section-heading .button')?.getAttribute('href')==='/artworks/'&&!document.body.textContent.includes('Click or tap any image to explore')&&!document.body.textContent.includes('Swipe or use arrow keys in the viewer')`)) throw Error(`${width} artwork: enquiry or archive route is incorrect`);
                 const related = await evaluate(`[...document.querySelectorAll('.artwork-page+section .work-card')].map(link=>link.getAttribute('href'))`);

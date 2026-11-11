@@ -1,6 +1,6 @@
 export const footerLinks = {
   email: 'mailto:sara.milojevic.art@gmail.com',
-  instagram: 'https://www.instagram.com/saramilojevic__/',
+  instagram: 'https://www.instagram.com/sara.milojevic.art/',
   saatchi: 'https://www.saatchiart.com/account/profile/3030919',
-  behance: 'https://www.behance.net/Sarami',
+  behance: 'https://www.behance.net/Sarami/',
 } as const;
