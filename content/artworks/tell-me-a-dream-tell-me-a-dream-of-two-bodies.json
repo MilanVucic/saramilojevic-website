@@ -1,0 +1,54 @@
+{
+  "slug": "tell-me-a-dream-tell-me-a-dream-of-two-bodies",
+  "title": "Tell Me a Dream. Tell Me a Dream of Two Bodies.",
+  "collection": "soft-as-dreams",
+  "type": "painting",
+  "year": 2026,
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 200,
+    "heightCm": 200
+  },
+  "description": "The work focuses on pure visual gesture and the dynamics of movement, depicting two leaping figures entirely liberated from mass, ground, and any gravitational anchor. Displaced from a static spatial framework, they materialize an exuberant energy and a sense of liberation, articulated through a signature palette of contrasting pink and green tones. Here, the jump becomes an act of release from the spatial and societal dictates of stability, visualizing the dream as a realm where stepping out of balance is experienced not as a loss of footing, but as the conquest of freedom in which gravity is transcended through expression, intimacy, and momentum.",
+  "order": 18,
+  "featured": false,
+  "available": true,
+  "published": true,
+  "images": [
+    {
+      "src": "soft-as-dreams/tell-me-a-dream-tell-me-a-dream-of-two-bodies.jpg",
+      "width": 3246,
+      "height": 3332,
+      "alt": "Tell Me a Dream. Tell Me a Dream of Two Bodies., acrylic on canvas",
+      "caption": "Full composition"
+    },
+    {
+      "src": "soft-as-dreams/tell-me-a-dream-tell-me-a-dream-of-two-bodies-detail-01.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Tell Me a Dream. Tell Me a Dream of Two Bodies., additional photograph 1",
+      "caption": "Detail / additional view 1"
+    },
+    {
+      "src": "soft-as-dreams/tell-me-a-dream-tell-me-a-dream-of-two-bodies-detail-02.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Tell Me a Dream. Tell Me a Dream of Two Bodies., additional photograph 2",
+      "caption": "Detail / additional view 2"
+    },
+    {
+      "src": "soft-as-dreams/tell-me-a-dream-tell-me-a-dream-of-two-bodies-detail-03.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Tell Me a Dream. Tell Me a Dream of Two Bodies., additional photograph 3",
+      "caption": "Detail / additional view 3"
+    },
+    {
+      "src": "soft-as-dreams/tell-me-a-dream-tell-me-a-dream-of-two-bodies-detail-04.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Tell Me a Dream. Tell Me a Dream of Two Bodies., additional photograph 4",
+      "caption": "Detail / additional view 4"
+    }
+  ]
+}

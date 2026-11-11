@@ -1,0 +1,110 @@
+{
+  "slug": "fall-exercises-01",
+  "title": "Fall Exercises No. 1",
+  "collection": "soft-as-dreams",
+  "type": "painting",
+  "year": 2026,
+  "medium": "Acrylic on canvas",
+  "dimensions": {
+    "widthCm": 150,
+    "heightCm": 200
+  },
+  "description": "This large-scale acrylic on unprimed canvas painting belongs to the series You Need Something Soft, exploring the tension between vulnerability and collapse through dynamic female figures in symbolic fall exercises. Set against a contrasting chromatic atmosphere of tactile pinks and greens, the composition captures a suspended moment where control gives way to weight. Echoing the ethereal energy of Soft as Dreams, the work investigates physical and emotional descent, translating a gentle gesture that turns into a fall into a visually charged narrative. Raw canvas textures interplay with weightless forms, transforming vulnerability into a visceral form of strength.",
+  "order": 9,
+  "featured": false,
+  "available": true,
+  "published": true,
+  "images": [
+    {
+      "src": "soft-as-dreams/fall-exercises-01.jpg",
+      "width": 3199,
+      "height": 4278,
+      "alt": "Fall Exercises No. 1, acrylic on canvas",
+      "caption": "Full composition"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-01.jpg",
+      "width": 2991,
+      "height": 3896,
+      "alt": "Fall Exercises No. 1, additional photograph 1",
+      "caption": "Detail / additional view 1"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-02.jpg",
+      "width": 5184,
+      "height": 3456,
+      "alt": "Fall Exercises No. 1, additional photograph 2",
+      "caption": "Detail / additional view 2"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-03.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Fall Exercises No. 1, additional photograph 3",
+      "caption": "Detail / additional view 3"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-04.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Fall Exercises No. 1, additional photograph 4",
+      "caption": "Detail / additional view 4"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-05.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Fall Exercises No. 1, additional photograph 5",
+      "caption": "Detail / additional view 5"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-06.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Fall Exercises No. 1, additional photograph 6",
+      "caption": "Detail / additional view 6"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-07.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Fall Exercises No. 1, additional photograph 7",
+      "caption": "Detail / additional view 7"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-08.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Fall Exercises No. 1, additional photograph 8",
+      "caption": "Detail / additional view 8"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-09.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Fall Exercises No. 1, additional photograph 9",
+      "caption": "Detail / additional view 9"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-10.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Fall Exercises No. 1, additional photograph 10",
+      "caption": "Detail / additional view 10"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-11.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Fall Exercises No. 1, additional photograph 11",
+      "caption": "Detail / additional view 11"
+    },
+    {
+      "src": "soft-as-dreams/fall-exercises-01-detail-12.jpg",
+      "width": 3456,
+      "height": 5184,
+      "alt": "Fall Exercises No. 1, additional photograph 12",
+      "caption": "Detail / additional view 12"
+    }
+  ]
+}
