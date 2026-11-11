@@ -28,7 +28,9 @@ const newestWorks = site.newestWorkImages.map(selection => {
   return { ...work, images: [work.images[selection.image - 1]] };
 });
 if (!newestWorks.length) throw new Error('Configure at least one image in newestWorkImages.');
-const newestGroups = Array.from({ length: Math.ceil(newestWorks.length / 3) }, (_, index) => newestWorks.slice(index * 3, index * 3 + 3));
+const newestGroups = Array.from({ length: newestWorks.length % 3 === 0 ? newestWorks.length / 3 : newestWorks.length }, (_, index) =>
+  Array.from({ length: 3 }, (_, slot) => newestWorks[(index * 3 + slot) % newestWorks.length]),
+);
 const [firstName, ...surname] = site.name.split(' ');
 ---
 <Layout title="Newest works" description={site.seoDescription} socialImage={initialHeroEntry?.src} socialImageAlt={initialHeroEntry?.image.alt}>
@@ -56,7 +58,7 @@ const [firstName, ...surname] = site.name.split(' ');
   </section>}
   <section id="newest" class="section" data-reveal>
     <div class="section-heading"><div><p class="eyebrow">The latest from the studio</p><h2>Newest <em>works</em></h2></div><div class="desktop-all-artworks"><CTA href="/artworks/">View all artworks</CTA></div></div>
-    <div class="newest-works-stage" data-newest-works>
+    <div class="newest-works-stage" data-newest-works data-newest-count={newestWorks.length}>
       {newestGroups.map((group, groupIndex) =>
         <div
           class:list={['works-grid', 'newest-works-group', { 'is-active': groupIndex === 0 }]}

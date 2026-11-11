@@ -100,7 +100,7 @@ Edit `newestWorkImages` in `content/site.json` to choose the images and their ro
 { "artwork": "fall-exercises-01", "image": 1 }
 ```
 
-Add, remove, or reorder entries to curate the loop; choose `image: 2` for the second photograph, for example. The homepage shows three cards at a time on desktop and two on mobile, advancing every five seconds. Every configured image appears in the loop. Builds reject unknown or unpublished artworks and invalid image numbers. The hero uses its separate `heroDesktopImages` and `heroMobileImages` lists.
+Add, remove, or reorder entries to curate the loop; choose `image: 2` for the second photograph, for example. The homepage shows three cards at a time on desktop and two on mobile, advancing every five seconds. Every configured image appears in the loop. Each batch continues from the next image using modulo indexing: desktop shows 1?3, 4?6, 7?9, 10?1?2, 3?5, and so on; mobile advances two images at a time. Builds reject unknown or unpublished artworks and invalid image numbers. The hero uses its separate `heroDesktopImages` and `heroMobileImages` lists.
 
 ## Deployment
 

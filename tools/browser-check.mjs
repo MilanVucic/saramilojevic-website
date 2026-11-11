@@ -74,7 +74,10 @@ try {
                 if (!await evaluate(`document.querySelector('#newest .section-heading .button')?.getAttribute('href')==='/artworks/'&&[...document.querySelectorAll('[data-newest-group]')].every(group=>group.querySelectorAll('.work-card').length<=3)&&document.querySelector('[data-newest-group].is-active')?.querySelectorAll('.work-card').length===(innerWidth<761?2:3)`)) throw Error(`${width} homepage: Newest Works groups or CTA are incorrect`);
                 const configuredWorks = site.newestWorkImages.map(entry => '/artwork/' + entry.artwork + '/');
                 const renderedWorks = await evaluate(`[...document.querySelectorAll('[data-newest-works] .work-card')].map(card=>card.getAttribute('href'))`);
-                if (JSON.stringify(renderedWorks) !== JSON.stringify(configuredWorks)) throw Error('Newest Works does not match configured artwork order');
+                const batchSize = width < 761 ? 2 : 3;
+                const expectedWorks = Array.from({length: (configuredWorks.length % batchSize === 0 ? configuredWorks.length / batchSize : configuredWorks.length) * batchSize}, (_, index) => configuredWorks[index % configuredWorks.length]);
+                if (JSON.stringify(renderedWorks) !== JSON.stringify(expectedWorks)) throw Error('Newest Works does not fill every batch in configured order');
+                if (!await evaluate(`[...document.querySelectorAll('[data-newest-group]')].every(group=>group.querySelectorAll('.work-card').length===${batchSize})`)) throw Error('Newest Works contains an incomplete batch');
                 if (!await evaluate(`document.querySelector('#newest h2')?.textContent==='Newest works'`)) throw Error('Newest Works heading is incorrect');
                 if (width < 761 && !await evaluate(`(()=>{const group=document.querySelector('[data-newest-group].is-active');const cards=[...group.querySelectorAll('.work-card')].filter(card=>getComputedStyle(card).display!=='none');return getComputedStyle(group).gridTemplateColumns.split(' ').length===2&&cards.length===2})()`)) throw Error(`${width} homepage: newest works are not shown as one row of two items`);
                 await evaluate(`document.querySelector('#newest').scrollIntoView({block:'center'})`);
@@ -102,6 +105,7 @@ try {
                 })()`);
                 if (!cycle.wrapped || cycle.seen !== cycle.groups || JSON.stringify([...cycle.images].sort()) !== JSON.stringify([...new Set(configuredWorks)].sort())) throw Error(`${width} homepage: incomplete newest works cycle ${JSON.stringify(cycle)}`);
                 console.log(`PASS ${width}px Newest Works: all ${cycle.images.length} configured images load through a complete loop`);
+                await new Promise(resolve => setTimeout(resolve, 800));
                 const {data} = await call('Page.captureScreenshot', {format: 'png', captureBeyondViewport: false});
                 await writeFile(path.join(profile, `home-${width}.png`), Buffer.from(data, 'base64'));
             }

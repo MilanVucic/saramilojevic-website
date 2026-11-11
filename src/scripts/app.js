@@ -384,7 +384,7 @@ if(contactForm){
 }
 const newestWorks=document.querySelector('[data-newest-works]');
 if(newestWorks){
- const cards=[...newestWorks.querySelectorAll('.work-card')];
+ const cards=[...newestWorks.querySelectorAll('.work-card')].slice(0,Number(newestWorks.dataset.newestCount));
  const mobile=window.matchMedia('(max-width: 760px)');
  let groups=[];
  let activeIndex=0;
@@ -407,22 +407,33 @@ if(newestWorks){
   leaveTimer=window.setTimeout(()=>previous.classList.remove('is-leaving'),700);
  };
  const regroup=()=>{
-  const currentCard=groups[activeIndex]?.querySelector('.work-card') || cards[0];
+  const start=Number(groups[activeIndex]?.dataset.start || 0);
   window.clearTimeout(leaveTimer);
   window.clearInterval(rotationTimer);
   const size=mobile.matches?2:3;
-  activeIndex=Math.max(0,Math.floor(cards.indexOf(currentCard)/size));
+  activeIndex=0;
   groups=[];
-  for(let offset=0;offset<cards.length;offset+=size){
+  const groupCount=cards.length%size===0?cards.length/size:cards.length;
+  for(let batch=0;batch<groupCount;batch++){
+   const offset=(start+batch*size)%cards.length;
    const group=document.createElement('div');
    const index=groups.length;
    const active=index===activeIndex;
    group.className='works-grid newest-works-group'+(active?' is-active':'');
    group.dataset.newestGroup='';
    group.dataset.group=String(index);
+   group.dataset.start=String(offset);
    group.setAttribute('aria-hidden',String(!active));
    group.inert=!active;
-   group.append(...cards.slice(offset,offset+size));
+   for(let slot=0;slot<size;slot++){
+    const position=offset+slot;
+    const card=cards[position%cards.length].cloneNode(true);
+    card.querySelectorAll('[data-image-loader]').forEach(shell=>{
+     delete shell.dataset.loaderReady;
+     initializeImageLoader(shell);
+    });
+    group.append(card);
+   }
    groups.push(group);
   }
   newestWorks.replaceChildren(...groups);
