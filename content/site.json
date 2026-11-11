@@ -8,6 +8,18 @@
   "seoDescription": "Sara Milojević is a Belgrade-based visual artist and painter. Explore original paintings, selected works, exhibitions, and her studio practice.",
   "imageBaseUrl": "https://images.saramilojevic.com",
   "responsiveImagesEnabled": true,
+  "newestWorkImages": [
+    { "artwork": "fall-exercises-01", "image": 1 },
+    { "artwork": "fall-exercises-02", "image": 1 },
+    { "artwork": "fall-exercises-03", "image": 1 },
+    { "artwork": "fall-exercises-04", "image": 1 },
+    { "artwork": "fall-exercises-05", "image": 1 },
+    { "artwork": "fall-exercises-06", "image": 1 },
+    { "artwork": "fall-exercises-07", "image": 1 },
+    { "artwork": "fall-exercises-08", "image": 1 },
+    { "artwork": "fall-exercises-09", "image": 1 },
+    { "artwork": "tell-me-a-dream-tell-me-a-dream-of-two-bodies", "image": 1 }
+  ],
   "heroDesktopImages": [
     { "artwork": "the-blue-clips", "image": 1 },
     { "artwork": "dont-worry", "image": 1 },

@@ -86,11 +86,21 @@ You can use a Cloudflare custom domain while keeping Namecheap as the registrar.
 ## Editing content
 
 - Site name, introductory text, biography, contact email, hero artwork, and image base URL: `content/site.json`.
-- One JSON file per artwork in `content/artworks/`. Copy an existing file; set unique slug, collection, title, dimensions, images. `published: false` removes it from generated public pages. `featured: true` includes it on the homepage. `order` controls sequence.
+- One JSON file per artwork in `content/artworks/`. Copy an existing file; set unique slug, collection, title, dimensions, images. `published: false` removes it from generated public pages. `order` controls sequence.
 - One JSON file per collection in `content/collections/`. Artwork collection fields must match its slug.
 - Set the contact email to show enquiry links; it is intentionally blank in the demo.
 - Every build validates slugs, collection relationships, required images, alt text, and dimensions. Remote image existence is not checked automatically.
 - Pages are in `src/pages/`, shared layout in `src/layouts/Layout.astro`, and reusable cards/images in `src/components/`. CSS is `src/styles/global.css`. Browser interactions are in `src/scripts/`. Content schemas live in `src/content.config.ts`; JSON files remain in `content/` for future Decap compatibility.
+
+### Homepage Newest Works
+
+Edit `newestWorkImages` in `content/site.json` to choose the images and their rotation order. Each entry uses an artwork slug and a one-based image number from that artwork's `images` array:
+
+```json
+{ "artwork": "fall-exercises-01", "image": 1 }
+```
+
+Add, remove, or reorder entries to curate the loop; choose `image: 2` for the second photograph, for example. The homepage shows three cards at a time on desktop and two on mobile, advancing every five seconds. Every configured image appears in the loop. Builds reject unknown or unpublished artworks and invalid image numbers. The hero uses its separate `heroDesktopImages` and `heroMobileImages` lists.
 
 ## Deployment
 

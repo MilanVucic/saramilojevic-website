@@ -382,29 +382,54 @@ if(contactForm){
   }
  });
 }
-const selectedWorks=document.querySelector('[data-selected-works]');
-if(selectedWorks){
- const groups=[...selectedWorks.querySelectorAll('[data-selected-group]')];
+const newestWorks=document.querySelector('[data-newest-works]');
+if(newestWorks){
+ const cards=[...newestWorks.querySelectorAll('.work-card')];
+ const mobile=window.matchMedia('(max-width: 760px)');
+ let groups=[];
  let activeIndex=0;
  let leaveTimer=0;
- const showSelectedGroup=index=>{
+ let rotationTimer=0;
+ const showNewestGroup=index=>{
   const previous=groups[activeIndex];
   activeIndex=(index+groups.length)%groups.length;
   const next=groups[activeIndex];
   if(previous===next)return;
   window.clearTimeout(leaveTimer);
+  groups.forEach(group=>group.classList.remove('is-leaving'));
   previous.classList.remove('is-active');
   previous.classList.add('is-leaving');
   previous.setAttribute('aria-hidden','true');
   previous.inert=true;
-  next.classList.remove('is-leaving');
   next.classList.add('is-active');
   next.setAttribute('aria-hidden','false');
   next.inert=false;
   leaveTimer=window.setTimeout(()=>previous.classList.remove('is-leaving'),700);
  };
- groups.forEach((group,index)=>{group.inert=index!==0;});
- if(groups.length>1)window.setInterval(()=>showSelectedGroup(activeIndex+1),5000);
+ const regroup=()=>{
+  const currentCard=groups[activeIndex]?.querySelector('.work-card') || cards[0];
+  window.clearTimeout(leaveTimer);
+  window.clearInterval(rotationTimer);
+  const size=mobile.matches?2:3;
+  activeIndex=Math.max(0,Math.floor(cards.indexOf(currentCard)/size));
+  groups=[];
+  for(let offset=0;offset<cards.length;offset+=size){
+   const group=document.createElement('div');
+   const index=groups.length;
+   const active=index===activeIndex;
+   group.className='works-grid newest-works-group'+(active?' is-active':'');
+   group.dataset.newestGroup='';
+   group.dataset.group=String(index);
+   group.setAttribute('aria-hidden',String(!active));
+   group.inert=!active;
+   group.append(...cards.slice(offset,offset+size));
+   groups.push(group);
+  }
+  newestWorks.replaceChildren(...groups);
+  if(groups.length>1)rotationTimer=window.setInterval(()=>showNewestGroup(activeIndex+1),5000);
+ };
+ regroup();
+ mobile.addEventListener('change',regroup);
 }
 if (!reduced) {
  const sections=[...document.querySelectorAll('.collection-feature')].map(section=>({

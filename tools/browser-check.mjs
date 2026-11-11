@@ -1,11 +1,12 @@
 // Optional local check, using an installed Chrome and Node's built-in WebSocket.
 import {spawn} from 'node:child_process';
-import {mkdtemp, writeFile} from 'node:fs/promises';
+import {mkdtemp, writeFile, readFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 
 const profile = await mkdtemp(path.join(tmpdir(), 'sara-browser-'));
 const baseUrl = process.env.TEST_BASE_URL || 'http://localhost:4321';
+const site = JSON.parse(await readFile(new URL('../content/site.json', import.meta.url), 'utf8'));
 const chrome = spawn('C:/Program Files/Google/Chrome/Application/chrome.exe', ['--headless=new', '--no-first-run', '--remote-debugging-port=9334', `--user-data-dir=${profile}`, 'about:blank'], {
     windowsHide: true,
     stdio: 'ignore'
@@ -70,14 +71,37 @@ try {
                     if (!await evaluate(`!!document.querySelector('[data-hero] .hero-slide-loader')&&!document.querySelector('[data-hero] canvas')`)) throw Error(`${width} homepage: timed hero did not initialize on mobile`);
                 } else if (!await evaluate(`!!document.querySelector('[data-hero] .hero-slide-loader')&&!document.querySelector('[data-hero] canvas')`)) throw Error(`${width} homepage: timed hero did not initialize`);
                 if (!await evaluate(`document.documentElement.classList.contains('reveal-enabled')`)) throw Error(`${width} homepage: section reveals did not initialize`);
-                if (!await evaluate(`document.querySelector('#selected .section-heading .button')?.getAttribute('href')==='/artworks/'&&[...document.querySelectorAll('[data-selected-group]')].every(group=>group.querySelectorAll('.work-card').length<=3)&&document.querySelector('[data-selected-group].is-active')?.querySelectorAll('.work-card').length===3`)) throw Error(`${width} homepage: Selected Works groups or CTA are incorrect`);
-                if (width < 761 && !await evaluate(`(()=>{const group=document.querySelector('[data-selected-group].is-active');const cards=[...group.querySelectorAll('.work-card')].filter(card=>getComputedStyle(card).display!=='none');return getComputedStyle(group).gridTemplateColumns.split(' ').length===2&&cards.length===2})()`)) throw Error(`${width} homepage: selected works are not shown as one row of two items`);
-                if (width === 1440) {
-                    const selectedCollection = await evaluate(`document.querySelector('[data-selected-group].is-active').dataset.collection`);
-                    await new Promise(r => setTimeout(r, 4500));
-                    if (!await evaluate(`!!document.querySelector('[data-hero] .hero-slide-loader img')?.getAttribute('src')`)) throw Error('1440 homepage: timed hero did not advance');
-                    if (await evaluate(`document.querySelector('[data-selected-group].is-active').dataset.collection`) === selectedCollection) throw Error('1440 homepage: Selected Works did not rotate after five seconds');
-                }
+                if (!await evaluate(`document.querySelector('#newest .section-heading .button')?.getAttribute('href')==='/artworks/'&&[...document.querySelectorAll('[data-newest-group]')].every(group=>group.querySelectorAll('.work-card').length<=3)&&document.querySelector('[data-newest-group].is-active')?.querySelectorAll('.work-card').length===(innerWidth<761?2:3)`)) throw Error(`${width} homepage: Newest Works groups or CTA are incorrect`);
+                const configuredWorks = site.newestWorkImages.map(entry => '/artwork/' + entry.artwork + '/');
+                const renderedWorks = await evaluate(`[...document.querySelectorAll('[data-newest-works] .work-card')].map(card=>card.getAttribute('href'))`);
+                if (JSON.stringify(renderedWorks) !== JSON.stringify(configuredWorks)) throw Error('Newest Works does not match configured artwork order');
+                if (!await evaluate(`document.querySelector('#newest h2')?.textContent==='Newest works'`)) throw Error('Newest Works heading is incorrect');
+                if (width < 761 && !await evaluate(`(()=>{const group=document.querySelector('[data-newest-group].is-active');const cards=[...group.querySelectorAll('.work-card')].filter(card=>getComputedStyle(card).display!=='none');return getComputedStyle(group).gridTemplateColumns.split(' ').length===2&&cards.length===2})()`)) throw Error(`${width} homepage: newest works are not shown as one row of two items`);
+                await evaluate(`document.querySelector('#newest').scrollIntoView({block:'center'})`);
+                const cycle = await evaluate(`(async()=>{
+                    const stage=document.querySelector('[data-newest-works]');
+                    const groups=[...stage.querySelectorAll('[data-newest-group]')];
+                    const initial=stage.querySelector('.is-active').dataset.group;
+                    const seen=new Set();
+                    const images=new Set();
+                    const started=Date.now();
+                    let wrapped=false;
+                    while(Date.now()-started<groups.length*5000+1500){
+                        const active=stage.querySelector('.is-active');
+                        seen.add(active.dataset.group);
+                        for(const card of active.querySelectorAll('.work-card')){
+                            if(getComputedStyle(card).display==='none')throw Error('Configured card is hidden');
+                            const img=card.querySelector('img');
+                            await Promise.race([img.decode(),new Promise((_,reject)=>setTimeout(()=>reject(Error('Image load timeout')),15000))]);
+                            images.add(card.getAttribute('href'));
+                        }
+                        if(seen.size===groups.length&&active.dataset.group===initial&&Date.now()-started>1000){wrapped=true;break;}
+                        await new Promise(resolve=>setTimeout(resolve,100));
+                    }
+                    return{seen:seen.size,groups:groups.length,images:[...images],wrapped};
+                })()`);
+                if (!cycle.wrapped || cycle.seen !== cycle.groups || JSON.stringify([...cycle.images].sort()) !== JSON.stringify([...new Set(configuredWorks)].sort())) throw Error(`${width} homepage: incomplete newest works cycle ${JSON.stringify(cycle)}`);
+                console.log(`PASS ${width}px Newest Works: all ${cycle.images.length} configured images load through a complete loop`);
                 const {data} = await call('Page.captureScreenshot', {format: 'png', captureBeyondViewport: false});
                 await writeFile(path.join(profile, `home-${width}.png`), Buffer.from(data, 'base64'));
             }
